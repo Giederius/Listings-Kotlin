@@ -5,7 +5,7 @@ interface State<out T : State<T, E>, in E> {
     fun clearCommandAndRequest(): T
 }
 
-interface StateListener<out T : State<T, E>, in E> {
+interface StateListener< T : State<T, E>, in E> {
     fun onStateUpdated(oldState: T?, newState: T)
 }
 
