@@ -19,7 +19,7 @@
         android:id="@+id/homeFragment"
         android:name="com.giedriusmecius.listings.ui.home.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home"/>
+        tools:layout="@layout/fragment_home" />
 
 
 </navigation>

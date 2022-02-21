@@ -1,6 +1,7 @@
 package com.giedriusmecius.listings.ui.splash
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.giedriusmecius.listings.databinding.FragmentSplashBinding
@@ -13,14 +14,21 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.splashTitle.text = "ASDSAD"
-        vm.transition(SplashState.Event.ViewCreated)
+
+        binding.splashButton.setOnClickListener {
+            vm.transition(SplashState.Event.TappedButton)
+//            navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
+        }
+        // todo create some sort of login check
     }
 
     override fun observeState() {
         vm.subscribeWithAutoDispose(viewLifecycleOwner) { _, newState ->
             when (newState.command) {
-                SplashState.Command.OpenHomeScreen -> {}
+                SplashState.Command.OpenHomeScreen -> {
+                    Log.d("GM1", "state")
+                    navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
+                }
             }
         }
     }

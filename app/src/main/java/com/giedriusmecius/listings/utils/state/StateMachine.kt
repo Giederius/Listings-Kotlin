@@ -23,7 +23,7 @@ class StateMachine<T : State<T, E>, E>(initial: T) {
         private set(value) {
             val oldValue = field
             field = value.clearCommandAndRequest()
-            listeners.forEach { it.onStateUpdated(oldValue, state) }
+            listeners.forEach { it.onStateUpdated(oldValue, value) } // here has to be value, not state
         }
 
     fun transition(event: E) {
