@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.giedriusmecius.listings"
-        minSdk 21
+        minSdk 28
         targetSdk 31
         versionCode 1
         versionName "1.0"
@@ -50,11 +50,15 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.6.0'
     implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
-    implementation "androidx.lifecycle:lifecycle-common-java8:2.3.1"
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     implementation 'androidx.navigation:navigation-fragment-ktx:2.4.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.4.1'
     implementation "androidx.recyclerview:recyclerview:1.2.1"
     implementation "androidx.viewpager2:viewpager2:1.1.0-beta01"
+
+    // groupie
+    implementation "com.xwray:groupie:2.9.0"
+    implementation "com.xwray:groupie-viewbinding:2.9.0"
 }

@@ -8,6 +8,7 @@ class MainActivityViewModel : BaseViewModel<MainActivityState, MainActivityState
     override fun handleState(newState: MainActivityState) {
         when (newState.request) {
 
+            else -> {}
         }
     }
 }

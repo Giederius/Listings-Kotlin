@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="BodoniModa">
+        <item name="android:textColor">@color/neutralDarkest</item>
+        <item name="android:textColorHint">@color/neutralDark</item>
+        <item name="android:fontFamily">@font/bodonimoda</item>
+        <item name="fontStyle">normal</item>
+    </style>
+
+    <style name="Raleway">
+        <item name="android:textColor">@color/neutralDarkest</item>
+        <item name="android:textColorHint">@color/neutralDark</item>
+        <item name="android:fontFamily">@font/raleway</item>
+        <item name="fontStyle">normal</item>
+    </style>
+
+    <style name="H1" parent="BodoniModa">
+        <item name="android:textSize">48sp</item>
+        <item name="android:letterSpacing">.05</item>
+        <item name="font">@font/bodonimoda__bold</item>
+    </style>
+
+    <style name="oneLetterBold" parent="Raleway">
+        <item name="android:textSize">32sp</item>
+        <item name="android:fontWeight">800</item>
+        <item name="font">@font/raleway_bold</item>
+    </style>
+</resources>

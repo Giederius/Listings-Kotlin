@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         vm.subscribeWithAutoDispose(this) { _, newState ->
             when (val cmd = newState.command) {
 
+                else -> {}
             }
         }
     }

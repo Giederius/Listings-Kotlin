@@ -3,9 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/bg_rounded_rect_sm.xml" value="0.176" />
+        <entry key="app/src/main/res/drawable/bg_rounded_rect_sm_border.xml" value="0.176" />
+        <entry key="app/src/main/res/drawable/bg_rounded_rect_sm_borderless.xml" value="0.176" />
+        <entry key="app/src/main/res/drawable/bg_rounded_rectangle.xml" value="0.1795" />
+        <entry key="app/src/main/res/font-v26/raleway.xml" value="0.30132788559754853" />
+        <entry key="app/src/main/res/font/bodonimoda.xml" value="0.30132788559754853" />
+        <entry key="app/src/main/res/font/raleway.xml" value="0.30132788559754853" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.27783452502553624" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.40976201525991124" />
         <entry key="app/src/main/res/layout/fragment_splash.xml" value="0.27783452502553624" />
+        <entry key="app/src/main/res/layout/item_home_category.xml" value="0.26875" />
       </map>
     </option>
   </component>

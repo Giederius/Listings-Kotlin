@@ -14,10 +14,10 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        vm.transition(SplashState.Event.ViewCreated)
 
         binding.splashButton.setOnClickListener {
             vm.transition(SplashState.Event.TappedButton)
-//            navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
         }
         // todo create some sort of login check
     }
@@ -26,9 +26,9 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding
         vm.subscribeWithAutoDispose(viewLifecycleOwner) { _, newState ->
             when (newState.command) {
                 SplashState.Command.OpenHomeScreen -> {
-                    Log.d("GM1", "state")
                     navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
                 }
+                else -> {}
             }
         }
     }

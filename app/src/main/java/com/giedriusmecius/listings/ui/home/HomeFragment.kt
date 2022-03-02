@@ -22,6 +22,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
                 HomeState.Command.ChangeName -> {
                     binding.homeTitle.text = "THIS IS NEW HOME TITLE"
                 }
+                else -> {}
             }
         }
     }
