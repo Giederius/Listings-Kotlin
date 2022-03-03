@@ -21,6 +21,11 @@
         <item name="font">@font/bodonimoda__bold</item>
     </style>
 
+    <style name="H2" parent="Raleway">
+        <item name="android:textSize">32sp</item>
+        <item name="font">@font/raleway_bold</item>
+    </style>
+
     <style name="oneLetterBold" parent="Raleway">
         <item name="android:textSize">32sp</item>
         <item name="android:fontWeight">800</item>
