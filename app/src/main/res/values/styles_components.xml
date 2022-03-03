@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="homeTabLayoutStyle" parent="Widget.Design.TabLayout">
+        <item name="tabIndicator">@drawable/item_dot_selected</item>
+        <item name="tabIndicatorHeight">2dp</item>
+        <item name="tabSelectedTextColor">@color/neutralDarkest</item>
+        <item name="tabTextColor">@color/neutralDark</item>
+    </style>
+
+    <style name="homeTabStyle" parent="TextAppearance.Design.Tab">
+        <item name="font">@font/raleway_bold</item>
+    </style>
+</resources>
