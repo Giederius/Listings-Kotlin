@@ -3,4 +3,19 @@
     <string name="home_featured">Featured</string>
     <string name="home_latest">Latest</string>
     <string name="home_watchList">Watchlist</string>
+
+    // Common
+    <string name="common.size">Size</string>
+    <string name="common.edit">Edit</string>
+    <string name="common.save">Save</string>
+    <string name="common.addCard">Add card</string>
+    <string name="common.card.mastercard">Mastercard</string>
+    <string name="common.card.visa">Visa</string>
+
+    // Profile fragment
+    <string name="profile.ordersAndMessages">My orders and messages</string>
+    <string name="profile.myPreferences">My Preferences</string>
+    <string name="profile.mainDepartment">Main department</string>
+    <string name="profile.favoriteColor">Favorite color</string>
+    <string name="profile.paymentMethods">Payment methods</string>
 </resources>

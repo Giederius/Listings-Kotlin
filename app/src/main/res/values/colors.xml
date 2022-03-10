@@ -9,7 +9,15 @@
     <color name="white">#FFFFFFFF</color>
 
     // Added colors
-    <color name="neutralDarkest">#1a1a1c</color>
-    <color name="neutralDark">#6e6e70</color>
+    <color name="darkTextColor">#1a1a1c</color>
+    <color name="normalTextColor">#272728</color>
+    <color name="grayedOutTextColor">#6e6e70</color>
     <color name="neutralLight">#dbdbdb</color>
+
+    <color name="accentPurple">#614FE0</color>
+    <color name="warmPurple">#D2CEF6</color>
+    <color name="warmYellow">#FFF1DC</color>
+    <color name="warmGreen">#D7FAF4</color>
+    <color name="warmRed">#FEEFEF</color>
+
 </resources>

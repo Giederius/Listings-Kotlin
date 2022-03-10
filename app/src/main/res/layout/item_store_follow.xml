@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="74dp"
+    android:layout_marginHorizontal="24dp"
+    android:layout_marginTop="12dp">
+
+    <ImageView
+        android:id="@+id/followItemImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_shopping_bag"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/warmPurple" />
+
+    <TextView
+        android:id="@+id/storeName"
+        style="@style/RegularTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="Sustainable"
+        app:layout_constraintStart_toEndOf="@id/followItemImage"
+        app:layout_constraintTop_toTopOf="@id/followItemImage" />
+
+    <TextView
+        android:id="@+id/storeDescription"
+        style="@style/labelTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="Store"
+        app:layout_constraintBottom_toBottomOf="@id/followItemImage"
+        app:layout_constraintStart_toEndOf="@id/followItemImage" />
+
+    <TextView
+        android:id="@+id/followButton"
+        style="@style/H4.Bold"
+        android:background="@drawable/bg_rounded_rect_sm_border"
+        android:padding="10dp"
+        android:text="Unfollow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/followItemImage"
+        app:layout_constraintBottom_toBottomOf="@id/followItemImage"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
