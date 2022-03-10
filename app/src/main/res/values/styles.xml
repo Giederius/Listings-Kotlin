@@ -2,33 +2,85 @@
 <resources>
 
     <style name="BodoniModa">
-        <item name="android:textColor">@color/neutralDarkest</item>
-        <item name="android:textColorHint">@color/neutralDark</item>
+        <item name="android:textColor">@color/normalTextColor</item>
+        <item name="android:textColorHint">@color/grayedOutTextColor</item>
         <item name="android:fontFamily">@font/bodonimoda</item>
         <item name="fontStyle">normal</item>
+        <item name="android:textFontWeight">500</item>
     </style>
 
     <style name="Raleway">
-        <item name="android:textColor">@color/neutralDarkest</item>
-        <item name="android:textColorHint">@color/neutralDark</item>
+        <item name="android:textColor">@color/normalTextColor</item>
+        <item name="android:textColorHint">@color/grayedOutTextColor</item>
         <item name="android:fontFamily">@font/raleway</item>
         <item name="fontStyle">normal</item>
+        <item name="android:textFontWeight">500</item>
     </style>
 
     <style name="H1" parent="BodoniModa">
         <item name="android:textSize">48sp</item>
         <item name="android:letterSpacing">.05</item>
         <item name="font">@font/bodonimoda__bold</item>
+        <item name="android:textFontWeight">800</item>
     </style>
 
     <style name="H2" parent="Raleway">
         <item name="android:textSize">32sp</item>
         <item name="font">@font/raleway_bold</item>
+        <item name="android:textFontWeight">700</item>
     </style>
+
+    <style name="H2.Bold" parent="Raleway">
+        <item name="android:textSize">32sp</item>
+        <item name="font">@font/raleway_bold</item>
+        <item name="android:textFontWeight">800</item>
+    </style>
+
+    <style name="H4.Grey" parent="Raleway">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textColor">@color/grayedOutTextColor</item>
+    </style>
+
+    <style name="H4.Bold" parent="Raleway">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textFontWeight">800</item>
+        <item name="android:textColor">@color/darkTextColor</item>
+    </style>
+
+    <style name="BoldRegularText" parent="Raleway">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textFontWeight">700</item>
+        <item name="android:textColor">@color/darkTextColor</item>
+    </style>
+
+    <style name="RegularText" parent="Raleway">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textColor">@color/normalTextColor</item>
+    </style>
+
+    <style name="RegularTextGrayedOut" parent="Raleway">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textColor">@color/grayedOutTextColor</item>
+    </style>
+
+    <style name="RegularTitleText" parent="Raleway">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textColor">@color/normalTextColor</item>
+    </style>
+
+    <style name="labelTitleText" parent="Raleway">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textColor">@color/grayedOutTextColor</item>
+    </style>
+
 
     <style name="oneLetterBold" parent="Raleway">
         <item name="android:textSize">32sp</item>
-        <item name="android:fontWeight">800</item>
-        <item name="font">@font/raleway_bold</item>
+        <item name="android:textFontWeight">700</item>
     </style>
 </resources>

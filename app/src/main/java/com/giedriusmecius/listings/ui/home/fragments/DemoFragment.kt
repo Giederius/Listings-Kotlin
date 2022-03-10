@@ -12,7 +12,7 @@ class DemoFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("MANO","created, ${requireArguments().getString(TITLE)}")
+        Log.d("MANO", "created, ${requireArguments().getString(TITLE)}")
         with(binding) {
             demoTitle.text = requireArguments().getString(TITLE)
         }

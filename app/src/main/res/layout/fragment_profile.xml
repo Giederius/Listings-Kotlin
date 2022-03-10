@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:overScrollMode="always">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="20dp">
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/normalTextColor" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/profilePicture"
+            android:layout_width="103dp"
+            android:layout_height="103dp"
+            android:layout_marginTop="60dp"
+            android:src="@drawable/sample_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/circularShape" />
+
+        <TextView
+            android:id="@+id/userFullName"
+            style="@style/H2.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Ava Johnson"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profilePicture" />
+
+        <TextView
+            android:id="@+id/userHandle"
+            style="@style/H4.Grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="\@avajohnson"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userFullName" />
+
+        <TextView
+            android:id="@+id/followerCountButton"
+            style="@style/BoldRegularText"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_rounded_rect_sm_border"
+            android:padding="10dp"
+            android:text="10 Following"
+            app:layout_constraintEnd_toStartOf="@+id/settingsButton"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userHandle" />
+
+        <ImageButton
+            android:id="@+id/settingsButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/bg_rounded_rect_sm_borderless"
+            android:backgroundTint="@color/accentPurple"
+            android:src="@drawable/ic_settings"
+            app:layout_constraintBottom_toBottomOf="@id/followerCountButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/followerCountButton"
+            app:layout_constraintTop_toTopOf="@id/followerCountButton" />
+
+        <View
+            android:id="@+id/firstDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="32dp"
+            android:background="@color/neutralLight"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/followerCountButton" />
+
+        <TextView
+            android:id="@+id/orderAndMessagesTitle"
+            style="@style/BoldRegularText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/profile.ordersAndMessages"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/firstDivider" />
+
+        <ImageView
+            android:id="@+id/orderAndMessagesButton"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_messages"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/firstDivider"
+            app:tint="@color/darkTextColor" />
+
+        <View
+            android:id="@+id/secondDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="32dp"
+            android:background="@color/neutralLight"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/orderAndMessagesTitle" />
+
+        <TextView
+            android:id="@+id/myPreferencesTitle"
+            style="@style/RegularTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/profile.myPreferences"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/secondDivider" />
+
+        <TextView
+            android:id="@+id/userMainDepartmentTitle"
+            style="@style/RegularTextGrayedOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/profile.mainDepartment"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/myPreferencesTitle" />
+
+        <TextView
+            android:id="@+id/userMainDepartmentText"
+            style="@style/RegularText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="Women"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userMainDepartmentTitle" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/departmentIcon"
+            style="@style/BoldRegularText"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bg_rounded_rect_sm_border"
+            android:stateListAnimator="@null"
+            android:text="W"
+            app:layout_constraintBottom_toBottomOf="@id/userMainDepartmentText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/userMainDepartmentTitle" />
+
+        <TextView
+            android:id="@+id/userSizeTitle"
+            style="@style/RegularTextGrayedOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/common.size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userMainDepartmentText" />
+
+        <TextView
+            android:id="@+id/userSizeText"
+            style="@style/RegularText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="26 - S"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userSizeTitle" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/sizeIcon"
+            style="@style/BoldRegularText"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bg_rounded_rect_sm_border"
+            android:stateListAnimator="@null"
+            android:text="S"
+            app:layout_constraintBottom_toBottomOf="@id/userSizeText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/userSizeTitle" />
+
+        <TextView
+            android:id="@+id/userFavoriteColorTitle"
+            style="@style/RegularTextGrayedOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/profile.favoriteColor"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userSizeText" />
+
+        <TextView
+            android:id="@+id/userFavoriteColorText"
+            style="@style/RegularText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:text="Orange"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userFavoriteColorTitle" />
+
+        <ImageView
+            android:id="@+id/favoriteColorIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bg_rounded_rect_sm_border"
+            android:padding="16dp"
+            android:src="@drawable/item_dot_selected"
+            app:layout_constraintBottom_toBottomOf="@id/userFavoriteColorText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/userFavoriteColorTitle"
+            app:tint="@android:color/holo_orange_dark" />
+
+        <View
+            android:id="@+id/thirdDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="32dp"
+            android:background="@color/neutralLight"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userFavoriteColorText" />
+
+        <TextView
+            android:id="@+id/paymentMethodsTitle"
+            style="@style/RegularTitleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/profile.paymentMethods"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/thirdDivider" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/profilePaymentMethodRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/paymentMethodsTitle" />
+
+        <TextView
+            android:id="@+id/paymentMethodsEditButton"
+            style="@style/BoldRegularText"
+            android:layout_width="160dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_rounded_rect_sm_border"
+            android:gravity="center"
+            android:text="@string/common.edit"
+            app:layout_constraintEnd_toStartOf="@id/paymentMethodsAddCardButton"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profilePaymentMethodRecyclerView" />
+
+        <TextView
+            android:id="@+id/paymentMethodsAddCardButton"
+            style="@style/BoldRegularText"
+            android:layout_width="160dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/bg_rounded_rect_sm_border"
+            android:gravity="center"
+            android:text="@string/common.addCard"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/paymentMethodsEditButton"
+            app:layout_constraintTop_toBottomOf="@id/profilePaymentMethodRecyclerView" />
+
+        <View
+            android:id="@+id/fourthDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="32dp"
+            android:background="@color/neutralLight"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/paymentMethodsEditButton" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

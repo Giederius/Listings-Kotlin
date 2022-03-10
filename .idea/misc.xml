@@ -3,20 +3,30 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/bg_dialog_rounded_top.xml" value="0.2565" />
         <entry key="app/src/main/res/drawable/bg_rounded_rect_sm.xml" value="0.176" />
         <entry key="app/src/main/res/drawable/bg_rounded_rect_sm_border.xml" value="0.176" />
         <entry key="app/src/main/res/drawable/bg_rounded_rect_sm_borderless.xml" value="0.176" />
         <entry key="app/src/main/res/drawable/bg_rounded_rectangle.xml" value="0.1795" />
+        <entry key="app/src/main/res/drawable/ic_dialog_pill.xml" value="0.2565" />
+        <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/item_dot.xml" value="0.1335" />
+        <entry key="app/src/main/res/drawable/item_dot_selected.xml" value="0.196" />
+        <entry key="app/src/main/res/drawable/item_dot_selector.xml" value="0.196" />
         <entry key="app/src/main/res/drawable/item_dot_unselected.xml" value="0.1335" />
+        <entry key="app/src/main/res/drawable/item_payment_method_card.xml" value="0.1965" />
         <entry key="app/src/main/res/font-v26/raleway.xml" value="0.30132788559754853" />
         <entry key="app/src/main/res/font/bodonimoda.xml" value="0.30132788559754853" />
         <entry key="app/src/main/res/font/raleway.xml" value="0.30132788559754853" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/fragment_demo.xml" value="0.11875" />
+        <entry key="app/src/main/res/layout/dialog_profile_following_bottom_sheet.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/fragment_demo.xml" value="0.14293670654296875" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.40976201525991124" />
+        <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.4425925925925926" />
         <entry key="app/src/main/res/layout/fragment_splash.xml" value="0.27783452502553624" />
         <entry key="app/src/main/res/layout/item_home_category.xml" value="0.26875" />
+        <entry key="app/src/main/res/layout/item_payment_method_card.xml" value="0.3768518518518518" />
+        <entry key="app/src/main/res/layout/item_store_follow.xml" value="0.6314814814814815" />
       </map>
     </option>
   </component>
