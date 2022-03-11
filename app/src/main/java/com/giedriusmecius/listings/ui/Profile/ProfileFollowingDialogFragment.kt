@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.databinding.DialogProfileFollowingBottomSheetBinding
 import com.giedriusmecius.listings.ui.common.groupie.StoreFollowItem
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -14,6 +15,8 @@ class ProfileFollowingDialogFragment : BottomSheetDialogFragment() {
     private val groupieAdapter = GroupieAdapter()
     private var _binding: DialogProfileFollowingBottomSheetBinding? = null
     private val binding get() = _binding!!
+
+    override fun getTheme(): Int = R.style.AppBottomSheetDialogTheme
 
     override fun onCreateView(
         inflater: LayoutInflater,

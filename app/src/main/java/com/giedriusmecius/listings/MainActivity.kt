@@ -21,9 +21,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setFullscreenActivity() {
-        @Suppress("DEPRECATION")
-        window.decorView.rootView.systemUiVisibility =
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+//        @Suppress("DEPRECATION")
+//        window.decorView.rootView.systemUiVisibility =
+//            View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
     }
 
     private fun observeState() {

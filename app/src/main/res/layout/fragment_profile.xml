@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="32dp"
+    android:clipToPadding="false"
+    android:paddingBottom="32dp"
     android:overScrollMode="always">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -22,6 +23,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@color/normalTextColor" />
+
+        <com.giedriusmecius.listings.ui.views.ListingsButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:text="G"
+            app:layout_constraintStart_toEndOf="@id/close"
+            app:layout_constraintTop_toTopOf="@id/close"
+            />
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/profilePicture"
@@ -267,13 +276,14 @@
             android:layout_marginTop="24dp"
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/paymentMethodsTitle" />
 
         <TextView
             android:id="@+id/paymentMethodsEditButton"
             style="@style/BoldRegularText"
-            android:layout_width="160dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
@@ -281,14 +291,13 @@
             android:gravity="center"
             android:text="@string/common.edit"
             app:layout_constraintEnd_toStartOf="@id/paymentMethodsAddCardButton"
-            app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/profilePaymentMethodRecyclerView" />
 
         <TextView
             android:id="@+id/paymentMethodsAddCardButton"
             style="@style/BoldRegularText"
-            android:layout_width="160dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="24dp"
