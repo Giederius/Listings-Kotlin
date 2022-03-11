@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:layout_marginHorizontal="24dp">
+
+    <TextView
+        android:id="@+id/addressLine1"
+        style="@style/H4.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="3910 Crim Lane"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/addressLine2"
+        style="@style/H4.Grey.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Greendale County, Colorado"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addressLine1" />
+
+    <TextView
+        android:id="@+id/zipCodeTitle"
+        style="@style/H4.Grey.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/common.zipCode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/addressLine2" />
+
+    <TextView
+        android:id="@+id/userZipCode"
+        style="@style/H4.Grey.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/common.zipCode"
+        app:layout_constraintStart_toEndOf="@id/zipCodeTitle"
+        app:layout_constraintTop_toBottomOf="@id/addressLine2" />
+
+    <TextView
+        android:id="@+id/addressDescriptionTitle"
+        style="@style/labelTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ava Johnson - "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/zipCodeTitle" />
+
+    <TextView
+        android:id="@+id/addressDescriptionTag"
+        style="@style/labelTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Home"
+        app:layout_constraintStart_toEndOf="@id/addressDescriptionTitle"
+        app:layout_constraintTop_toBottomOf="@id/zipCodeTitle" />
+
+    <ImageView
+        android:id="@+id/addressItemMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_more_horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/addressDescriptionTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/addressLine1"
+        app:tint="@color/darkTextColor" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,11 +13,19 @@
     <color name="normalTextColor">#272728</color>
     <color name="grayedOutTextColor">#6e6e70</color>
     <color name="neutralLight">#dbdbdb</color>
+    <color name="highlightRed">#DF0707</color>
 
     <color name="accentPurple">#614FE0</color>
     <color name="warmPurple">#D2CEF6</color>
     <color name="warmYellow">#FFF1DC</color>
     <color name="warmGreen">#D7FAF4</color>
     <color name="warmRed">#FEEFEF</color>
+
+    <integer-array name="paymentTypeColors">
+        <item>@color/warmPurple</item>
+        <item>@color/warmGreen</item>
+        <item>@color/warmRed</item>
+        <item>@color/warmYellow</item>
+    </integer-array>
 
 </resources>
