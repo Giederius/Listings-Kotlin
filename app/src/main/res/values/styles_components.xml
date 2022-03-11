@@ -22,5 +22,9 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="BasePopUpMenu" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="android:background">@drawable/bg_rounded_rect_sm_borderless</item>
+    </style>
+
 
 </resources>

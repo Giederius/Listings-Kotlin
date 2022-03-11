@@ -1,6 +1,7 @@
 package com.giedriusmecius.listings.ui.common.groupie
 
 import android.view.View
+import coil.load
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.databinding.ItemStoreFollowBinding
 import com.xwray.groupie.viewbinding.BindableItem

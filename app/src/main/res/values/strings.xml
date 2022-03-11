@@ -11,6 +11,7 @@
     <string name="common.addCard">Add card</string>
     <string name="common.card.mastercard">Mastercard</string>
     <string name="common.card.visa">Visa</string>
+    <string name="common.zipCode">Zip Code</string>
 
     // Profile fragment
     <string name="profile.ordersAndMessages">My orders and messages</string>
@@ -18,4 +19,9 @@
     <string name="profile.mainDepartment">Main department</string>
     <string name="profile.favoriteColor">Favorite color</string>
     <string name="profile.paymentMethods">Payment methods</string>
+    <string name="profile.addresses">Addresses</string>
+    <string name="profile.addresses.addButton">Add address</string>
+    <string name="profile.addresses.editAddress">Edit address</string>
+    <string name="profile.addresses.deleteAddress">Delete address</string>
+
 </resources>

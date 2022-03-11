@@ -1,6 +1,7 @@
 package com.giedriusmecius.listings.ui.common.groupie
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.util.Log
 import android.view.View
 import coil.load
@@ -8,7 +9,7 @@ import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.databinding.ItemPaymentMethodCardBinding
 import com.xwray.groupie.viewbinding.BindableItem
 
-class PaymentMethodCardItem(val paymentType: PaymentType, val cardNumber: String) :
+data class PaymentMethodCardItem(private val paymentType: PaymentType, val cardNumber: String) :
     BindableItem<ItemPaymentMethodCardBinding>() {
     override fun getLayout(): Int = R.layout.item_payment_method_card
 
@@ -18,13 +19,12 @@ class PaymentMethodCardItem(val paymentType: PaymentType, val cardNumber: String
     @SuppressLint("ResourceAsColor")
     override fun bind(viewBinding: ItemPaymentMethodCardBinding, position: Int) {
         with(viewBinding) {
-            Log.d("MANO", paymentType.bgColor.toString())
-            paymenMethodCardContainer.setBackgroundColor(paymentType.bgColor)
+            paymentMethodCardContainer.setCardBackgroundColor(paymentType.bgColor)
             paymentMethodsCardImage.load(paymentType.cardImage)
             paymentMethodsCardType.text = paymentType.cardName
+            paymentMethodsCardNumber.text = cardNumber
         }
     }
-
 
     enum class PaymentType(val cardImage: Int, val cardName: String, val bgColor: Int) {
         VISA(R.drawable.icon_visa, "Visa", getRandomColor()),
@@ -33,8 +33,17 @@ class PaymentMethodCardItem(val paymentType: PaymentType, val cardNumber: String
 
 }
 
-fun getRandomColor(): Int {
-    val colorList =
-        arrayListOf(R.color.warmPurple, R.color.warmGreen, R.color.warmRed, R.color.warmYellow)
-    return colorList.random()
-}
+// todo fix this somehow ??
+fun getRandomColor(): Int = arrayListOf(
+    Color.parseColor("#FFF1DC"),
+    Color.parseColor("#D2CEF6"),
+    Color.parseColor("#D7FAF4"),
+    Color.parseColor("#FEEFEF"),
+).random()
+
+//arrayListOf(
+//R.color.warmPurple,
+//R.color.warmYellow,
+//R.color.warmRed,
+//R.color.warmGreen
+//)
