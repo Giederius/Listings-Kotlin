@@ -24,4 +24,8 @@
     <string name="profile.addresses.editAddress">Edit address</string>
     <string name="profile.addresses.deleteAddress">Delete address</string>
 
+    // Profile Drawers Fragment
+    <string name="profileDrawers.title">Drawers</string>
+    <string name="profileDrawers.filterSearch">Filter drawers</string>
+
 </resources>

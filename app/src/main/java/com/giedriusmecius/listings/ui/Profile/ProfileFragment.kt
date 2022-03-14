@@ -2,9 +2,7 @@ package com.giedriusmecius.listings.ui.Profile
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giedriusmecius.listings.MainActivity
@@ -39,6 +37,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
 
     private fun setupUI() {
         with(binding) {
+            close.setOnClickListener {
+                navigateUp()
+            }
             followerCountButton.setOnClickListener {
                 bottomSheet.show(
                     (activity as MainActivity).supportFragmentManager,

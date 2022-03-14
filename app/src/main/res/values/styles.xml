@@ -17,10 +17,9 @@
         <item name="android:textFontWeight">500</item>
     </style>
 
-    <style name="H1" parent="BodoniModa">
+    <style name="H1" parent="Raleway">
         <item name="android:textSize">48sp</item>
         <item name="android:letterSpacing">.05</item>
-        <item name="font">@font/bodonimoda__bold</item>
         <item name="android:textFontWeight">800</item>
     </style>
 

@@ -22,6 +22,13 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="roundedCornerShape">
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+
     <style name="BasePopUpMenu" parent="@style/Widget.AppCompat.PopupMenu">
         <item name="background">@drawable/bg_rounded_rect_sm_borderless</item>
         <item name="backgroundColor">@color/warmYellow</item>
@@ -36,5 +43,10 @@
         <item name="android:textColor">@color/highlightRed</item>
     </style>
 
+    <style name="ListingsSearchField" parent="Widget.AppCompat.EditText">
+        <item name="background">@drawable/bg_rounded_rect_sm_borderless</item>
+        <item name="backgroundColor">@color/grayedOutTextColor</item>
+        <item name="android:drawableEnd">@drawable/ic_search</item>
+    </style>
 
 </resources>

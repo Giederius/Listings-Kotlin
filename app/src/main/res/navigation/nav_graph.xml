@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/profileFragment">
+    app:startDestination="@id/profileDrawerFragment">
 
     <fragment
         android:id="@+id/splashFragment"
@@ -25,7 +25,17 @@
         android:id="@+id/profileFragment"
         android:name="com.giedriusmecius.listings.ui.Profile.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile"/>
+        tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/profileDrawerFragment"
+        android:name="com.giedriusmecius.listings.ui.ProfileDrawers.ProfileDrawersFragment"
+        android:label="ProfileDrawerFragment"
+        tools:layout="@layout/fragment_profile_drawers" >
+        <action
+            android:id="@+id/action_profileDrawerFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
 
 
 </navigation>
