@@ -1,13 +1,15 @@
 package com.giedriusmecius.listings.ui.common.groupie
 
+import android.net.Uri
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giedriusmecius.listings.R
+import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.databinding.ItemProfileDrawerBinding
 import com.xwray.groupie.GroupieAdapter
 import com.xwray.groupie.viewbinding.BindableItem
 
-class ProfileDrawerItem(val title: String, val count: Int, val img: Int) :
+class ProfileDrawerItem(val title: String, val imgList: List<Product>) :
     BindableItem<ItemProfileDrawerBinding>() {
     override fun getLayout(): Int = R.layout.item_profile_drawer
 
@@ -23,15 +25,9 @@ class ProfileDrawerItem(val title: String, val count: Int, val img: Int) :
                 //layout params del to gravity title
                 adapter = groupie
             }
-            groupie.add(ProfileDrawerTitleItem(title, count))
-            groupie.addAll(
-                arrayListOf(
-                    ProfileDrawerImageItem(img),
-                    ProfileDrawerImageItem(img),
-                    ProfileDrawerImageItem(img),
-                    ProfileDrawerImageItem(img)
-                )
-            )
+            val listOfImageItems = imgList.map { ProfileDrawerImageItem(it.image) }
+            groupie.add(ProfileDrawerTitleItem(title, imgList.size))
+            groupie.addAll(listOfImageItems)
         }
     }
 }

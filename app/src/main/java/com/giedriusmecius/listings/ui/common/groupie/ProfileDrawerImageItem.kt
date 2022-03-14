@@ -7,7 +7,7 @@ import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.databinding.ItemProfileDrawerImageBinding
 import com.xwray.groupie.viewbinding.BindableItem
 
-class ProfileDrawerImageItem(val img: Int) : BindableItem<ItemProfileDrawerImageBinding>() {
+class ProfileDrawerImageItem(val img: String) : BindableItem<ItemProfileDrawerImageBinding>() {
     override fun getLayout(): Int = R.layout.item_profile_drawer_image
 
     override fun initializeViewBinding(view: View): ItemProfileDrawerImageBinding =

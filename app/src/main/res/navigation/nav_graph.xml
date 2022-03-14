@@ -23,13 +23,13 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.giedriusmecius.listings.ui.Profile.ProfileFragment"
+        android:name="com.giedriusmecius.listings.ui.profile.ProfileFragment"
         android:label="ProfileFragment"
         tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/profileDrawerFragment"
-        android:name="com.giedriusmecius.listings.ui.ProfileDrawers.ProfileDrawersFragment"
+        android:name="com.giedriusmecius.listings.ui.profileDrawers.ProfileDrawersFragment"
         android:label="ProfileDrawerFragment"
         tools:layout="@layout/fragment_profile_drawers" >
         <action

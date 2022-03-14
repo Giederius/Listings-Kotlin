@@ -1,4 +1,4 @@
-package com.giedriusmecius.listings.ui.Profile
+package com.giedriusmecius.listings.ui.profile
 
 import android.os.Bundle
 import android.view.LayoutInflater
