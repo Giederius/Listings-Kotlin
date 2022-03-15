@@ -12,6 +12,8 @@
     <string name="common.card.mastercard">Mastercard</string>
     <string name="common.card.visa">Visa</string>
     <string name="common.zipCode">Zip Code</string>
+    <string name="common.sortBy">Sort by</string>
+    <string name="common.layout">Layout</string>
 
     // Profile fragment
     <string name="profile.ordersAndMessages">My orders and messages</string>
@@ -27,5 +29,8 @@
     // Profile Drawers Fragment
     <string name="profileDrawers.title">Drawers</string>
     <string name="profileDrawers.filterSearch">Filter drawers</string>
+    <string name="profileDrawers.adjustDialog.Adjust">Adjust</string>
+    <string name="profileDrawers.adjustDialog.LastSavedTo">Last saved to</string>
+    <string name="profileDrawers.adjustDialog.alphabetically">Alphabetically (A - Z)</string>
 
 </resources>

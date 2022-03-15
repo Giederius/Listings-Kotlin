@@ -61,6 +61,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/profileDrawersTitle" />
 
+        <View
+            android:id="@+id/profileSearchButton"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/ic_search"
+            app:layout_constraintEnd_toEndOf="@id/profileSearchField"
+            app:layout_constraintTop_toTopOf="@id/profileSearchField"
+            app:layout_constraintBottom_toBottomOf="@id/profileSearchField" />
+
         <com.giedriusmecius.listings.ui.views.ListingsButton
             android:id="@+id/adjustDrawersButton"
             android:layout_width="48dp"

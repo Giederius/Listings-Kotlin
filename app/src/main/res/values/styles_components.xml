@@ -46,7 +46,11 @@
     <style name="ListingsSearchField" parent="Widget.AppCompat.EditText">
         <item name="background">@drawable/bg_rounded_rect_sm_borderless</item>
         <item name="backgroundColor">@color/grayedOutTextColor</item>
-        <item name="android:drawableEnd">@drawable/ic_search</item>
+    </style>
+
+    <style name="AppRadioButton">
+        <item name="android:buttonStyle">@drawable/radio_button_selector</item>
+        <item name="background">@drawable/bg_radio_button_selector</item>
     </style>
 
 </resources>

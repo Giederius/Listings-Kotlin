@@ -17,7 +17,7 @@ import com.xwray.groupie.GroupieAdapter
 class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
 
     private val vm by viewModels<ProfileViewModel>()
-    val bottomSheet = ProfileFollowingDialogFragment()
+    private val bottomSheet = ProfileFollowingDialogFragment()
     private val paymentMethodAdapter = GroupieAdapter()
     private val addressAdapter = GroupieAdapter()
 

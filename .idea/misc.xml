@@ -6,11 +6,15 @@
         <entry key="app/src/main/res/drawable/bg_dialog_rounded_top.xml" value="0.2565" />
         <entry key="app/src/main/res/drawable/bg_listings_button.xml" value="0.167" />
         <entry key="app/src/main/res/drawable/bg_listings_button_selected.xml" value="0.167" />
+        <entry key="app/src/main/res/drawable/bg_radio_button_selected.xml" value="0.1335" />
+        <entry key="app/src/main/res/drawable/bg_radio_button_selector.xml" value="0.167" />
         <entry key="app/src/main/res/drawable/bg_rounded_rect_sm.xml" value="0.176" />
         <entry key="app/src/main/res/drawable/bg_rounded_rect_sm_border.xml" value="0.176" />
         <entry key="app/src/main/res/drawable/bg_rounded_rect_sm_borderless.xml" value="0.176" />
         <entry key="app/src/main/res/drawable/bg_rounded_rectangle.xml" value="0.1795" />
         <entry key="app/src/main/res/drawable/ic_dialog_pill.xml" value="0.2565" />
+        <entry key="app/src/main/res/drawable/ic_layout_horizontal.xml" value="0.167" />
+        <entry key="app/src/main/res/drawable/ic_layout_list.xml" value="0.167" />
         <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/item_dot.xml" value="0.1335" />
         <entry key="app/src/main/res/drawable/item_dot_selected.xml" value="0.196" />
@@ -18,10 +22,13 @@
         <entry key="app/src/main/res/drawable/item_dot_unselected.xml" value="0.1335" />
         <entry key="app/src/main/res/drawable/item_payment_method_card.xml" value="0.1965" />
         <entry key="app/src/main/res/drawable/listings_button_selector.xml" value="0.167" />
+        <entry key="app/src/main/res/drawable/radio_button_selector.xml" value="0.167" />
         <entry key="app/src/main/res/font-v26/raleway.xml" value="0.30132788559754853" />
         <entry key="app/src/main/res/font/bodonimoda.xml" value="0.30132788559754853" />
         <entry key="app/src/main/res/font/raleway.xml" value="0.30132788559754853" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/dialog_profile_add_card.xml" value="0.2635342185903984" />
+        <entry key="app/src/main/res/layout/dialog_profile_drawers_adjust.xml" value="0.28030090332031254" />
         <entry key="app/src/main/res/layout/dialog_profile_following_bottom_sheet.xml" value="0.335" />
         <entry key="app/src/main/res/layout/fragment_demo.xml" value="0.14293670654296875" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.40976201525991124" />
