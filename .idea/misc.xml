@@ -14,6 +14,8 @@
         <entry key="app/src/main/res/drawable/bg_rounded_rectangle.xml" value="0.1795" />
         <entry key="app/src/main/res/drawable/ic_dialog_pill.xml" value="0.2565" />
         <entry key="app/src/main/res/drawable/ic_layout_horizontal.xml" value="0.167" />
+        <entry key="app/src/main/res/drawable/ic_layout_horizontal_checked.xml" value="0.1825" />
+        <entry key="app/src/main/res/drawable/ic_layout_horizontal_unchecked.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_layout_list.xml" value="0.167" />
         <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/item_dot.xml" value="0.1335" />
@@ -22,6 +24,7 @@
         <entry key="app/src/main/res/drawable/item_dot_unselected.xml" value="0.1335" />
         <entry key="app/src/main/res/drawable/item_payment_method_card.xml" value="0.1965" />
         <entry key="app/src/main/res/drawable/listings_button_selector.xml" value="0.167" />
+        <entry key="app/src/main/res/drawable/radio_button_horizontal_layout.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/radio_button_selector.xml" value="0.167" />
         <entry key="app/src/main/res/font-v26/raleway.xml" value="0.30132788559754853" />
         <entry key="app/src/main/res/font/bodonimoda.xml" value="0.30132788559754853" />

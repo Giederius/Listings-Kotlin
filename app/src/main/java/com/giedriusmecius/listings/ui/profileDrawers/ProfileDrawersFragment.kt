@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.View
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giedriusmecius.listings.MainActivity
 import com.giedriusmecius.listings.R
@@ -12,7 +13,6 @@ import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.databinding.FragmentProfileDrawersBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerItem
-import com.giedriusmecius.listings.ui.profile.ProfileFollowingDialogFragment
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import com.xwray.groupie.GroupieAdapter
 
@@ -32,7 +32,9 @@ class ProfileDrawersFragment :
         super.onViewCreated(view, savedInstanceState)
         vm.transition(ProfileDrawersState.Event.ViewCreated)
         setupUI()
+        listenForAdjustDialogAction()
     }
+
 
     override fun onDestroy() {
         super.onDestroy()
@@ -54,6 +56,19 @@ class ProfileDrawersFragment :
                         ""
                     )
                 }
+                // todo there must be a better way to do this
+                ProfileDrawersState.Command.ChangeLayoutHorizontal -> {
+                    binding.profileDrawerRecyclerView.layoutManager =
+                        LinearLayoutManager(context)
+                }
+                ProfileDrawersState.Command.ChangeLayoutGrid -> {
+                    binding.profileDrawerRecyclerView.layoutManager = GridLayoutManager(context, 2)
+                    // todo create new items.
+                }
+                ProfileDrawersState.Command.ChangeLayoutList -> {
+                    binding.profileDrawerRecyclerView.layoutManager = LinearLayoutManager(context)
+                }
+                // todo layout adjustment.
                 else -> {}
             }
         }
@@ -167,5 +182,26 @@ class ProfileDrawersFragment :
                 vm.transition(ProfileDrawersState.Event.TappedAdjustDrawers)
             }
         }
+    }
+
+    private fun listenForAdjustDialogAction() {
+        val layoutListener =
+            object : ProfileDrawersAdjustDialogFragment.OnLayoutSelectedListener {
+                override fun onLayoutSelected(action: ProfileDrawersAdjustDialogFragment.AdjustDialogActions) {
+                    when (action) {
+                        ProfileDrawersAdjustDialogFragment.AdjustDialogActions.HORIZONTAL -> {
+                            vm.transition(ProfileDrawersState.Event.TappedHorizontalLayout)
+                        }
+                        ProfileDrawersAdjustDialogFragment.AdjustDialogActions.GRID -> {
+                            vm.transition(ProfileDrawersState.Event.TappedGridLayout)
+                        }
+                        ProfileDrawersAdjustDialogFragment.AdjustDialogActions.LIST -> {
+                            vm.transition(ProfileDrawersState.Event.TappedListLayout)
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        adjustSheet.setOnLayoutSelectedListener(layoutListener)
     }
 }

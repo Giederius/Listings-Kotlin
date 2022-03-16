@@ -12,6 +12,12 @@ class ProfileDrawersAdjustDialogFragment : BottomSheetDialogFragment() {
     private var _binding: DialogProfileDrawersAdjustBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var listener: OnLayoutSelectedListener
+
+    fun setOnLayoutSelectedListener(listener: OnLayoutSelectedListener) {
+        this.listener = listener
+    }
+
     override fun getTheme(): Int = R.style.AppBottomSheetDialogTheme
 
     override fun onCreateView(
@@ -27,5 +33,28 @@ class ProfileDrawersAdjustDialogFragment : BottomSheetDialogFragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding = null
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        with(binding) {
+            horizontal.setOnClickListener {
+                listener.onLayoutSelected(AdjustDialogActions.HORIZONTAL)
+            }
+            grid.setOnClickListener {
+                listener.onLayoutSelected(AdjustDialogActions.GRID)
+            }
+            list.setOnClickListener {
+                listener.onLayoutSelected(AdjustDialogActions.LIST)
+            }
+        }
+    }
+
+    enum class AdjustDialogActions {
+        LAST_SAVED, ALPHABETICALLY, HORIZONTAL, GRID, LIST
+    }
+
+    interface OnLayoutSelectedListener {
+        fun onLayoutSelected(action: AdjustDialogActions)
     }
 }

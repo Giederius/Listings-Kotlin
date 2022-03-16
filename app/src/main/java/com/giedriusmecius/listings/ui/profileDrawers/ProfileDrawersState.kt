@@ -14,6 +14,9 @@ data class ProfileDrawersState(
         data class ReceivedProducts(val data: List<Product>) : Event()
         data class TypedInSearch(val query: String) : Event()
         object TappedAdjustDrawers : Event()
+        object TappedHorizontalLayout : Event()
+        object TappedGridLayout : Event()
+        object TappedListLayout : Event()
     }
 
     sealed class Request {
@@ -24,6 +27,9 @@ data class ProfileDrawersState(
         data class DisplayData(val data: List<Product>) : Command()
         data class FilterSearch(val query: String) : Command()
         object OpenAdjustDrawers : Command()
+        object ChangeLayoutHorizontal : Command()
+        object ChangeLayoutGrid : Command()
+        object ChangeLayoutList : Command()
     }
 
     override fun reduce(event: Event): ProfileDrawersState {
@@ -35,6 +41,9 @@ data class ProfileDrawersState(
             )
             is Event.TypedInSearch -> copy(command = Command.FilterSearch(event.query))
             Event.TappedAdjustDrawers -> copy(command = Command.OpenAdjustDrawers)
+            Event.TappedHorizontalLayout -> copy(command = Command.ChangeLayoutHorizontal)
+            Event.TappedGridLayout -> copy(command = Command.ChangeLayoutGrid)
+            Event.TappedListLayout -> copy(command = Command.ChangeLayoutList)
             else -> copy()
         }
     }

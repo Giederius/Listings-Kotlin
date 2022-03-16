@@ -48,9 +48,13 @@
         <item name="backgroundColor">@color/grayedOutTextColor</item>
     </style>
 
-    <style name="AppRadioButton">
-        <item name="android:buttonStyle">@drawable/radio_button_selector</item>
-        <item name="background">@drawable/bg_radio_button_selector</item>
+    <style name="AppRadioButton" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:button">@android:color/transparent</item>
+        <item name="android:background">@drawable/bg_radio_button_selector</item>
+        <item name="android:drawableEnd">@drawable/radio_button_selector</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/normalTextColor</item>
+        <item name="rippleColor">@android:color/transparent</item>
     </style>
 
 </resources>

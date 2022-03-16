@@ -56,21 +56,17 @@
             app:layout_constraintTop_toBottomOf="@id/adjustDrawerSortBy">
 
             <RadioButton
+                style="@style/AppRadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_radio_button_selector"
                 android:checked="true"
-
-                android:drawableEnd="@drawable/bg_radio_button_selector"
                 android:text="@string/profileDrawers.adjustDialog.LastSavedTo" />
 
             <RadioButton
+                style="@style/AppRadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_radio_button_selector"
-                android:drawableEnd="@drawable/bg_radio_button_selector"
                 android:text="@string/profileDrawers.adjustDialog.alphabetically" />
-
         </RadioGroup>
 
         <View
@@ -94,13 +90,44 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider" />
 
+        <RadioGroup
+            android:id="@+id/layoutRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/adjustDrawerLayout">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_radio_button_selector"
+                android:button="@drawable/radio_button_horizontal_layout"
+                android:checked="false" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="48dp" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="48dp" />
+        </RadioGroup>
+
         <ImageView
             android:id="@+id/horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
-            android:src="@drawable/ic_layout_horizontal"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/bg_radio_button_selector"
+            android:padding="12dp"
+            android:src="@drawable/radio_button_horizontal_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/grid"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toStartOf="parent"
@@ -108,22 +135,30 @@
 
         <ImageView
             android:id="@+id/grid"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/bg_radio_button_selector"
+            android:padding="12dp"
             android:src="@drawable/ic_layout_grid"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/list"
             app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toEndOf="@id/grid"
+            app:layout_constraintStart_toEndOf="@id/horizontal"
             app:layout_constraintTop_toBottomOf="@id/adjustDrawerLayout" />
-
 
         <ImageView
             android:id="@+id/list"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/bg_radio_button_selector"
+            android:padding="16dp"
             android:src="@drawable/ic_layout_list"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintStart_toEndOf="@id/grid"
