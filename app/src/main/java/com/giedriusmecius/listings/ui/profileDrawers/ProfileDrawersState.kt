@@ -6,7 +6,8 @@ import com.giedriusmecius.listings.utils.state.State
 data class ProfileDrawersState(
     val request: Request? = null,
     val command: Command? = null,
-    val data: List<Product>? = null
+    val data: List<Product>? = null,
+    val isLoading: Boolean = true
 ) :
     State<ProfileDrawersState, ProfileDrawersState.Event> {
     sealed class Event {
@@ -34,10 +35,11 @@ data class ProfileDrawersState(
 
     override fun reduce(event: Event): ProfileDrawersState {
         return when (event) {
-            Event.ViewCreated -> copy(request = Request.FetchProducts)
+            Event.ViewCreated -> copy(request = Request.FetchProducts, isLoading = true)
             is Event.ReceivedProducts -> copy(
                 command = Command.DisplayData(event.data),
-                data = event.data
+                data = event.data,
+                isLoading = false
             )
             is Event.TypedInSearch -> copy(command = Command.FilterSearch(event.query))
             Event.TappedAdjustDrawers -> copy(command = Command.OpenAdjustDrawers)

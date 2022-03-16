@@ -3,6 +3,7 @@ package com.giedriusmecius.listings.ui.profileDrawers
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -12,7 +13,9 @@ import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.databinding.FragmentProfileDrawersBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
+import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerGridItem
 import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerItem
+import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerListItem
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import com.xwray.groupie.GroupieAdapter
 
@@ -43,6 +46,12 @@ class ProfileDrawersFragment :
 
     override fun observeState() {
         vm.subscribeWithAutoDispose(this) { oldState, newState ->
+            if( oldState != newState){
+                with(binding){
+                    Log.d("MANO","${oldState?.isLoading} ${newState.isLoading}")
+                    profileDrawersProgressBar.isGone = !newState.isLoading
+                }
+            }
             when (val cmd = newState.command) {
                 is ProfileDrawersState.Command.DisplayData -> {
                     displayData(cmd.data)
@@ -60,13 +69,56 @@ class ProfileDrawersFragment :
                 ProfileDrawersState.Command.ChangeLayoutHorizontal -> {
                     binding.profileDrawerRecyclerView.layoutManager =
                         LinearLayoutManager(context)
+                    groupie.clear()
+                    groupie.addAll(
+                        arrayListOf(
+                            ProfileDrawerItem("Electronics", electronicsList),
+                            ProfileDrawerItem("Jewelry", jewelryList),
+                            ProfileDrawerItem("Men\'s clothing", mensClothingList),
+                            ProfileDrawerItem("Women\'s clothing", womensClothignList),
+                        )
+                    )
                 }
                 ProfileDrawersState.Command.ChangeLayoutGrid -> {
                     binding.profileDrawerRecyclerView.layoutManager = GridLayoutManager(context, 2)
-                    // todo create new items.
+                    groupie.clear()
+                    groupie.addAll(
+                        arrayListOf(
+                            ProfileDrawerGridItem("Electronics", electronicsList),
+                            ProfileDrawerGridItem("Jewelry", jewelryList),
+                            ProfileDrawerGridItem("Men\'s clothing", mensClothingList),
+                            ProfileDrawerGridItem("Women\'s clothing", womensClothignList),
+                        )
+                    )
+
                 }
                 ProfileDrawersState.Command.ChangeLayoutList -> {
+                    groupie.clear()
                     binding.profileDrawerRecyclerView.layoutManager = LinearLayoutManager(context)
+                    groupie.addAll(
+                        arrayListOf(
+                            ProfileDrawerListItem(
+                                "Electronics",
+                                electronicsList.size,
+                                electronicsList[0].image
+                            ),
+                            ProfileDrawerListItem(
+                                "Jewelry",
+                                jewelryList.size,
+                                jewelryList[0].image
+                            ),
+                            ProfileDrawerListItem(
+                                "Men\'s clothing",
+                                mensClothingList.size,
+                                mensClothingList[0].image
+                            ),
+                            ProfileDrawerListItem(
+                                "Women\'s clothing",
+                                womensClothignList.size,
+                                womensClothignList[0].image
+                            ),
+                        )
+                    )
                 }
                 // todo layout adjustment.
                 else -> {}

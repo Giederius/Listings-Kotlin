@@ -38,14 +38,18 @@ class ProfileDrawersAdjustDialogFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         with(binding) {
-            horizontal.setOnClickListener {
+            toggleButtonGroup.check(0)
+            horizontalLayout.setOnClickListener {
                 listener.onLayoutSelected(AdjustDialogActions.HORIZONTAL)
+                dismiss()
             }
-            grid.setOnClickListener {
+            gridLayout.setOnClickListener {
                 listener.onLayoutSelected(AdjustDialogActions.GRID)
+                dismiss()
             }
-            list.setOnClickListener {
+            listLayout.setOnClickListener {
                 listener.onLayoutSelected(AdjustDialogActions.LIST)
+                dismiss()
             }
         }
     }

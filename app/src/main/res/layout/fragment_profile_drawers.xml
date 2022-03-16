@@ -106,5 +106,15 @@
             app:layout_constraintTop_toBottomOf="@id/profileSearchField"
             tools:listitem="@layout/item_profile_drawer" />
 
+        <ProgressBar
+            android:id="@+id/profileDrawersProgressBar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:visibility="visible"
+            android:layout_marginTop="150dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileSearchField"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

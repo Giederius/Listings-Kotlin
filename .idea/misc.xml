@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/drawable/bg_rounded_rect_sm_border.xml" value="0.176" />
         <entry key="app/src/main/res/drawable/bg_rounded_rect_sm_borderless.xml" value="0.176" />
         <entry key="app/src/main/res/drawable/bg_rounded_rectangle.xml" value="0.1795" />
+        <entry key="app/src/main/res/drawable/bg_toggle_button_selector.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/ic_dialog_pill.xml" value="0.2565" />
         <entry key="app/src/main/res/drawable/ic_layout_horizontal.xml" value="0.167" />
         <entry key="app/src/main/res/drawable/ic_layout_horizontal_checked.xml" value="0.1825" />
@@ -36,13 +37,15 @@
         <entry key="app/src/main/res/layout/fragment_demo.xml" value="0.14293670654296875" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.40976201525991124" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.2764227642276423" />
-        <entry key="app/src/main/res/layout/fragment_profile_drawers.xml" value="0.2635342185903984" />
+        <entry key="app/src/main/res/layout/fragment_profile_drawers.xml" value="0.1017478152309613" />
         <entry key="app/src/main/res/layout/fragment_splash.xml" value="0.27783452502553624" />
         <entry key="app/src/main/res/layout/item_home_category.xml" value="0.26875" />
         <entry key="app/src/main/res/layout/item_payment_method_card.xml" value="0.55" />
         <entry key="app/src/main/res/layout/item_profile_address.xml" value="0.3768518518518518" />
         <entry key="app/src/main/res/layout/item_profile_drawer.xml" value="0.2900390625" />
+        <entry key="app/src/main/res/layout/item_profile_drawer_grid.xml" value="0.26875" />
         <entry key="app/src/main/res/layout/item_profile_drawer_image.xml" value="0.44527180989583337" />
+        <entry key="app/src/main/res/layout/item_profile_drawer_list.xml" value="0.6491409301757811" />
         <entry key="app/src/main/res/layout/item_profile_drawer_title.xml" value="0.12864583333333332" />
         <entry key="app/src/main/res/layout/item_store_follow.xml" value="0.6314814814814815" />
         <entry key="app/src/main/res/layout/menu_address_item_menu.xml" value="0.3768518518518518" />
