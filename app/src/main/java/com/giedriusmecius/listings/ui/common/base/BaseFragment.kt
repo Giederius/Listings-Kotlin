@@ -1,6 +1,7 @@
 package com.giedriusmecius.listings.ui.common.base
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,7 +44,13 @@ abstract class BaseFragment<VB : ViewBinding>(
     open fun observeState() {}
 
     fun navigate(directions: NavDirections) {
-        findNavController().navigate(directions)
+        try {
+            findNavController().navigate(directions)
+        } catch (e: IllegalArgumentException) {
+            Log.d("errorArgument", e.localizedMessage)
+        } catch (e: IllegalStateException) {
+            Log.d("errorState", e.localizedMessage)
+        }
     }
 
     fun navigateUp() {

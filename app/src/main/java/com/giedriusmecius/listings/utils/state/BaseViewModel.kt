@@ -1,6 +1,5 @@
 package com.giedriusmecius.listings.utils.state
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Job
 

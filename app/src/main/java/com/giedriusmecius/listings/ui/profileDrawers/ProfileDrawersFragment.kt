@@ -8,7 +8,6 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.giedriusmecius.listings.MainActivity
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.databinding.FragmentProfileDrawersBinding
@@ -16,6 +15,8 @@ import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerGridItem
 import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerItem
 import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerListItem
+import com.giedriusmecius.listings.ui.profile.ProfileFragment
+import com.giedriusmecius.listings.utils.extensions.getNavigationResult
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import com.xwray.groupie.GroupieAdapter
 
@@ -29,13 +30,22 @@ class ProfileDrawersFragment :
     private var mensClothingList = mutableListOf<Product>()
     private var womensClothignList = mutableListOf<Product>()
 
-    private val adjustSheet = ProfileDrawersAdjustDialogFragment()
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vm.transition(ProfileDrawersState.Event.ViewCreated)
         setupUI()
-        listenForAdjustDialogAction()
+//        listenForAdjustDialogAction()
+        listenForAdjustDialogResult()
+        listenForProfileFragmentResult()
+    }
+
+    private fun listenForProfileFragmentResult() {
+        getNavigationResult<String>(
+            R.id.profileDrawerFragment,
+            ProfileFragment.RESULT_KEY
+        ) {
+            Log.d("MANOPROFILIO", it)
+        }
     }
 
 
@@ -46,9 +56,8 @@ class ProfileDrawersFragment :
 
     override fun observeState() {
         vm.subscribeWithAutoDispose(this) { oldState, newState ->
-            if( oldState != newState){
-                with(binding){
-                    Log.d("MANO","${oldState?.isLoading} ${newState.isLoading}")
+            if (oldState != newState) {
+                with(binding) {
                     profileDrawersProgressBar.isGone = !newState.isLoading
                 }
             }
@@ -60,10 +69,7 @@ class ProfileDrawersFragment :
                     newState.data?.let { handleSearch(cmd.query, it) }
                 }
                 ProfileDrawersState.Command.OpenAdjustDrawers -> {
-                    adjustSheet.show(
-                        (activity as MainActivity).supportFragmentManager,
-                        ""
-                    )
+                    navigate(ProfileDrawersFragmentDirections.profileDrawerFragmentToProfileAdjustDialogFragment())
                 }
                 // todo there must be a better way to do this
                 ProfileDrawersState.Command.ChangeLayoutHorizontal -> {
@@ -236,24 +242,27 @@ class ProfileDrawersFragment :
         }
     }
 
-    private fun listenForAdjustDialogAction() {
-        val layoutListener =
-            object : ProfileDrawersAdjustDialogFragment.OnLayoutSelectedListener {
-                override fun onLayoutSelected(action: ProfileDrawersAdjustDialogFragment.AdjustDialogActions) {
-                    when (action) {
-                        ProfileDrawersAdjustDialogFragment.AdjustDialogActions.HORIZONTAL -> {
-                            vm.transition(ProfileDrawersState.Event.TappedHorizontalLayout)
-                        }
-                        ProfileDrawersAdjustDialogFragment.AdjustDialogActions.GRID -> {
-                            vm.transition(ProfileDrawersState.Event.TappedGridLayout)
-                        }
-                        ProfileDrawersAdjustDialogFragment.AdjustDialogActions.LIST -> {
-                            vm.transition(ProfileDrawersState.Event.TappedListLayout)
-                        }
-                        else -> {}
-                    }
-                }
-            }
-        adjustSheet.setOnLayoutSelectedListener(layoutListener)
+    private fun listenForAdjustDialogResult() {
+        getNavigationResult<ProfileDrawersAdjustDialogFragment.AdjustDialogActions>(
+            R.id.profileDrawerFragment,
+            ProfileDrawersAdjustDialogFragment.RESULT_KEY
+        ) {
+            Log.d("MANO", "$it")
+//            when (it) {
+//                ProfileDrawersAdjustDialogFragment.AdjustDialogActions.HORIZONTAL -> {
+//                    Log.d("MANO", "HORIZONATL")
+//                    vm.transition(ProfileDrawersState.Event.TappedHorizontalLayout)
+//                }
+//                ProfileDrawersAdjustDialogFragment.AdjustDialogActions.GRID -> {
+//                    Log.d("MANO", "GRID")
+//                    vm.transition(ProfileDrawersState.Event.TappedGridLayout)
+//                }
+//                ProfileDrawersAdjustDialogFragment.AdjustDialogActions.LIST -> {
+//                    Log.d("MANO", "LIST")
+//                    vm.transition(ProfileDrawersState.Event.TappedListLayout)
+//                }
+//                else -> {}
+//            }
+        }
     }
 }

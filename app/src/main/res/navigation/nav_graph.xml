@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/profileDrawerFragment">
+    app:startDestination="@id/profileFragment">
 
     <fragment
         android:id="@+id/splashFragment"
@@ -25,21 +25,46 @@
         android:id="@+id/profileFragment"
         android:name="com.giedriusmecius.listings.ui.profile.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/profileFragment_to_profileFollowingDialog"
+            app:destination="@id/profileFollowingDialogFragment" />
+        <action
+            android:id="@+id/profileFragment_to_addCardDialog"
+            app:destination="@id/profileAddCardDialogFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/profileDrawerFragment"
         android:name="com.giedriusmecius.listings.ui.profileDrawers.ProfileDrawersFragment"
         android:label="ProfileDrawerFragment"
-        tools:layout="@layout/fragment_profile_drawers" >
+        tools:layout="@layout/fragment_profile_drawers">
         <action
             android:id="@+id/action_profileDrawerFragment_to_profileFragment"
             app:destination="@id/profileFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
-            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/profileDrawerFragment_to_profileAdjustDialogFragment"
+            app:destination="@id/profileDrawerAdjustDialogFragment" />
     </fragment>
+
+    <dialog
+        android:id="@+id/profileFollowingDialogFragment"
+        android:name="com.giedriusmecius.listings.ui.profile.ProfileFollowingDialogFragment"
+        tools:layout="@layout/dialog_profile_following_bottom_sheet" />
+
+    <dialog
+        android:id="@+id/profileAddCardDialogFragment"
+        android:name="com.giedriusmecius.listings.ui.profile.ProfileAddCardDialogFragment"
+        tools:layout="@layout/dialog_profile_add_card" />
+
+    <dialog
+        android:id="@+id/profileDrawerAdjustDialogFragment"
+        android:name="com.giedriusmecius.listings.ui.profileDrawers.ProfileDrawersAdjustDialogFragment"
+        tools:layout="@layout/dialog_profile_drawers_adjust" />
 
 
 </navigation>

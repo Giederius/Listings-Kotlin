@@ -2,10 +2,8 @@ package com.giedriusmecius.listings.ui.views
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Color.blue
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
-import android.util.Log
 import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -35,15 +33,14 @@ class ListingsButton @JvmOverloads constructor(
         with(binding) {
             when (isText) {
                 true -> {
-                    Log.d("MANO", text)
-                    buttonImage.isGone = true
-                    buttonTitle.isGone = false
+                    buttonImage.isGone = isText
+                    buttonTitle.isGone = !isText
                     setText(text)
                     buttonContainer.setPadding(0, padding, padding, 0)
                 }
                 else -> {
-                    buttonImage.isGone = false
-                    buttonTitle.isGone = true
+                    buttonImage.isGone = isText
+                    buttonTitle.isGone = !isText
                     if (icon != null) {
                         buttonImage.setImageDrawable(icon)
                         setIconTint(R.color.darkTextColor)
@@ -58,7 +55,8 @@ class ListingsButton @JvmOverloads constructor(
     }
 
     fun setIconTint(color: Int) {
-        binding.buttonImage.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(context, color))
+        binding.buttonImage.imageTintList =
+            ColorStateList.valueOf(ContextCompat.getColor(context, color))
     }
 
 }

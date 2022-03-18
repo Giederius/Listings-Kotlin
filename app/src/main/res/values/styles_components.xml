@@ -71,4 +71,9 @@
         <item name="iconTint">@color/text_toggle_button_color</item>
     </style>
 
+    <style name="RegularTextInputStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:editTextStyle">@style/H4.Grey</item>
+        <item name="android:backgroundTint">@color/accentPurple</item>
+    </style>
+
 </resources>

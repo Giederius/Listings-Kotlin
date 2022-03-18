@@ -33,4 +33,13 @@
     <string name="profileDrawers.adjustDialog.LastSavedTo">Last saved to</string>
     <string name="profileDrawers.adjustDialog.alphabetically">Alphabetically (A - Z)</string>
 
+    // Add Card Dialog
+    <string name="addCardDialog.addYourCardNumbers">Add Your card numbers</string>
+    <string name="addCardDialog.nameOnCard">Type the name written on the card</string>
+    <string name="addCardDialog.cardExpDate">MM/YY</string>
+    <string name="addCardDialog.securityCode">Card security code</string>
+    <string name="addCardDialog.cardExpiration">Card expiration date</string>
+    <string name="addCardDialog.cardName">Card name</string>
+    <string name="addCardDialog.cardNumber">Card number</string>
+
 </resources>

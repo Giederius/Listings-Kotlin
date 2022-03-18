@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../.gradle/caches/transforms-3/b4e5e8692cb7831fe31001e9cc8ae277/transformed/appcompat-1.4.0/res/drawable/abc_btn_default_mtrl_shape.xml" value="0.1825" />
         <entry key="app/src/main/res/drawable/bg_dialog_rounded_top.xml" value="0.2565" />
         <entry key="app/src/main/res/drawable/bg_listings_button.xml" value="0.167" />
         <entry key="app/src/main/res/drawable/bg_listings_button_selected.xml" value="0.167" />
