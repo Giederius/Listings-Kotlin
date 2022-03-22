@@ -6,7 +6,6 @@ import android.view.View
 import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giedriusmecius.listings.R
@@ -16,7 +15,6 @@ import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerGridItem
 import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerItem
 import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerListItem
-import com.giedriusmecius.listings.ui.profile.ProfileFragment
 import com.giedriusmecius.listings.utils.extensions.getNavigationResult
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import com.xwray.groupie.GroupieAdapter
@@ -35,21 +33,8 @@ class ProfileDrawersFragment :
         super.onViewCreated(view, savedInstanceState)
         vm.transition(ProfileDrawersState.Event.ViewCreated)
         setupUI()
-//        listenForAdjustDialogAction()
         listenForAdjustDialogResult()
-//        listenForProfileFragmentResult()
-        Log.d("MANOENTRY", previousBackStackEntry.toString())
     }
-
-    private fun listenForProfileFragmentResult() {
-        getNavigationResult<String?>(
-            R.id.profileDrawerFragment,
-            ProfileFragment.RESULT_KEY
-        ) {
-            Log.d("MANOPROFILIO", it.toString())
-        }
-    }
-
 
     override fun onDestroy() {
         super.onDestroy()
@@ -245,26 +230,25 @@ class ProfileDrawersFragment :
     }
 
     private fun listenForAdjustDialogResult() {
-        getNavigationResult<Any?>(
+        getNavigationResult<ProfileDrawersAdjustDialogFragment.AdjustDialogActions>(
             R.id.profileDrawerFragment,
             ProfileDrawersAdjustDialogFragment.RESULT_KEY
         ) {
-            Log.d("MANOKEY", "$it")
-//            when (it) {
-//                ProfileDrawersAdjustDialogFragment.AdjustDialogActions.HORIZONTAL -> {
-//                    Log.d("MANO", "HORIZONATL")
-//                    vm.transition(ProfileDrawersState.Event.TappedHorizontalLayout)
-//                }
-//                ProfileDrawersAdjustDialogFragment.AdjustDialogActions.GRID -> {
-//                    Log.d("MANO", "GRID")
-//                    vm.transition(ProfileDrawersState.Event.TappedGridLayout)
-//                }
-//                ProfileDrawersAdjustDialogFragment.AdjustDialogActions.LIST -> {
-//                    Log.d("MANO", "LIST")
-//                    vm.transition(ProfileDrawersState.Event.TappedListLayout)
-//                }
-//                else -> {}
-//            }
+            when (it) {
+                ProfileDrawersAdjustDialogFragment.AdjustDialogActions.HORIZONTAL -> {
+                    Log.d("MANO", "HORIZONATL")
+                    vm.transition(ProfileDrawersState.Event.TappedHorizontalLayout)
+                }
+                ProfileDrawersAdjustDialogFragment.AdjustDialogActions.GRID -> {
+                    Log.d("MANO", "GRID")
+                    vm.transition(ProfileDrawersState.Event.TappedGridLayout)
+                }
+                ProfileDrawersAdjustDialogFragment.AdjustDialogActions.LIST -> {
+                    Log.d("MANO", "LIST")
+                    vm.transition(ProfileDrawersState.Event.TappedListLayout)
+                }
+                else -> {}
+            }
         }
     }
 }

@@ -5,22 +5,16 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.giedriusmecius.listings.MainActivity
 import com.giedriusmecius.listings.databinding.FragmentProfileBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.groupie.PaymentMethodCardItem
 import com.giedriusmecius.listings.ui.common.groupie.ProfileAddressItem
-import com.giedriusmecius.listings.utils.extensions.setNavigationResult
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import com.xwray.groupie.GroupieAdapter
 
 
 class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
 
-
-    // persimest bottomsheetus i navigacija ir susitvarkyt listeneri
-    // profile drawers, nes reikes tada imt
-    // is navigationlisteneri
     private val vm by viewModels<ProfileViewModel>()
     private val paymentMethodAdapter = GroupieAdapter()
     private val addressAdapter = GroupieAdapter()
@@ -29,7 +23,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         super.onViewCreated(view, savedInstanceState)
         vm.transition(ProfileState.Event.ViewCreated)
         setupUI()
-        setNavigationResult(RESULT_KEY,"as esu profilis")
     }
 
     override fun observeState() {
@@ -49,10 +42,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                 navigate(ProfileFragmentDirections.profileFragmentToProfileFollowingDialog())
             }
             paymentMethodsEditButton.setOnClickListener {
-                Log.d("MANO", "clicked edit")
             }
             paymentMethodsAddCardButton.setOnClickListener {
-                Log.d("MANO", "Clicked")
                 navigate(ProfileFragmentDirections.profileFragmentToAddCardDialog())
             }
             addressAddButton.setOnClickListener {
@@ -123,7 +114,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
 
         }
     }
-    companion object{
+
+    companion object {
         const val RESULT_KEY = "profileResultKey"
     }
 }

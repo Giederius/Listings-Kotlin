@@ -42,17 +42,14 @@ class ProfileDrawersAdjustDialogFragment : BottomSheetDialogFragment() {
         with(binding) {
             toggleButtonGroup.check(0)
             horizontalLayout.setOnClickListener {
-                setResult("AS NESU HORIZONTAL")
-//                listener.onLayoutSelected(AdjustDialogActions.HORIZONTAL)
+                setResult(AdjustDialogActions.HORIZONTAL)
             }
-//            gridLayout.setOnClickListener {
-//                setResult(AdjustDialogActions.GRID)
-////                listener.onLayoutSelected(AdjustDialogActions.GRID)
-//            }
-//            listLayout.setOnClickListener {
-//                setResult(AdjustDialogActions.LIST)
-////                listener.onLayoutSelected(AdjustDialogActions.LIST)
-//            }
+            gridLayout.setOnClickListener {
+                setResult(AdjustDialogActions.GRID)
+            }
+            listLayout.setOnClickListener {
+                setResult(AdjustDialogActions.LIST)
+            }
         }
     }
 
@@ -65,7 +62,7 @@ class ProfileDrawersAdjustDialogFragment : BottomSheetDialogFragment() {
         const val RESULT_KEY = "profileDrawersAdjustResultKey"
     }
 
-    private fun setResult(value: String) {
+    private fun setResult(value: AdjustDialogActions) {
         setNavigationResult(RESULT_KEY, value)
         dismiss()
     }

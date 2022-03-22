@@ -2,7 +2,6 @@ package com.giedriusmecius.listings.ui.common.groupie
 
 import android.annotation.SuppressLint
 import android.graphics.Color
-import android.util.Log
 import android.view.View
 import coil.load
 import com.giedriusmecius.listings.R
@@ -40,10 +39,3 @@ fun getRandomColor(): Int = arrayListOf(
     Color.parseColor("#D7FAF4"),
     Color.parseColor("#FEEFEF"),
 ).random()
-
-//arrayListOf(
-//R.color.warmPurple,
-//R.color.warmYellow,
-//R.color.warmRed,
-//R.color.warmGreen
-//)
