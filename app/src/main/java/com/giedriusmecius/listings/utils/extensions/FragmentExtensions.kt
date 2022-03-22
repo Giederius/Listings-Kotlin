@@ -9,25 +9,23 @@ import androidx.navigation.fragment.findNavController
 
 fun <T> Fragment.setNavigationResult(key: String, value: T) {
     Log.d("MANOSET", "$value")
-    findNavController().currentBackStackEntry?.savedStateHandle?.set(key, value)
+    Log.d("MANOSET", findNavController().currentBackStackEntry.toString())
+    findNavController().previousBackStackEntry?.savedStateHandle?.set(key, value)
 }
 
-fun <T> Fragment.getNavigationResult(@IdRes id: Int, key: String, onResult: (result: T) -> Unit) {
+fun <T> Fragment.getNavigationResult(@IdRes id: Int, key: String, onResult: (result: T?) -> Unit) {
     try {
         Log.d("MANO1", "get1")
         val navBackStackEntry = findNavController().getBackStackEntry(id)
-
+        Log.d("MANOBACKSTACK", navBackStackEntry.toString())
         val observer = LifecycleEventObserver { _, event ->
 
-//            Log.d("MANOEVENT2",event.toString())
-//            Log.d("MANOEVENT3",navBackStackEntry.savedStateHandle.get<T>(key).toString())
-//            Log.d("MANOEVENT4",navBackStackEntry.savedStateHandle.contains(key).toString())
             if (event == Lifecycle.Event.ON_RESUME && navBackStackEntry.savedStateHandle.contains(
                     key
                 )
             ) {
                 Log.d("MANO5", "get2")
-                navBackStackEntry.savedStateHandle.get<T>(key)?.let(onResult)
+                navBackStackEntry.savedStateHandle.get<T>(key).let { onResult(it) }
                 navBackStackEntry.savedStateHandle.remove<T>(key)
             }
         }.also {
@@ -41,6 +39,7 @@ fun <T> Fragment.getNavigationResult(@IdRes id: Int, key: String, onResult: (res
             }
         })
     } catch (e: IllegalArgumentException) {
+        Log.d("MANOERROR", e.toString())
         onResult
     }
 }

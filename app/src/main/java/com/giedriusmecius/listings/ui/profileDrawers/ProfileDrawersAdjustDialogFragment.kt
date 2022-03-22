@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.Keep
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.ui.NavigationUI.navigateUp
 import com.giedriusmecius.listings.R
@@ -37,21 +38,21 @@ class ProfileDrawersAdjustDialogFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("MANOENTRY1", findNavController().previousBackStackEntry?.destination?.id.toString())
         with(binding) {
             toggleButtonGroup.check(0)
             horizontalLayout.setOnClickListener {
-                Log.d("MANO", "click1")
-                setResult(AdjustDialogActions.HORIZONTAL)
+                setResult("AS NESU HORIZONTAL")
 //                listener.onLayoutSelected(AdjustDialogActions.HORIZONTAL)
             }
-            gridLayout.setOnClickListener {
-                setResult(AdjustDialogActions.GRID)
-//                listener.onLayoutSelected(AdjustDialogActions.GRID)
-            }
-            listLayout.setOnClickListener {
-                setResult(AdjustDialogActions.LIST)
-//                listener.onLayoutSelected(AdjustDialogActions.LIST)
-            }
+//            gridLayout.setOnClickListener {
+//                setResult(AdjustDialogActions.GRID)
+////                listener.onLayoutSelected(AdjustDialogActions.GRID)
+//            }
+//            listLayout.setOnClickListener {
+//                setResult(AdjustDialogActions.LIST)
+////                listener.onLayoutSelected(AdjustDialogActions.LIST)
+//            }
         }
     }
 
@@ -64,8 +65,7 @@ class ProfileDrawersAdjustDialogFragment : BottomSheetDialogFragment() {
         const val RESULT_KEY = "profileDrawersAdjustResultKey"
     }
 
-    private fun setResult(value: AdjustDialogActions) {
-        Log.d("MANO", "click1")
+    private fun setResult(value: String) {
         setNavigationResult(RESULT_KEY, value)
         dismiss()
     }

@@ -6,6 +6,7 @@ import android.view.View
 import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giedriusmecius.listings.R
@@ -36,15 +37,16 @@ class ProfileDrawersFragment :
         setupUI()
 //        listenForAdjustDialogAction()
         listenForAdjustDialogResult()
-        listenForProfileFragmentResult()
+//        listenForProfileFragmentResult()
+        Log.d("MANOENTRY", previousBackStackEntry.toString())
     }
 
     private fun listenForProfileFragmentResult() {
-        getNavigationResult<String>(
+        getNavigationResult<String?>(
             R.id.profileDrawerFragment,
             ProfileFragment.RESULT_KEY
         ) {
-            Log.d("MANOPROFILIO", it)
+            Log.d("MANOPROFILIO", it.toString())
         }
     }
 
@@ -243,11 +245,11 @@ class ProfileDrawersFragment :
     }
 
     private fun listenForAdjustDialogResult() {
-        getNavigationResult<ProfileDrawersAdjustDialogFragment.AdjustDialogActions>(
+        getNavigationResult<Any?>(
             R.id.profileDrawerFragment,
             ProfileDrawersAdjustDialogFragment.RESULT_KEY
         ) {
-            Log.d("MANO", "$it")
+            Log.d("MANOKEY", "$it")
 //            when (it) {
 //                ProfileDrawersAdjustDialogFragment.AdjustDialogActions.HORIZONTAL -> {
 //                    Log.d("MANO", "HORIZONATL")

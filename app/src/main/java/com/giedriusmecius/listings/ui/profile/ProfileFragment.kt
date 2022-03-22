@@ -29,7 +29,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         super.onViewCreated(view, savedInstanceState)
         vm.transition(ProfileState.Event.ViewCreated)
         setupUI()
-//        setNavigationResult(RESULT_KEY,"as esu profilis")
+        setNavigationResult(RESULT_KEY,"as esu profilis")
     }
 
     override fun observeState() {

@@ -23,8 +23,8 @@ class ProfileDrawersViewModel : BaseViewModel<ProfileDrawersState, ProfileDrawer
         val response = ProductApi.retrofitService.getAllProducts()
         val data = response.isSuccessful
         if (response.body() != null) {
-            Log.d("MANO", response.toString())
-            Log.d("MANO", response.body().toString())
+//            Log.d("MANO", response.toString())
+//            Log.d("MANO", response.body().toString())
             transition(ProfileDrawersState.Event.ReceivedProducts(response.body()!!))
         }
     }
