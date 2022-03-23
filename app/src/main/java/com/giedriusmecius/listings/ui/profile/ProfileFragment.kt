@@ -47,7 +47,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                 navigate(ProfileFragmentDirections.profileFragmentToAddCardDialog())
             }
             addressAddButton.setOnClickListener {
-                navigate(ProfileFragmentDirections.profileFragmentToAddCardDialog())
             }
 
             profilePaymentMethodRecyclerView.apply {

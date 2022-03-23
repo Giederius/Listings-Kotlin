@@ -65,6 +65,4 @@
         android:id="@+id/profileDrawerAdjustDialogFragment"
         android:name="com.giedriusmecius.listings.ui.profileDrawers.ProfileDrawersAdjustDialogFragment"
         tools:layout="@layout/dialog_profile_drawers_adjust" />
-
-
 </navigation>

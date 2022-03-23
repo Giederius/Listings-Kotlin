@@ -1,6 +1,5 @@
 package com.giedriusmecius.listings.ui.profileDrawers
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.giedriusmecius.listings.data.ProductApi
 import com.giedriusmecius.listings.utils.state.BaseViewModel
@@ -22,9 +21,7 @@ class ProfileDrawersViewModel : BaseViewModel<ProfileDrawersState, ProfileDrawer
     private suspend fun fetchData() {
         val response = ProductApi.retrofitService.getAllProducts()
         val data = response.isSuccessful
-        if (response.body() != null) {
-//            Log.d("MANO", response.toString())
-//            Log.d("MANO", response.body().toString())
+        if (data != null) {
             transition(ProfileDrawersState.Event.ReceivedProducts(response.body()!!))
         }
     }

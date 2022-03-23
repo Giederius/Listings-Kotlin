@@ -38,7 +38,6 @@ class ProfileDrawersAdjustDialogFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("MANOENTRY1", findNavController().previousBackStackEntry?.destination?.id.toString())
         with(binding) {
             toggleButtonGroup.check(0)
             horizontalLayout.setOnClickListener {
