@@ -1,16 +1,15 @@
 package com.giedriusmecius.listings.ui.profile
 
 import android.os.Bundle
-import android.util.Log
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isGone
-import androidx.core.widget.addTextChangedListener
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.remote.model.CC
 import com.giedriusmecius.listings.databinding.DialogProfileAddCardBinding
-import com.giedriusmecius.listings.utils.extensions.showKeyboard
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
@@ -39,35 +38,109 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
 //        cardTypeCheck.add("^4[0-9]{6,}$")
 //        cardTypeCheck.add("^5[1-5][0-9]{5,}$")
 
+        dialog?.window?.setSoftInputMode(4) // VISIBLE KEYBOARD
+
         with(binding) {
-            addCardNumberTextEdit.addTextChangedListener {
-                Log.d("MANO", it.toString())
-            }
-
             addCardNumberTextEdit.apply {
-                showKeyboard()
-                onFocusChangeListener = View.OnFocusChangeListener { view, b ->
-                    view.animate()
-                        .translationY(-50F)
-                        .alpha(0F)
-                        .setDuration(1000)
-                        .setListener(null)
-                }
+                this.setOnKeyListener { v, keyCode, event ->
+                    if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
+                        // todo handle text
+                        addCardNameTextEdit.apply {
+                            isGone = false
+                            alpha = 0F
+                            translationY = 50F
+                            requestFocus()
+                            animate()
+                                .translationY(0F)
+                                .alpha(1F)
+                                .setDuration(700)
+                                .setListener(null)
+                        }
 
+                        v.animate()
+                            .translationY(-50F)
+                            .alpha(0F)
+                            .setDuration(700)
+                            .setListener(null)
+                            .withEndAction { v.isGone = true }
+                        true
+                    } else {
+                        false
+                    }
+                }
             }
 
             addCardNameTextEdit.apply {
-                isGone = false
-                alpha = 0F
-                translationY = 200F
-                onFocusChangeListener = View.OnFocusChangeListener { view, b ->
-                    view.animate()
-                        .alpha(1F)
-                        .translationY(0F)
-                        .setDuration(2000)
+                this.setOnKeyListener { v, keyCode, event ->
+                    if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
+                        addCardExpDateTextEdit.apply {
+                            isGone = false
+                            alpha = 0F
+                            translationY = 50F
+                            requestFocus()
+                            animate()
+                                .translationY(0F)
+                                .alpha(1F)
+                                .setDuration(700)
+                                .setListener(null)
+                        }
+
+                        v.animate()
+                            .translationY(-50F)
+                            .alpha(0F)
+                            .setDuration(700)
+                            .setListener(null)
+                            .withEndAction { v.isGone = true }
+                        true
+                    } else {
+                        false
+                    }
+                }
+            }
+            addCardExpDateTextEdit.apply {
+
+                this.setOnKeyListener { v, keyCode, event ->
+                    if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
+                        addCardSecurityTextEdit.apply {
+                            isGone = false
+                            alpha = 0F
+                            translationY = 50F
+                            requestFocus()
+                            animate()
+                                .translationY(0F)
+                                .alpha(1F)
+                                .setDuration(700)
+                                .setListener(null)
+                        }
+
+                        v.animate()
+                            .translationY(-50F)
+                            .alpha(0F)
+                            .setDuration(700)
+                            .setListener(null)
+                            .withEndAction { v.isGone = true }
+                        true
+                    } else {
+                        false
+                    }
+                }
+            }
+            addCardSecurityTextEdit.apply {
+                this.setOnKeyListener { v, keyCode, event ->
+                    if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
+                        Toast.makeText(context, "HOORAY!", Toast.LENGTH_SHORT).show()
+                        true
+                    } else {
+                        false
+                    }
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.addCardNumberTextEdit.requestFocus()
     }
 
     override fun onDestroy() {
