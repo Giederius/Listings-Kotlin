@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/profileFragment">
+    app:startDestination="@id/profileDrawerFragment">
 
     <fragment
         android:id="@+id/splashFragment"
@@ -32,6 +32,9 @@
         <action
             android:id="@+id/profileFragment_to_addCardDialog"
             app:destination="@id/profileAddCardDialogFragment" />
+        <action
+            android:id="@+id/profileFragment_to_profileDrawerFragment"
+            app:destination="@id/profileDrawerFragment" />
     </fragment>
 
     <fragment
@@ -39,6 +42,10 @@
         android:name="com.giedriusmecius.listings.ui.profileDrawers.ProfileDrawersFragment"
         android:label="ProfileDrawerFragment"
         tools:layout="@layout/fragment_profile_drawers">
+        <argument
+            android:name="title"
+            android:defaultValue="Drawer"
+            app:argType="string" />
         <action
             android:id="@+id/action_profileDrawerFragment_to_profileFragment"
             app:destination="@id/profileFragment"

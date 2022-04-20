@@ -6,6 +6,9 @@ import android.view.View
 import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giedriusmecius.listings.R
@@ -18,16 +21,20 @@ import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerListItem
 import com.giedriusmecius.listings.utils.extensions.getNavigationResult
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import com.xwray.groupie.GroupieAdapter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ProfileDrawersFragment :
     BaseFragment<FragmentProfileDrawersBinding>(FragmentProfileDrawersBinding::inflate) {
     private val vm by viewModels<ProfileDrawersViewModel>()
     private val groupie = GroupieAdapter()
+    private val args by navArgs<ProfileDrawersFragmentArgs>()
 
     private var electronicsList = mutableListOf<Product>()
     private var jewelryList = mutableListOf<Product>()
     private var mensClothingList = mutableListOf<Product>()
-    private var womensClothignList = mutableListOf<Product>()
+    private var womensClothingList = mutableListOf<Product>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -68,7 +75,7 @@ class ProfileDrawersFragment :
                             ProfileDrawerItem("Electronics", electronicsList),
                             ProfileDrawerItem("Jewelry", jewelryList),
                             ProfileDrawerItem("Men\'s clothing", mensClothingList),
-                            ProfileDrawerItem("Women\'s clothing", womensClothignList),
+                            ProfileDrawerItem("Women\'s clothing", womensClothingList),
                         )
                     )
                 }
@@ -80,7 +87,7 @@ class ProfileDrawersFragment :
                             ProfileDrawerGridItem("Electronics", electronicsList),
                             ProfileDrawerGridItem("Jewelry", jewelryList),
                             ProfileDrawerGridItem("Men\'s clothing", mensClothingList),
-                            ProfileDrawerGridItem("Women\'s clothing", womensClothignList),
+                            ProfileDrawerGridItem("Women\'s clothing", womensClothingList),
                         )
                     )
 
@@ -107,8 +114,8 @@ class ProfileDrawersFragment :
                             ),
                             ProfileDrawerListItem(
                                 "Women\'s clothing",
-                                womensClothignList.size,
-                                womensClothignList[0].image
+                                womensClothingList.size,
+                                womensClothingList[0].image
                             ),
                         )
                     )
@@ -121,7 +128,6 @@ class ProfileDrawersFragment :
 
     private fun handleSearch(query: String, data: List<Product>) {
         groupie.clear()
-        Log.d("mano", binding.profileSearchField.text.toString())
         var electronicsSearchList = mutableListOf<Product>()
         var jewelrySearchList = mutableListOf<Product>()
         var mensSearchList = mutableListOf<Product>()
@@ -190,7 +196,7 @@ class ProfileDrawersFragment :
                     mensClothingList.add(it)
                 }
                 else -> {
-                    womensClothignList.add(it)
+                    womensClothingList.add(it)
                 }
             }
         }
@@ -199,7 +205,7 @@ class ProfileDrawersFragment :
                 ProfileDrawerItem("Electronics", electronicsList),
                 ProfileDrawerItem("Jewelry", jewelryList),
                 ProfileDrawerItem("Men\'s clothing", mensClothingList),
-                ProfileDrawerItem("Women\'s clothing", womensClothignList),
+                ProfileDrawerItem("Women\'s clothing", womensClothingList),
             )
         )
     }

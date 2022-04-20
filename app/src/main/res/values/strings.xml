@@ -11,6 +11,7 @@
     <string name="common.addCard">Add card</string>
     <string name="common.card.mastercard">Mastercard</string>
     <string name="common.card.visa">Visa</string>
+    <string name="common.card.cvv">CVV</string>
     <string name="common.zipCode">Zip Code</string>
     <string name="common.sortBy">Sort by</string>
     <string name="common.layout">Layout</string>

@@ -1,10 +1,11 @@
-package com.giedriusmecius.listings.data.remote.repository
+package com.giedriusmecius.listings.data.remote.api
 
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import retrofit2.Response
-import javax.inject.Singleton
+import retrofit2.http.GET
 
-@Singleton
-interface ProductRepository {
+interface ProductApi {
+
+    @GET("products")
     suspend fun getAllProducts(): Response<List<Product>>
 }

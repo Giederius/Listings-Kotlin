@@ -1,6 +1,7 @@
 package com.giedriusmecius.listings.data
 
 import com.giedriusmecius.listings.data.remote.model.product.Product
+import com.google.android.datatransport.runtime.dagger.Module
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import okhttp3.OkHttpClient

@@ -8,8 +8,7 @@ data class ProfileDrawersState(
     val command: Command? = null,
     val data: List<Product>? = null,
     val isLoading: Boolean = true
-) :
-    State<ProfileDrawersState, ProfileDrawersState.Event> {
+) : State<ProfileDrawersState, ProfileDrawersState.Event> {
     sealed class Event {
         object ViewCreated : Event()
         data class ReceivedProducts(val data: List<Product>) : Event()
@@ -46,11 +45,10 @@ data class ProfileDrawersState(
             Event.TappedHorizontalLayout -> copy(command = Command.ChangeLayoutHorizontal)
             Event.TappedGridLayout -> copy(command = Command.ChangeLayoutGrid)
             Event.TappedListLayout -> copy(command = Command.ChangeLayoutList)
-            else -> copy()
         }
     }
 
     override fun clearCommandAndRequest(): ProfileDrawersState {
-        return copy(request = null, command = null)
+        return copy(command = null, request = null)
     }
 }

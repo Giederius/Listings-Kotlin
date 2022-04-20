@@ -35,15 +35,15 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             homeScreenViewPager.adapter = HomeTabLayoutAdapter(this@HomeFragment)
             homeScreenViewPager.isUserInputEnabled = false
 
-//            homeScreenViewPagerTabLayout.addTab(
-//                homeScreenViewPagerTabLayout.newTab().setText(R.string.home_featured)
-//            )
-//            homeScreenViewPagerTabLayout.addTab(
-//                homeScreenViewPagerTabLayout.newTab().setText(R.string.home_latest)
-//            )
-//            homeScreenViewPagerTabLayout.addTab(
-//                homeScreenViewPagerTabLayout.newTab().setText(R.string.home_watchList)
-//            )
+            homeScreenViewPagerTabLayout.addTab(
+                homeScreenViewPagerTabLayout.newTab().setText(R.string.home_featured)
+            )
+            homeScreenViewPagerTabLayout.addTab(
+                homeScreenViewPagerTabLayout.newTab().setText(R.string.home_latest)
+            )
+            homeScreenViewPagerTabLayout.addTab(
+                homeScreenViewPagerTabLayout.newTab().setText(R.string.home_watchList)
+            )
             val tabArray = arrayOf("Featured", "Latest", "WatchList")
 
             TabLayoutMediator(homeScreenViewPagerTabLayout, homeScreenViewPager){ tab, position ->

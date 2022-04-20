@@ -5,7 +5,7 @@ interface State<out T : State<T, E>, in E> {
     fun clearCommandAndRequest(): T
 }
 
-interface StateListener< T : State<T, E>, in E> {
+interface StateListener<T : State<T, E>, in E> {
     fun onStateUpdated(oldState: T?, newState: T)
 }
 
@@ -23,7 +23,7 @@ class StateMachine<T : State<T, E>, E>(initial: T) {
         private set(value) {
             val oldValue = field
             field = value.clearCommandAndRequest()
-            listeners.forEach { it.onStateUpdated(oldValue, value) } // here has to be value, not state
+            listeners.forEach { it.onStateUpdated(oldValue, value) }
         }
 
     fun transition(event: E) {

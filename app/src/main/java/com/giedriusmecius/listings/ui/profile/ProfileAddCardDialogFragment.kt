@@ -1,5 +1,7 @@
 package com.giedriusmecius.listings.ui.profile
 
+import android.animation.AnimatorInflater
+import android.animation.AnimatorSet
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -7,9 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.remote.model.CC
 import com.giedriusmecius.listings.databinding.DialogProfileAddCardBinding
+import com.giedriusmecius.listings.ui.profileDrawers.ProfileDrawersAdjustDialogFragment
+import com.giedriusmecius.listings.utils.extensions.setNavigationResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
@@ -45,6 +50,7 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                 this.setOnKeyListener { v, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
                         // todo handle text
+                        cardContainerFrontSide.cardNumber.text = this.text
                         addCardNameTextEdit.apply {
                             isGone = false
                             alpha = 0F
@@ -60,7 +66,7 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                         v.animate()
                             .translationY(-50F)
                             .alpha(0F)
-                            .setDuration(700)
+                            .setDuration(400)
                             .setListener(null)
                             .withEndAction { v.isGone = true }
                         true
@@ -73,6 +79,7 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
             addCardNameTextEdit.apply {
                 this.setOnKeyListener { v, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
+                        cardContainerFrontSide.cardUserName.text = this.text
                         addCardExpDateTextEdit.apply {
                             isGone = false
                             alpha = 0F
@@ -88,7 +95,7 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                         v.animate()
                             .translationY(-50F)
                             .alpha(0F)
-                            .setDuration(700)
+                            .setDuration(400)
                             .setListener(null)
                             .withEndAction { v.isGone = true }
                         true
@@ -98,9 +105,9 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                 }
             }
             addCardExpDateTextEdit.apply {
-
                 this.setOnKeyListener { v, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
+                        cardContainerFrontSide.cardExpDate.text = this.text
                         addCardSecurityTextEdit.apply {
                             isGone = false
                             alpha = 0F
@@ -112,11 +119,11 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                                 .setDuration(700)
                                 .setListener(null)
                         }
-
+                        rotateCard(cardContainerBack, cardContainerFront)
                         v.animate()
                             .translationY(-50F)
                             .alpha(0F)
-                            .setDuration(700)
+                            .setDuration(400)
                             .setListener(null)
                             .withEndAction { v.isGone = true }
                         true
@@ -128,7 +135,9 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
             addCardSecurityTextEdit.apply {
                 this.setOnKeyListener { v, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
-                        Toast.makeText(context, "HOORAY!", Toast.LENGTH_SHORT).show()
+                        cardContainerBackside.cardCvv.text = this.text
+//                        setResult(CC(card))
+                        dismiss()
                         true
                     } else {
                         false
@@ -136,6 +145,24 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                 }
             }
         }
+    }
+
+    private fun rotateCard(visibleView: View, invisibleView: View) {
+        visibleView.isVisible = true
+        val scale = context?.resources?.displayMetrics?.density
+        val cameraDist = 8000 * scale!!
+        visibleView.cameraDistance = cameraDist
+        invisibleView.cameraDistance = cameraDist
+
+        val flipOutAnimatorSet =
+            AnimatorInflater.loadAnimator(context, R.animator.flip_out) as AnimatorSet
+        val flipInAnimatorSet =
+            AnimatorInflater.loadAnimator(context, R.animator.flip_in) as AnimatorSet
+
+        flipOutAnimatorSet.setTarget(invisibleView)
+        flipInAnimatorSet.setTarget(visibleView)
+        flipOutAnimatorSet.start()
+        flipInAnimatorSet.start()
     }
 
     override fun onResume() {
@@ -148,7 +175,13 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
         _binding = null
     }
 
+    private fun setResult(value: CC) {
+        setNavigationResult(ProfileFragment.RESULT_KEY, value)
+        dismiss()
+    }
+
     companion object {
         private const val CARD_NUMBER_CHUNKS = 4
+        const val RESULT_KEY = "profileAddCardResultKey"
     }
 }

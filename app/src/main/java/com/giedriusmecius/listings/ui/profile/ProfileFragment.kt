@@ -5,10 +5,13 @@ import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.giedriusmecius.listings.R
+import com.giedriusmecius.listings.data.remote.model.CC
 import com.giedriusmecius.listings.databinding.FragmentProfileBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.groupie.PaymentMethodCardItem
 import com.giedriusmecius.listings.ui.common.groupie.ProfileAddressItem
+import com.giedriusmecius.listings.utils.extensions.getNavigationResult
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import com.xwray.groupie.GroupieAdapter
 
@@ -36,7 +39,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     private fun setupUI() {
         with(binding) {
             close.setOnClickListener {
-                navigateUp()
+//                navigateUp()
+                navigate(ProfileFragmentDirections.profileFragmentToProfileDrawerFragment("GIedrius"))
             }
             followerCountButton.setOnClickListener {
                 navigate(ProfileFragmentDirections.profileFragmentToProfileFollowingDialog())
@@ -111,6 +115,20 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                 )
             )
 
+        }
+    }
+
+    private fun listenForCCAdd() {
+        getNavigationResult<CC>(
+            R.id.profileAddCardDialogFragment,
+            ProfileAddCardDialogFragment.RESULT_KEY
+        ) {
+            paymentMethodAdapter.add(
+                PaymentMethodCardItem(
+                    PaymentMethodCardItem.PaymentType.VISA,
+                    it?.number.toString()
+                )
+            )
         }
     }
 

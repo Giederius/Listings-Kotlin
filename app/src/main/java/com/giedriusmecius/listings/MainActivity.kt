@@ -6,7 +6,9 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.giedriusmecius.listings.databinding.ActivityMainBinding
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val vm by viewModels<MainActivityViewModel>()

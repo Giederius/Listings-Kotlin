@@ -5,9 +5,8 @@ import com.giedriusmecius.listings.data.ProductApi
 import com.giedriusmecius.listings.utils.state.BaseViewModel
 import kotlinx.coroutines.launch
 
-class ProfileDrawersViewModel : BaseViewModel<ProfileDrawersState, ProfileDrawersState.Event>(
-    ProfileDrawersState()
-) {
+class ProfileDrawersViewModel : BaseViewModel<ProfileDrawersState, ProfileDrawersState.Event>
+    (ProfileDrawersState()) {
     override fun handleState(newState: ProfileDrawersState) {
         when (val req = newState.request) {
             ProfileDrawersState.Request.FetchProducts -> {
