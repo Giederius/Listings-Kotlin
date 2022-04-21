@@ -10,6 +10,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.giedriusmecius.listings.R
@@ -17,6 +18,10 @@ import com.giedriusmecius.listings.data.remote.model.CC
 import com.giedriusmecius.listings.databinding.DialogProfileAddCardBinding
 import com.giedriusmecius.listings.utils.extensions.setNavigationResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.Date
 
 class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
     private var _binding: DialogProfileAddCardBinding? = null
@@ -36,13 +41,12 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
         return view
     }
 
-    // todo add animations to change textinput fields
-    // todo fix shit with regex to check everything.
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         cardTypeCheck.add(CardTypes.Visa)
         cardTypeCheck.add(CardTypes.MasterCard)
+        val today = LocalDate.now()
+        val todaysMonth = today.format(DateTimeFormatter.ofPattern("MM/yy"))
 
         dialog?.window?.setSoftInputMode(4) // VISIBLE KEYBOARD
 
@@ -52,10 +56,11 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
                     override fun onTextChanged(
-                        p0: CharSequence?, p1 : Int, p2: Int, p3: Int
+                        p0: CharSequence?, p1: Int, p2: Int, p3: Int
                     ) {
                         val formattedCardNumber =
-                            p0.toString().replace(" ", "").chunked(CARD_NUMBER_CHUNKS).joinToString(" ")
+                            p0.toString().replace(" ", "").chunked(CARD_NUMBER_CHUNKS)
+                                .joinToString(" ")
                         if (formattedCardNumber != p0.toString()) {
                             binding.addCardNumberTextEdit.apply {
                                 setText(formattedCardNumber)
@@ -70,7 +75,7 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                                 when (p) {
                                     CardTypes.Visa -> {
                                         if (s.toString().matches(p.regex)) {
-                                            Log.d("MANO","matches")
+                                            Log.d("MANO", "matches")
                                             binding.cardContainerFrontSide.cardTypeImg.apply {
                                                 isGone = false
                                             }
@@ -91,7 +96,6 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                 })
                 this.setOnKeyListener { v, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
-                        // todo handle text
                         cardContainerFrontSide.cardNumber.text = this.text
                         addCardNameTextEdit.apply {
                             isGone = false
@@ -147,27 +151,63 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                 }
             }
             addCardExpDateTextEdit.apply {
+                this.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+                    override fun onTextChanged(
+                        p0: CharSequence?, p1: Int, p2: Int, p3: Int
+                    ) {
+                        val expDate = p0.toString()
+                        if (expDate.length == 2) {
+                            val formattedExpDate = StringBuilder(expDate).insert(2, "/").toString()
+                            binding.addCardExpDateTextEdit.apply {
+                                setText(formattedExpDate)
+                                setSelection(formattedExpDate.length)
+                            }
+                        }
+                    }
+
+                    override fun afterTextChanged(s: Editable?) {}
+
+                })
                 this.setOnKeyListener { v, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
-                        cardContainerFrontSide.cardExpDate.text = this.text
-                        addCardSecurityTextEdit.apply {
-                            isGone = false
-                            alpha = 0F
-                            translationY = 50F
-                            requestFocus()
-                            animate()
-                                .translationY(0F)
-                                .alpha(1F)
-                                .setDuration(700)
+                        val formattedExpDate = cardContainerFrontSide.cardExpDate.text
+                            // todo fix validation for card date
+//                        val simpleDateFormat = SimpleDateFormat("MM/yy")
+//                        simpleDateFormat.isLenient = false
+//                        val expiry = simpleDateFormat.parse(formattedExpDate.toString())
+//                        val expired = expiry.before(Date())
+                        val expired = false
+
+                        if (expired) {
+                            cardContainerFrontSide.cardExpDate.apply {
+                                setTextColor(resources.getColor(R.color.highlightRed))
+                                // todo FIX ANIMATION
+                                shakeAnimation(this)
+                                Toast.makeText(context, "Card not valid", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            cardContainerFrontSide.cardExpDate.text = formattedExpDate
+                            addCardSecurityTextEdit.apply {
+                                isGone = false
+                                alpha = 0F
+                                translationY = 50F
+                                requestFocus()
+                                animate()
+                                    .translationY(0F)
+                                    .alpha(1F)
+                                    .setDuration(700)
+                                    .setListener(null)
+                            }
+                            rotateCard(cardContainerBack, cardContainerFront)
+                            v.animate()
+                                .translationY(-50F)
+                                .alpha(0F)
+                                .setDuration(400)
                                 .setListener(null)
+                                .withEndAction { v.isGone = true }
                         }
-                        rotateCard(cardContainerBack, cardContainerFront)
-                        v.animate()
-                            .translationY(-50F)
-                            .alpha(0F)
-                            .setDuration(400)
-                            .setListener(null)
-                            .withEndAction { v.isGone = true }
                         true
                     } else {
                         false
@@ -187,6 +227,13 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                 }
             }
         }
+    }
+
+    private fun shakeAnimation(shakeMe: View) {
+        val shakeAnimatorSet =
+            AnimatorInflater.loadAnimator(context, R.animator.anim_shake) as AnimatorSet
+        shakeAnimatorSet.setTarget(shakeMe)
+        shakeAnimatorSet.start()
     }
 
     private fun rotateCard(visibleView: View, invisibleView: View) {
