@@ -5,11 +5,11 @@ import android.animation.AnimatorSet
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -18,16 +18,17 @@ import com.giedriusmecius.listings.data.remote.model.CC
 import com.giedriusmecius.listings.databinding.DialogProfileAddCardBinding
 import com.giedriusmecius.listings.utils.extensions.setNavigationResult
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import java.text.SimpleDateFormat
-import java.time.LocalDate
+import java.time.YearMonth
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.util.Date
+import java.time.format.DateTimeParseException
 
 class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
     private var _binding: DialogProfileAddCardBinding? = null
     private val binding get() = _binding!!
     private val cardTypeCheck = ArrayList<CardTypes>()
     private val newCard: CC? = null
+    private var isExpired: Boolean = false
 
     override fun getTheme(): Int = R.style.AppBottomSheetDialogTheme
 
@@ -45,10 +46,10 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         cardTypeCheck.add(CardTypes.Visa)
         cardTypeCheck.add(CardTypes.MasterCard)
-        val today = LocalDate.now()
-        val todaysMonth = today.format(DateTimeFormatter.ofPattern("MM/yy"))
 
         dialog?.window?.setSoftInputMode(4) // VISIBLE KEYBOARD
+
+        // todo fix the checks for lengths for every field everywhere after done setting up.
 
         with(binding) {
             addCardNumberTextEdit.apply {
@@ -70,20 +71,21 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                     }
 
                     override fun afterTextChanged(s: Editable?) {
+                        var formattedString = s.toString().replace(" ", "")
                         cardTypeCheck.forEach {
                             for (p in cardTypeCheck) {
                                 when (p) {
                                     CardTypes.Visa -> {
-                                        if (s.toString().matches(p.regex)) {
-                                            Log.d("MANO", "matches")
+                                        if (formattedString.matches(p.regex)) {
                                             binding.cardContainerFrontSide.cardTypeImg.apply {
                                                 isGone = false
                                             }
                                         }
                                     }
                                     CardTypes.MasterCard -> {
-                                        if (s.toString().matches(p.regex)) {
+                                        if (formattedString.matches(p.regex)) {
                                             binding.cardContainerFrontSide.cardTypeImg.apply {
+                                                setImageDrawable(resources.getDrawable(R.drawable.icon_mastercard))
                                                 isGone = false
                                             }
                                         }
@@ -167,24 +169,23 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                         }
                     }
 
-                    override fun afterTextChanged(s: Editable?) {}
+                    override fun afterTextChanged(s: Editable?) {
+                        isExpired = isValidCard(s.toString())
+                    }
 
                 })
                 this.setOnKeyListener { v, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
                         val formattedExpDate = cardContainerFrontSide.cardExpDate.text
-                            // todo fix validation for card date
-//                        val simpleDateFormat = SimpleDateFormat("MM/yy")
-//                        simpleDateFormat.isLenient = false
-//                        val expiry = simpleDateFormat.parse(formattedExpDate.toString())
-//                        val expired = expiry.before(Date())
-                        val expired = false
-
-                        if (expired) {
+                        if (isExpired) {
                             cardContainerFrontSide.cardExpDate.apply {
                                 setTextColor(resources.getColor(R.color.highlightRed))
-                                // todo FIX ANIMATION
-                                shakeAnimation(this)
+                                this.startAnimation(
+                                    AnimationUtils.loadAnimation(
+                                        context,
+                                        R.anim.anim_shake
+                                    )
+                                )
                                 Toast.makeText(context, "Card not valid", Toast.LENGTH_SHORT).show()
                             }
                         } else {
@@ -205,6 +206,7 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                                 .translationY(-50F)
                                 .alpha(0F)
                                 .setDuration(400)
+                                .setStartDelay(100)
                                 .setListener(null)
                                 .withEndAction { v.isGone = true }
                         }
@@ -220,6 +222,7 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                         cardContainerBackside.cardCvv.text = this.text
 //                        setResult(CC(card))
                         dismiss()
+                        Toast.makeText(context, "Card added!", Toast.LENGTH_SHORT).show()
                         true
                     } else {
                         false
@@ -229,11 +232,20 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private fun shakeAnimation(shakeMe: View) {
-        val shakeAnimatorSet =
-            AnimatorInflater.loadAnimator(context, R.animator.anim_shake) as AnimatorSet
-        shakeAnimatorSet.setTarget(shakeMe)
-        shakeAnimatorSet.start()
+    private fun isValidCard(ccExpDate: String): Boolean {
+        val monthFormatter = DateTimeFormatter.ofPattern("MM/yy")
+        return try {
+            val lastValidMonth = YearMonth.parse(ccExpDate, monthFormatter)
+            if (YearMonth.now(ZoneId.systemDefault()).isAfter(lastValidMonth)) {
+                println("Credit card has expired")
+                true
+            } else {
+                false
+            }
+        } catch (e: DateTimeParseException) {
+            print(e.message)
+            return false
+        }
     }
 
     private fun rotateCard(visibleView: View, invisibleView: View) {
