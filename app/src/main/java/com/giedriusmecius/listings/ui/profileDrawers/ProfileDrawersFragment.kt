@@ -6,13 +6,12 @@ import android.view.View
 import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleCoroutineScope
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.remote.model.product.Product
+import com.giedriusmecius.listings.data.remote.repository.ProductRepository
 import com.giedriusmecius.listings.databinding.FragmentProfileDrawersBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerGridItem
@@ -21,12 +20,13 @@ import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerListItem
 import com.giedriusmecius.listings.utils.extensions.getNavigationResult
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import com.xwray.groupie.GroupieAdapter
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ProfileDrawersFragment :
     BaseFragment<FragmentProfileDrawersBinding>(FragmentProfileDrawersBinding::inflate) {
+
     private val vm by viewModels<ProfileDrawersViewModel>()
     private val groupie = GroupieAdapter()
     private val args by navArgs<ProfileDrawersFragmentArgs>()

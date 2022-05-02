@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/profileFragment">
+    app:startDestination="@id/profileDrawerFragment">
 
     <fragment
         android:id="@+id/splashFragment"
@@ -57,6 +57,22 @@
             android:id="@+id/profileDrawerFragment_to_profileAdjustDialogFragment"
             app:destination="@id/profileDrawerAdjustDialogFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/productFragment"
+        android:name="com.giedriusmecius.listings.ui.product.ProductFragment"
+        android:label="ProductFragment"
+        tools:layout="@layout/fragment_product">
+        <argument
+            android:name="productID"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+
+    <action
+        android:id="@+id/globalProductFragmentAction"
+        app:destination="@id/productFragment" />
 
     <dialog
         android:id="@+id/profileFollowingDialogFragment"
