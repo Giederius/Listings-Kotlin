@@ -5,6 +5,7 @@ import android.animation.AnimatorSet
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -15,8 +16,10 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.remote.model.CC
+import com.giedriusmecius.listings.data.remote.model.CardType
 import com.giedriusmecius.listings.databinding.DialogProfileAddCardBinding
 import com.giedriusmecius.listings.utils.extensions.setNavigationResult
+import com.giedriusmecius.listings.utils.extensions.showAlertDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.time.YearMonth
 import java.time.ZoneId
@@ -27,7 +30,7 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
     private var _binding: DialogProfileAddCardBinding? = null
     private val binding get() = _binding!!
     private val cardTypeCheck = ArrayList<CardTypes>()
-    private val newCard: CC? = null
+    private var newCard: CC = CC(null, null, null, null, null)
     private var isExpired: Boolean = false
 
     override fun getTheme(): Int = R.style.AppBottomSheetDialogTheme
@@ -36,7 +39,7 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = DialogProfileAddCardBinding.inflate(inflater, container, false)
         val view = binding.root
         return view
@@ -71,12 +74,13 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                     }
 
                     override fun afterTextChanged(s: Editable?) {
-                        var formattedString = s.toString().replace(" ", "")
+                        val formattedString = s.toString().replace(" ", "")
                         cardTypeCheck.forEach {
                             for (p in cardTypeCheck) {
                                 when (p) {
                                     CardTypes.Visa -> {
                                         if (formattedString.matches(p.regex)) {
+                                            newCard = newCard.copy(type = CardType.VISA)
                                             binding.cardContainerFrontSide.cardTypeImg.apply {
                                                 isGone = false
                                             }
@@ -84,6 +88,7 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                                     }
                                     CardTypes.MasterCard -> {
                                         if (formattedString.matches(p.regex)) {
+                                            newCard = newCard.copy(type = CardType.MASTERCARD)
                                             binding.cardContainerFrontSide.cardTypeImg.apply {
                                                 setImageDrawable(resources.getDrawable(R.drawable.icon_mastercard))
                                                 isGone = false
@@ -98,6 +103,8 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                 })
                 this.setOnKeyListener { v, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
+                        val formattedString = this.text.toString().replace(" ", "")
+                        newCard = newCard.copy(number = formattedString.toLong())
                         cardContainerFrontSide.cardNumber.text = this.text
                         addCardNameTextEdit.apply {
                             isGone = false
@@ -128,6 +135,7 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                 this.setOnKeyListener { v, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
                         cardContainerFrontSide.cardUserName.text = this.text
+                        newCard = newCard.copy(name = this.text.toString())
                         addCardExpDateTextEdit.apply {
                             isGone = false
                             alpha = 0F
@@ -176,7 +184,7 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                 })
                 this.setOnKeyListener { v, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
-                        val formattedExpDate = cardContainerFrontSide.cardExpDate.text
+                        val formattedExpDate = this.text
                         if (isExpired) {
                             cardContainerFrontSide.cardExpDate.apply {
                                 setTextColor(resources.getColor(R.color.highlightRed))
@@ -188,8 +196,10 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                                 )
                                 Toast.makeText(context, "Card not valid", Toast.LENGTH_SHORT).show()
                             }
+                            this.clearComposingText()
                         } else {
                             cardContainerFrontSide.cardExpDate.text = formattedExpDate
+                            newCard = newCard.copy(expDate = formattedExpDate.toString())
                             addCardSecurityTextEdit.apply {
                                 isGone = false
                                 alpha = 0F
@@ -220,9 +230,29 @@ class ProfileAddCardDialogFragment : BottomSheetDialogFragment() {
                 this.setOnKeyListener { v, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
                         cardContainerBackside.cardCvv.text = this.text
-//                        setResult(CC(card))
-                        dismiss()
+                        newCard = newCard.copy(ccv = Integer.parseInt(this.text.toString()))
+                        Log.d("MANO", newCard.toString())
+//                        setResult(newCard)
                         Toast.makeText(context, "Card added!", Toast.LENGTH_SHORT).show()
+                        // todo add popup to confirm data or edit
+                        showAlertDialog(
+                            this.context,
+                            onPositiveClick = {
+                                Toast.makeText(
+                                    context,
+                                    "Positive",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                dismiss()
+                            },
+                            onNegativeClick = {
+                                Toast.makeText(
+                                    context,
+                                    "Negative!",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            })
+//                        dismiss()
                         true
                     } else {
                         false

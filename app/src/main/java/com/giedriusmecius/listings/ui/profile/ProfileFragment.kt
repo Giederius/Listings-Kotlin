@@ -3,6 +3,7 @@ package com.giedriusmecius.listings.ui.profile
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giedriusmecius.listings.R
@@ -12,6 +13,7 @@ import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.groupie.PaymentMethodCardItem
 import com.giedriusmecius.listings.ui.common.groupie.ProfileAddressItem
 import com.giedriusmecius.listings.utils.extensions.getNavigationResult
+import com.giedriusmecius.listings.utils.extensions.showAlertDialog
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import com.xwray.groupie.GroupieAdapter
 
@@ -46,6 +48,22 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                 navigate(ProfileFragmentDirections.profileFragmentToProfileFollowingDialog())
             }
             paymentMethodsEditButton.setOnClickListener {
+                showAlertDialog(
+                    it.context,
+                    onPositiveClick = {
+                        Toast.makeText(
+                            context,
+                            "Positive",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onNegativeClick = {
+                        Toast.makeText(
+                            context,
+                            "Negative!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    })
             }
             paymentMethodsAddCardButton.setOnClickListener {
                 navigate(ProfileFragmentDirections.profileFragmentToAddCardDialog())

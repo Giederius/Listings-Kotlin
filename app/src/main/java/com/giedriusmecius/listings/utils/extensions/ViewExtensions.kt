@@ -1,6 +1,8 @@
 package com.giedriusmecius.listings.utils.extensions
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -19,7 +21,12 @@ fun EditText.hideKeyboard() {
     imm.hideSoftInputFromWindow(this.windowToken, 0)
 }
 
-fun EditText.addCardAnimationWithSetText(addTextTo: TextView, animateIn: View, label: TextView, labelTitle: Int) {
+fun EditText.addCardAnimationWithSetText(
+    addTextTo: TextView,
+    animateIn: View,
+    label: TextView,
+    labelTitle: Int
+) {
     label.text = context.getText(labelTitle)
     this.setOnKeyListener { v, keyCode, event ->
         if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
@@ -47,4 +54,20 @@ fun EditText.addCardAnimationWithSetText(addTextTo: TextView, animateIn: View, l
             false
         }
     }
+}
+
+fun showAlertDialog(context: Context, onPositiveClick: () -> Unit, onNegativeClick: () -> Unit) {
+    val builder = AlertDialog.Builder(context)
+    builder.setTitle("Test")
+    builder.setMessage("i\'m a test")
+    builder.setCancelable(true)
+    builder.setPositiveButton(
+        "OK",
+        DialogInterface.OnClickListener { _, _ -> onPositiveClick() })
+
+    builder.setNegativeButton("Edit") { _, _ ->
+        onNegativeClick()
+    }
+
+    builder.show()
 }

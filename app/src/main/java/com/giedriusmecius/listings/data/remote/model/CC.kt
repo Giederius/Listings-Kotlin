@@ -1,11 +1,11 @@
 package com.giedriusmecius.listings.data.remote.model
 
 data class CC(
-    val number: Int?,
-    val name: String?,
-    val type: CardType?,
-    val expDate: String?,
-    val ccv: Int?
+    var number: Long?,
+    var name: String?,
+    var type: CardType?,
+    var expDate: String?,
+    var ccv: Int?
 )
 
 enum class CardType {
