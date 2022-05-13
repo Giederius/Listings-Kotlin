@@ -1,4 +1,4 @@
-package com.giedriusmecius.listings.ui.Profile
+package com.giedriusmecius.listings.ui.profile
 
 import com.giedriusmecius.listings.utils.state.State
 

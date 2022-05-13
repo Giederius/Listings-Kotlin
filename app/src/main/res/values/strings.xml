@@ -11,7 +11,10 @@
     <string name="common.addCard">Add card</string>
     <string name="common.card.mastercard">Mastercard</string>
     <string name="common.card.visa">Visa</string>
+    <string name="common.card.cvv">CVV</string>
     <string name="common.zipCode">Zip Code</string>
+    <string name="common.sortBy">Sort by</string>
+    <string name="common.layout">Layout</string>
 
     // Profile fragment
     <string name="profile.ordersAndMessages">My orders and messages</string>
@@ -23,5 +26,21 @@
     <string name="profile.addresses.addButton">Add address</string>
     <string name="profile.addresses.editAddress">Edit address</string>
     <string name="profile.addresses.deleteAddress">Delete address</string>
+
+    // Profile Drawers Fragment
+    <string name="profileDrawers.title">Drawers</string>
+    <string name="profileDrawers.filterSearch">Filter drawers</string>
+    <string name="profileDrawers.adjustDialog.Adjust">Adjust</string>
+    <string name="profileDrawers.adjustDialog.LastSavedTo">Last saved to</string>
+    <string name="profileDrawers.adjustDialog.alphabetically">Alphabetically (A - Z)</string>
+
+    // Add Card Dialog
+    <string name="addCardDialog.addYourCardNumbers">Add Your card numbers</string>
+    <string name="addCardDialog.nameOnCard">Type the name written on the card</string>
+    <string name="addCardDialog.cardExpDate">MM/YY</string>
+    <string name="addCardDialog.securityCode">Card security code</string>
+    <string name="addCardDialog.cardExpiration">Card expiration date</string>
+    <string name="addCardDialog.cardName">Card name</string>
+    <string name="addCardDialog.cardNumber">Card number</string>
 
 </resources>

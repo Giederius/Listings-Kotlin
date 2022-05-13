@@ -1,17 +1,19 @@
-package com.giedriusmecius.listings.ui.Profile
+package com.giedriusmecius.listings.ui.profile
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.giedriusmecius.listings.MainActivity
+import com.giedriusmecius.listings.R
+import com.giedriusmecius.listings.data.remote.model.CC
 import com.giedriusmecius.listings.databinding.FragmentProfileBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.groupie.PaymentMethodCardItem
 import com.giedriusmecius.listings.ui.common.groupie.ProfileAddressItem
+import com.giedriusmecius.listings.utils.extensions.getNavigationResult
+import com.giedriusmecius.listings.utils.extensions.showAlertDialog
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import com.xwray.groupie.GroupieAdapter
 
@@ -19,7 +21,6 @@ import com.xwray.groupie.GroupieAdapter
 class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
 
     private val vm by viewModels<ProfileViewModel>()
-    val bottomSheet = ProfileFollowingDialogFragment()
     private val paymentMethodAdapter = GroupieAdapter()
     private val addressAdapter = GroupieAdapter()
 
@@ -39,11 +40,35 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
 
     private fun setupUI() {
         with(binding) {
+            close.setOnClickListener {
+//                navigateUp()
+                navigate(ProfileFragmentDirections.profileFragmentToProfileDrawerFragment("GIedrius"))
+            }
             followerCountButton.setOnClickListener {
-                bottomSheet.show(
-                    (activity as MainActivity).supportFragmentManager,
-                    ProfileFollowingDialogFragment.TAG
-                )
+                navigate(ProfileFragmentDirections.profileFragmentToProfileFollowingDialog())
+            }
+            paymentMethodsEditButton.setOnClickListener {
+                showAlertDialog(
+                    it.context,
+                    onPositiveClick = {
+                        Toast.makeText(
+                            context,
+                            "Positive",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    },
+                    onNegativeClick = {
+                        Toast.makeText(
+                            context,
+                            "Negative!",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    })
+            }
+            paymentMethodsAddCardButton.setOnClickListener {
+                navigate(ProfileFragmentDirections.profileFragmentToAddCardDialog())
+            }
+            addressAddButton.setOnClickListener {
             }
 
             profilePaymentMethodRecyclerView.apply {
@@ -111,5 +136,21 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         }
     }
 
+    private fun listenForCCAdd() {
+        getNavigationResult<CC>(
+            R.id.profileAddCardDialogFragment,
+            ProfileAddCardDialogFragment.RESULT_KEY
+        ) {
+            paymentMethodAdapter.add(
+                PaymentMethodCardItem(
+                    PaymentMethodCardItem.PaymentType.VISA,
+                    it?.number.toString()
+                )
+            )
+        }
+    }
 
+    companion object {
+        const val RESULT_KEY = "profileResultKey"
+    }
 }

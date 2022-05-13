@@ -22,9 +22,58 @@
         <item name="cornerSize">50%</item>
     </style>
 
-    <style name="BasePopUpMenu" parent="@style/Widget.AppCompat.PopupMenu">
-        <item name="android:background">@drawable/bg_rounded_rect_sm_borderless</item>
+    <style name="roundedCornerShape">
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
     </style>
 
+    <style name="BasePopUpMenu" parent="@style/Widget.AppCompat.PopupMenu">
+        <item name="background">@drawable/bg_rounded_rect_sm_borderless</item>
+        <item name="backgroundColor">@color/warmYellow</item>
+        <item name="android:textAppearance">@style/H4.Bold</item>
+        <item name="android:textColor">@color/highlightRed</item>
+    </style>
+
+    <style name="ListingsBorderedButton">
+        <item name="background">@drawable/bg_rounded_rect_sm_border</item>
+        <item name="android:foreground">@android:color/white</item>
+        <item name="rippleColor">@color/warmPurple</item>
+        <item name="android:textColor">@color/highlightRed</item>
+    </style>
+
+    <style name="ListingsSearchField" parent="Widget.AppCompat.EditText">
+        <item name="background">@drawable/bg_rounded_rect_sm_borderless</item>
+        <item name="backgroundColor">@color/grayedOutTextColor</item>
+    </style>
+
+    <style name="AppRadioButton" parent="@android:style/Widget.CompoundButton.RadioButton">
+        <item name="android:button">@android:color/transparent</item>
+        <item name="android:background">@drawable/bg_radio_button_selector</item>
+        <item name="android:drawableEnd">@drawable/radio_button_selector</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/normalTextColor</item>
+        <item name="rippleColor">@android:color/transparent</item>
+    </style>
+
+    <style name="ToggleButtonWithIcon" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="iconPadding">0dp</item>
+        <item name="android:inset">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="minWidth">48dp</item>
+        <item name="iconGravity">textStart</item>
+        <item name="strokeWidth">0dp</item>
+        <item name="backgroundTint">@color/bg_toggle_button_selector</item>
+        <item name="iconTint">@color/text_toggle_button_color</item>
+    </style>
+
+    <style name="RegularTextInputStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:editTextStyle">@style/H4.Grey</item>
+        <item name="android:backgroundTint">@color/accentPurple</item>
+    </style>
 
 </resources>

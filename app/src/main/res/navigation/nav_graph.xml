@@ -23,9 +23,69 @@
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.giedriusmecius.listings.ui.Profile.ProfileFragment"
+        android:name="com.giedriusmecius.listings.ui.profile.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile"/>
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/profileFragment_to_profileFollowingDialog"
+            app:destination="@id/profileFollowingDialogFragment" />
+        <action
+            android:id="@+id/profileFragment_to_addCardDialog"
+            app:destination="@id/profileAddCardDialogFragment" />
+        <action
+            android:id="@+id/profileFragment_to_profileDrawerFragment"
+            app:destination="@id/profileDrawerFragment" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/profileDrawerFragment"
+        android:name="com.giedriusmecius.listings.ui.profileDrawers.ProfileDrawersFragment"
+        android:label="ProfileDrawerFragment"
+        tools:layout="@layout/fragment_profile_drawers">
+        <argument
+            android:name="title"
+            android:defaultValue="Drawer"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_profileDrawerFragment_to_profileFragment"
+            app:destination="@id/profileFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/profileDrawerFragment_to_profileAdjustDialogFragment"
+            app:destination="@id/profileDrawerAdjustDialogFragment" />
+    </fragment>
 
+    <fragment
+        android:id="@+id/productFragment"
+        android:name="com.giedriusmecius.listings.ui.product.ProductFragment"
+        android:label="ProductFragment"
+        tools:layout="@layout/fragment_product">
+        <argument
+            android:name="productID"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+
+    <action
+        android:id="@+id/globalProductFragmentAction"
+        app:destination="@id/productFragment" />
+
+    <dialog
+        android:id="@+id/profileFollowingDialogFragment"
+        android:name="com.giedriusmecius.listings.ui.profile.ProfileFollowingDialogFragment"
+        tools:layout="@layout/dialog_profile_following_bottom_sheet" />
+
+    <dialog
+        android:id="@+id/profileAddCardDialogFragment"
+        android:name="com.giedriusmecius.listings.ui.profile.ProfileAddCardDialogFragment"
+        tools:layout="@layout/dialog_profile_add_card" />
+
+    <dialog
+        android:id="@+id/profileDrawerAdjustDialogFragment"
+        android:name="com.giedriusmecius.listings.ui.profileDrawers.ProfileDrawersAdjustDialogFragment"
+        tools:layout="@layout/dialog_profile_drawers_adjust" />
 </navigation>

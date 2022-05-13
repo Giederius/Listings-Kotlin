@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="ListingsButton">
+        <attr name="android:text" format="string" />
+        <attr name="android:paddingHorizontal" format="integer" />
+        <attr name="isText" format="boolean" />
+        <attr name="android:drawable" />
+        <attr name="android:layout_height" />
+        <attr name="android:layout_width" />
+    </declare-styleable>
+</resources>
