@@ -15,6 +15,9 @@
     <string name="common.zipCode">Zip Code</string>
     <string name="common.sortBy">Sort by</string>
     <string name="common.layout">Layout</string>
+    <string name="common.feed">Feed</string>
+    <string name="common.market">Market</string>
+    <string name="common.profile">Profile</string>
 
     // Profile fragment
     <string name="profile.ordersAndMessages">My orders and messages</string>

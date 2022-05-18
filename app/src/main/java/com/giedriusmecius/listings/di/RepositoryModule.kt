@@ -1,7 +1,5 @@
 package com.giedriusmecius.listings.di
 
-//import com.giedriusmecius.listings.data.ProductRepositoryImpl
-//import com.giedriusmecius.listings.data.remote.api.ProductApi
 import com.giedriusmecius.listings.data.ProductRepositoryImpl
 import com.giedriusmecius.listings.data.remote.api.ProductApi
 import com.giedriusmecius.listings.data.remote.repository.ProductRepository
