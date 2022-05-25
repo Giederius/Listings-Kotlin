@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.remote.model.product.Product
-import com.giedriusmecius.listings.data.remote.repository.ProductRepository
 import com.giedriusmecius.listings.databinding.FragmentProfileDrawersBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerGridItem
@@ -21,7 +20,6 @@ import com.giedriusmecius.listings.utils.extensions.getNavigationResult
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import com.xwray.groupie.GroupieAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfileDrawersFragment :
@@ -126,6 +124,9 @@ class ProfileDrawersFragment :
         }
     }
 
+
+    // pasidaryt funkcija kuri grazintu hardkodintus duomenis
+    // companion objekta
     private fun handleSearch(query: String, data: List<Product>) {
         groupie.clear()
         var electronicsSearchList = mutableListOf<Product>()
@@ -140,7 +141,7 @@ class ProfileDrawersFragment :
                 "electronics" -> {
                     electronicsSearchList.add(it)
                 }
-                "jewelery" -> {
+                "jewelry" -> {
                     jewelrySearchList.add(it)
                 }
                 "men's clothing" -> {
@@ -151,6 +152,8 @@ class ProfileDrawersFragment :
                 }
             }
         }
+
+        // persimest
         if (electronicsSearchList.isNotEmpty()) {
             groupie.addAll(
                 arrayListOf(
@@ -189,7 +192,7 @@ class ProfileDrawersFragment :
                 "electronics" -> {
                     electronicsList.add(it)
                 }
-                "jewelery" -> {
+                "jewelry" -> {
                     jewelryList.add(it)
                 }
                 "men's clothing" -> {

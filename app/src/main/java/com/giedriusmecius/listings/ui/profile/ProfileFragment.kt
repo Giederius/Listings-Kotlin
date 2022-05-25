@@ -17,8 +17,10 @@ import com.giedriusmecius.listings.utils.extensions.getNavigationResult
 import com.giedriusmecius.listings.utils.extensions.showAlertDialog
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import com.xwray.groupie.GroupieAdapter
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
 
     private val vm by viewModels<ProfileViewModel>()
@@ -32,6 +34,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     }
 
     // todo
+    // susitvarkyti sharedprefsus
     // edit button card itemam
     // edit add address
     // preferences list and selection
@@ -101,18 +104,18 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                             )
                         )
                     },
-                    PaymentMethodCardItem(
-                        PaymentMethodCardItem.PaymentType.VISA,
-                        "****1722"
-                    ),
-                    PaymentMethodCardItem(
-                        PaymentMethodCardItem.PaymentType.MASTERCARD,
-                        "****1891"
-                    ),
-                    PaymentMethodCardItem(
-                        PaymentMethodCardItem.PaymentType.VISA,
-                        "****8881"
-                    ),
+//                    PaymentMethodCardItem(
+//                        PaymentMethodCardItem.PaymentType.VISA,
+//                        "****1722"
+//                    ),
+//                    PaymentMethodCardItem(
+//                        PaymentMethodCardItem.PaymentType.MASTERCARD,
+//                        "****1891"
+//                    ),
+//                    PaymentMethodCardItem(
+//                        PaymentMethodCardItem.PaymentType.VISA,
+//                        "****8881"
+//                    ),
                 )
             )
 
@@ -164,7 +167,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                 PaymentMethodCardItem(
                     PaymentMethodCardItem.PaymentType.VISA,
                     it?.number.toString()
-                )
+                ) {}
             )
         }
     }
