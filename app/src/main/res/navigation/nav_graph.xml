@@ -82,7 +82,15 @@
     <dialog
         android:id="@+id/profileAddCardDialogFragment"
         android:name="com.giedriusmecius.listings.ui.profile.ProfileAddCardDialogFragment"
-        tools:layout="@layout/dialog_profile_add_card" />
+        tools:layout="@layout/dialog_profile_add_card">
+        <argument
+            android:name="cardInfo"
+            app:argType="com.giedriusmecius.listings.data.remote.model.CC"
+            app:nullable="true" />
+        <argument
+            android:name="isEdit"
+            app:argType="boolean" />
+    </dialog>
 
     <dialog
         android:id="@+id/profileDrawerAdjustDialogFragment"

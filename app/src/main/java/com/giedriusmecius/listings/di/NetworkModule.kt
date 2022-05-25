@@ -37,7 +37,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @Named(RETROFIT)
     fun provideRetroFitBuilder(
         okHttpClient: OkHttpClient,
         moshi: Moshi
@@ -50,6 +49,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideProductApi(@Named(RETROFIT) retrofit: Retrofit.Builder): ProductApi =
+    fun provideProductApi(retrofit: Retrofit.Builder): ProductApi =
         retrofit.build().create(ProductApi::class.java)
 }

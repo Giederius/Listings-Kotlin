@@ -1,20 +1,15 @@
 package com.giedriusmecius.listings.utils.extensions
 
+import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import androidx.core.view.isGone
-
-fun EditText.showKeyboard() {
-    requestFocus()
-    val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
-}
+import com.giedriusmecius.listings.R
 
 fun EditText.hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -56,18 +51,44 @@ fun EditText.addCardAnimationWithSetText(
     }
 }
 
-fun showAlertDialog(context: Context, onPositiveClick: () -> Unit, onNegativeClick: () -> Unit) {
-    val builder = AlertDialog.Builder(context)
-    builder.setTitle("Test")
-    builder.setMessage("i\'m a test")
-    builder.setCancelable(true)
-    builder.setPositiveButton(
-        "OK",
-        DialogInterface.OnClickListener { _, _ -> onPositiveClick() })
+fun showAlertDialog(
+    context: Context,
+    title: String = "",
+    message: String = "",
+    onPositiveClick: () -> Unit,
+    onNegativeClick: () -> Unit,
+) {
+    AlertDialog.Builder(context, R.style.MyDialogTheme)
+        .setTitle(title)
+        .setMessage(message)
+        .setCancelable(true)
+        .setPositiveButton("OK") { _, _ -> onPositiveClick() }
+        .setNegativeButton("Edit") { _, _ -> onNegativeClick() }
+        .show()
+}
 
-    builder.setNegativeButton("Edit") { _, _ ->
-        onNegativeClick()
+fun View.animateLeave() {
+    this.apply {
+        isGone = true
+        alpha = 1F
+        animate()
+            .translationY(-50F)
+            .alpha(0F)
+            .setDuration(400)
+            .setListener(null)
     }
+}
 
-    builder.show()
+fun View.animateShowUp() {
+    this.apply {
+        isGone = false
+        alpha = 0F
+        translationY = 50F
+        requestFocus()
+        animate()
+            .translationY(0F)
+            .alpha(1F)
+            .setDuration(700)
+            .setListener(null)
+    }
 }

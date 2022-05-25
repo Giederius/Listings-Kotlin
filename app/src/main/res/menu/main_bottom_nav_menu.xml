@@ -3,6 +3,7 @@
     <item
         android:id="@+id/mainBottomNavFeed"
         android:icon="@drawable/ic_feed"
+        android:checked="true"
         android:title="@string/common.feed" />
     <item
         android:id="@+id/mainBottomNavMarket"

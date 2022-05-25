@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.remote.model.CC
+import com.giedriusmecius.listings.data.remote.model.CardType
 import com.giedriusmecius.listings.databinding.FragmentProfileBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.groupie.PaymentMethodCardItem
@@ -29,6 +30,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         vm.transition(ProfileState.Event.ViewCreated)
         setupUI()
     }
+
+    // todo
+    // edit button card itemam
+    // edit add address
+    // preferences list and selection
 
     override fun observeState() {
         vm.subscribeWithAutoDispose(viewLifecycleOwner) { _, newState ->
@@ -66,7 +72,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                     })
             }
             paymentMethodsAddCardButton.setOnClickListener {
-                navigate(ProfileFragmentDirections.profileFragmentToAddCardDialog())
+                navigate(ProfileFragmentDirections.profileFragmentToAddCardDialog(null, false))
             }
             addressAddButton.setOnClickListener {
             }
@@ -81,7 +87,20 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                     PaymentMethodCardItem(
                         PaymentMethodCardItem.PaymentType.MASTERCARD,
                         "****1789"
-                    ),
+                    ) {
+                        navigate(
+                            ProfileFragmentDirections.profileFragmentToAddCardDialog(
+                                CC(
+                                    number = 123451789,
+                                    name = "Netikra korta",
+                                    type = CardType.VISA,
+                                    expDate = "11/26",
+                                    ccv = 123
+                                ),
+                                true
+                            )
+                        )
+                    },
                     PaymentMethodCardItem(
                         PaymentMethodCardItem.PaymentType.VISA,
                         "****1722"

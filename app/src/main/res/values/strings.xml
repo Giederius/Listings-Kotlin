@@ -44,6 +44,9 @@
     <string name="addCardDialog.securityCode">Card security code</string>
     <string name="addCardDialog.cardExpiration">Card expiration date</string>
     <string name="addCardDialog.cardName">Card name</string>
-    <string name="addCardDialog.cardNumber">Card number</string>
+    <string name="addCardDialog.cardNumberLabel">Card number</string>
+    <string name="addCardDialog.nameOnCardlabel">Name on card</string>
+    <string name="addCardDialog.expDatelabel">Expiration date on card</string>
+    <string name="addCardDialog.ccvlabel">Security code</string>
 
 </resources>
