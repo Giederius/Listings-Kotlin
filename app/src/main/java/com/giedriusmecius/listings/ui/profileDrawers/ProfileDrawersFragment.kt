@@ -1,7 +1,6 @@
 package com.giedriusmecius.listings.ui.profileDrawers
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
@@ -10,18 +9,15 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giedriusmecius.listings.R
-import com.giedriusmecius.listings.data.remote.model.product.Product
-import com.giedriusmecius.listings.data.remote.repository.ProductRepository
+import com.giedriusmecius.listings.data.remote.model.category.Category
 import com.giedriusmecius.listings.databinding.FragmentProfileDrawersBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
-import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerGridItem
 import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerItem
 import com.giedriusmecius.listings.ui.common.groupie.ProfileDrawerListItem
 import com.giedriusmecius.listings.utils.extensions.getNavigationResult
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import com.xwray.groupie.GroupieAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfileDrawersFragment :
@@ -31,10 +27,10 @@ class ProfileDrawersFragment :
     private val groupie = GroupieAdapter()
     private val args by navArgs<ProfileDrawersFragmentArgs>()
 
-    private var electronicsList = mutableListOf<Product>()
-    private var jewelryList = mutableListOf<Product>()
-    private var mensClothingList = mutableListOf<Product>()
-    private var womensClothingList = mutableListOf<Product>()
+    /* all of the data here should be saved somewhere
+       you should create a drawer and add products to it
+       make something like a favorite page that should hold
+       different items in different categories. */
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -60,65 +56,22 @@ class ProfileDrawersFragment :
                     displayData(cmd.data)
                 }
                 is ProfileDrawersState.Command.FilterSearch -> {
-                    newState.data?.let { handleSearch(cmd.query, it) }
+                    handleSearch(cmd.query, newState.data)
                 }
                 ProfileDrawersState.Command.OpenAdjustDrawers -> {
                     navigate(ProfileDrawersFragmentDirections.profileDrawerFragmentToProfileAdjustDialogFragment())
                 }
-                // todo there must be a better way to do this
                 ProfileDrawersState.Command.ChangeLayoutHorizontal -> {
-                    binding.profileDrawerRecyclerView.layoutManager =
-                        LinearLayoutManager(context)
-                    groupie.clear()
-                    groupie.addAll(
-                        arrayListOf(
-                            ProfileDrawerItem("Electronics", electronicsList),
-                            ProfileDrawerItem("Jewelry", jewelryList),
-                            ProfileDrawerItem("Men\'s clothing", mensClothingList),
-                            ProfileDrawerItem("Women\'s clothing", womensClothingList),
-                        )
-                    )
+                    handleLayoutChange(true)
+                    displayData(newState.data)
                 }
                 ProfileDrawersState.Command.ChangeLayoutGrid -> {
-                    binding.profileDrawerRecyclerView.layoutManager = GridLayoutManager(context, 2)
-                    groupie.clear()
-                    groupie.addAll(
-                        arrayListOf(
-                            ProfileDrawerGridItem("Electronics", electronicsList),
-                            ProfileDrawerGridItem("Jewelry", jewelryList),
-                            ProfileDrawerGridItem("Men\'s clothing", mensClothingList),
-                            ProfileDrawerGridItem("Women\'s clothing", womensClothingList),
-                        )
-                    )
-
+                    handleLayoutChange(false)
+                    displayData(newState.data)
                 }
                 ProfileDrawersState.Command.ChangeLayoutList -> {
-                    groupie.clear()
-                    binding.profileDrawerRecyclerView.layoutManager = LinearLayoutManager(context)
-                    groupie.addAll(
-                        arrayListOf(
-                            ProfileDrawerListItem(
-                                "Electronics",
-                                electronicsList.size,
-                                electronicsList[0].image
-                            ),
-                            ProfileDrawerListItem(
-                                "Jewelry",
-                                jewelryList.size,
-                                jewelryList[0].image
-                            ),
-                            ProfileDrawerListItem(
-                                "Men\'s clothing",
-                                mensClothingList.size,
-                                mensClothingList[0].image
-                            ),
-                            ProfileDrawerListItem(
-                                "Women\'s clothing",
-                                womensClothingList.size,
-                                womensClothingList[0].image
-                            ),
-                        )
-                    )
+                    handleLayoutChange(true)
+                    displayData(newState.data, true)
                 }
                 // todo layout adjustment.
                 else -> {}
@@ -126,88 +79,18 @@ class ProfileDrawersFragment :
         }
     }
 
-    private fun handleSearch(query: String, data: List<Product>) {
+    private fun handleSearch(query: String, data: List<Category>) {
         groupie.clear()
-        var electronicsSearchList = mutableListOf<Product>()
-        var jewelrySearchList = mutableListOf<Product>()
-        var mensSearchList = mutableListOf<Product>()
-        var womensSearchList = mutableListOf<Product>()
-        val searchResult = data?.filter {
-            it.category.contains(query)
-        }
-        searchResult?.map {
-            when (it.category) {
-                "electronics" -> {
-                    electronicsSearchList.add(it)
-                }
-                "jewelery" -> {
-                    jewelrySearchList.add(it)
-                }
-                "men's clothing" -> {
-                    mensSearchList.add(it)
-                }
-                else -> {
-                    womensSearchList.add(it)
+        val searchResults: MutableList<Category> = mutableListOf()
+        data.forEach { cat ->
+            cat.products.filter { product -> product.category.contains(query) }.let { products ->
+                if (products.isNotEmpty()) {
+                    searchResults.add(Category(cat.title, products))
                 }
             }
         }
-        if (electronicsSearchList.isNotEmpty()) {
-            groupie.addAll(
-                arrayListOf(
-                    ProfileDrawerItem("Electronics", electronicsSearchList)
-                )
-            )
-        }
-        if (jewelrySearchList.isNotEmpty()) {
-            groupie.addAll(
-                arrayListOf(
-                    ProfileDrawerItem("Jewelry", jewelrySearchList)
-                )
-            )
-        }
-        if (mensSearchList.isNotEmpty()) {
-            groupie.addAll(
-                arrayListOf(
-                    ProfileDrawerItem("Men\'s clothing", mensSearchList)
-                )
-            )
-        }
-        if (womensSearchList.isNotEmpty()) {
-            groupie.addAll(
-                arrayListOf(
-                    ProfileDrawerItem("Women\'s clothing", womensSearchList)
-                )
-            )
-        }
-        Log.d("MANO", searchResult.toString())
 
-    }
-
-    private fun displayData(data: List<Product>) {
-        data.map {
-            when (it.category) {
-                "electronics" -> {
-                    electronicsList.add(it)
-                }
-                "jewelery" -> {
-                    jewelryList.add(it)
-                }
-                "men's clothing" -> {
-                    mensClothingList.add(it)
-                }
-                else -> {
-                    womensClothingList.add(it)
-                }
-            }
-        }
-        groupie.addAll(
-            arrayListOf(
-                ProfileDrawerItem("Electronics", electronicsList),
-                ProfileDrawerItem("Jewelry", jewelryList),
-                ProfileDrawerItem("Men\'s clothing", mensClothingList),
-                ProfileDrawerItem("Women\'s clothing", womensClothingList),
-            )
-        )
+        displayData(searchResults)
     }
 
     private fun setupUI() {
@@ -242,18 +125,41 @@ class ProfileDrawersFragment :
         ) {
             when (it) {
                 ProfileDrawersAdjustDialogFragment.AdjustDialogActions.HORIZONTAL -> {
-                    Log.d("MANO", "HORIZONATL")
                     vm.transition(ProfileDrawersState.Event.TappedHorizontalLayout)
                 }
                 ProfileDrawersAdjustDialogFragment.AdjustDialogActions.GRID -> {
-                    Log.d("MANO", "GRID")
                     vm.transition(ProfileDrawersState.Event.TappedGridLayout)
                 }
                 ProfileDrawersAdjustDialogFragment.AdjustDialogActions.LIST -> {
-                    Log.d("MANO", "LIST")
                     vm.transition(ProfileDrawersState.Event.TappedListLayout)
                 }
                 else -> {}
+            }
+        }
+    }
+
+    private fun handleLayoutChange(isLinear: Boolean) {
+        if (isLinear) {
+            binding.profileDrawerRecyclerView.layoutManager =
+                LinearLayoutManager(context)
+        } else {
+            binding.profileDrawerRecyclerView.layoutManager = GridLayoutManager(context, 2)
+        }
+        groupie.clear()
+    }
+
+    private fun displayData(data: List<Category>, isListItem: Boolean = false) {
+        if (data.isNotEmpty()) {
+            if (isListItem) {
+                groupie.addAll(data.map {
+                    ProfileDrawerListItem(
+                        it.title,
+                        it.products.size,
+                        it.products[0].image
+                    )
+                })
+            } else {
+                groupie.addAll(data.map { ProfileDrawerItem(it.title, it.products) })
             }
         }
     }

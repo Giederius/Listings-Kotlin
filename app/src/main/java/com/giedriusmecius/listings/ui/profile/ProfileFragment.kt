@@ -16,8 +16,9 @@ import com.giedriusmecius.listings.utils.extensions.getNavigationResult
 import com.giedriusmecius.listings.utils.extensions.showAlertDialog
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import com.xwray.groupie.GroupieAdapter
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
 
     private val vm by viewModels<ProfileViewModel>()
@@ -29,6 +30,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         vm.transition(ProfileState.Event.ViewCreated)
         setupUI()
     }
+
+    // todo
+    // susitvarkyti sharedprefsus
+    // edit button card itemam
+    // edit add address
+    // preferences list and selection
 
     override fun observeState() {
         vm.subscribeWithAutoDispose(viewLifecycleOwner) { _, newState ->
@@ -81,19 +88,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                     PaymentMethodCardItem(
                         PaymentMethodCardItem.PaymentType.MASTERCARD,
                         "****1789"
-                    ),
-                    PaymentMethodCardItem(
-                        PaymentMethodCardItem.PaymentType.VISA,
-                        "****1722"
-                    ),
-                    PaymentMethodCardItem(
-                        PaymentMethodCardItem.PaymentType.MASTERCARD,
-                        "****1891"
-                    ),
-                    PaymentMethodCardItem(
-                        PaymentMethodCardItem.PaymentType.VISA,
-                        "****8881"
-                    ),
+                    ) {
+                        navigate(
+                            ProfileFragmentDirections.profileFragmentToAddCardDialog()
+                        )
+                    },
                 )
             )
 
@@ -145,7 +144,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                 PaymentMethodCardItem(
                     PaymentMethodCardItem.PaymentType.VISA,
                     it?.number.toString()
-                )
+                ) {}
             )
         }
     }

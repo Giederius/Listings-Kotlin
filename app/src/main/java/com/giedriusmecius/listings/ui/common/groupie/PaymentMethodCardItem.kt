@@ -8,7 +8,11 @@ import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.databinding.ItemPaymentMethodCardBinding
 import com.xwray.groupie.viewbinding.BindableItem
 
-data class PaymentMethodCardItem(private val paymentType: PaymentType, val cardNumber: String) :
+data class PaymentMethodCardItem(
+    private val paymentType: PaymentType,
+    val cardNumber: String,
+    val onEditClick: () -> Unit
+) :
     BindableItem<ItemPaymentMethodCardBinding>() {
     override fun getLayout(): Int = R.layout.item_payment_method_card
 
@@ -22,6 +26,9 @@ data class PaymentMethodCardItem(private val paymentType: PaymentType, val cardN
             paymentMethodsCardImage.load(paymentType.cardImage)
             paymentMethodsCardType.text = paymentType.cardName
             paymentMethodsCardNumber.text = cardNumber
+            paymentMethodsEditButton.setOnClickListener {
+                onEditClick()
+            }
         }
     }
 

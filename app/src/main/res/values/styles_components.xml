@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="homeTabLayoutStyle" parent="Widget.Design.TabLayout">
-        <item name="tabIndicator">@drawable/item_dot_selector</item>
+    <style name="homeTabLayoutStyle" parent="Base.Widget.Design.TabLayout">
+        <item name="tabIndicator">@drawable/item_dot_selected</item>
         <item name="tabIndicatorHeight">4dp</item>
         <item name="android:width">4dp</item>
+        <item name="tabIndicatorColor">@color/accentPurple</item>
         <item name="tabSelectedTextColor">@color/normalTextColor</item>
         <item name="tabTextColor">@color/grayedOutTextColor</item>
         <item name="tabIndicatorFullWidth">false</item>
@@ -74,6 +75,10 @@
     <style name="RegularTextInputStyle" parent="Widget.AppCompat.EditText">
         <item name="android:editTextStyle">@style/H4.Grey</item>
         <item name="android:backgroundTint">@color/accentPurple</item>
+    </style>
+
+    <style name="MainBottomNavStyle" parent="Widget.Design.BottomNavigationView">
+        <item name="android:textColor">@color/grayedOutTextColor</item>
     </style>
 
 </resources>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mainBottomNavFeed"
+        android:icon="@drawable/ic_feed"
+        android:checked="true"
+        android:title="@string/common.feed" />
+    <item
+        android:id="@+id/mainBottomNavMarket"
+        android:icon="@drawable/ic_market"
+        android:title="@string/common.market" />
+    <item
+        android:id="@+id/mainBottomNavProfile"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/common.profile" />
+</menu>

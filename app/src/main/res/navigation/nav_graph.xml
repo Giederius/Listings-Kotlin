@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/profileFragment">
+    app:startDestination="@id/profileDrawerFragment">
 
     <fragment
         android:id="@+id/splashFragment"
@@ -82,7 +82,17 @@
     <dialog
         android:id="@+id/profileAddCardDialogFragment"
         android:name="com.giedriusmecius.listings.ui.profile.ProfileAddCardDialogFragment"
-        tools:layout="@layout/dialog_profile_add_card" />
+        tools:layout="@layout/dialog_profile_add_card">
+        <argument
+            android:name="cardInfo"
+            app:argType="com.giedriusmecius.listings.data.remote.model.CC"
+            android:defaultValue="@null"
+            app:nullable="true" />
+        <argument
+            android:name="isEdit"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </dialog>
 
     <dialog
         android:id="@+id/profileDrawerAdjustDialogFragment"
