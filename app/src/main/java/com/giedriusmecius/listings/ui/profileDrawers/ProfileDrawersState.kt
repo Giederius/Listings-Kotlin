@@ -1,17 +1,18 @@
 package com.giedriusmecius.listings.ui.profileDrawers
 
+import com.giedriusmecius.listings.data.remote.model.category.Category
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.utils.state.State
 
 data class ProfileDrawersState(
     val request: Request? = null,
     val command: Command? = null,
-    val data: List<Product>? = null,
+    val data: List<Category> = emptyList(),
     val isLoading: Boolean = true
 ) : State<ProfileDrawersState, ProfileDrawersState.Event> {
     sealed class Event {
         object ViewCreated : Event()
-        data class ReceivedProducts(val data: List<Product>) : Event()
+        data class ReceivedProducts(val data: List<Category>) : Event()
         data class TypedInSearch(val query: String) : Event()
         object TappedAdjustDrawers : Event()
         object TappedHorizontalLayout : Event()
@@ -24,7 +25,7 @@ data class ProfileDrawersState(
     }
 
     sealed class Command {
-        data class DisplayData(val data: List<Product>) : Command()
+        data class DisplayData(val data: List<Category>) : Command()
         data class FilterSearch(val query: String) : Command()
         object OpenAdjustDrawers : Command()
         object ChangeLayoutHorizontal : Command()

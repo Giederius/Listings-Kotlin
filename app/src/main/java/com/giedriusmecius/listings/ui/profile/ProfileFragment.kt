@@ -8,7 +8,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.remote.model.CC
-import com.giedriusmecius.listings.data.remote.model.CardType
 import com.giedriusmecius.listings.databinding.FragmentProfileBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.groupie.PaymentMethodCardItem
@@ -18,7 +17,6 @@ import com.giedriusmecius.listings.utils.extensions.showAlertDialog
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import com.xwray.groupie.GroupieAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBinding::inflate) {
@@ -75,7 +73,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                     })
             }
             paymentMethodsAddCardButton.setOnClickListener {
-                navigate(ProfileFragmentDirections.profileFragmentToAddCardDialog(null, false))
+                navigate(ProfileFragmentDirections.profileFragmentToAddCardDialog())
             }
             addressAddButton.setOnClickListener {
             }
@@ -92,30 +90,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                         "****1789"
                     ) {
                         navigate(
-                            ProfileFragmentDirections.profileFragmentToAddCardDialog(
-                                CC(
-                                    number = 123451789,
-                                    name = "Netikra korta",
-                                    type = CardType.VISA,
-                                    expDate = "11/26",
-                                    ccv = 123
-                                ),
-                                true
-                            )
+                            ProfileFragmentDirections.profileFragmentToAddCardDialog()
                         )
                     },
-//                    PaymentMethodCardItem(
-//                        PaymentMethodCardItem.PaymentType.VISA,
-//                        "****1722"
-//                    ),
-//                    PaymentMethodCardItem(
-//                        PaymentMethodCardItem.PaymentType.MASTERCARD,
-//                        "****1891"
-//                    ),
-//                    PaymentMethodCardItem(
-//                        PaymentMethodCardItem.PaymentType.VISA,
-//                        "****8881"
-//                    ),
                 )
             )
 

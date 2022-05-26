@@ -8,6 +8,7 @@ import com.giedriusmecius.listings.databinding.ActivityMainBinding
 import com.giedriusmecius.listings.ui.home.HomeFragment
 import com.giedriusmecius.listings.ui.market.MarketFragment
 import com.giedriusmecius.listings.ui.profile.ProfileFragment
+import com.giedriusmecius.listings.ui.profileDrawers.ProfileDrawersFragment
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,8 +31,6 @@ class MainActivity : AppCompatActivity() {
     private fun setupBottomNav() {
         var bottomNav = binding.mainBottomNav
 
-        // todo issiaiskinti kaip pasiimt visible fragmenta kad nuselectint mygtuka
-
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.mainBottomNavFeed -> {
@@ -43,7 +42,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.mainBottomNavProfile -> {
-                    openFragment(ProfileFragment())
+                    openFragment(ProfileDrawersFragment())
                     true
                 }
                 else -> {

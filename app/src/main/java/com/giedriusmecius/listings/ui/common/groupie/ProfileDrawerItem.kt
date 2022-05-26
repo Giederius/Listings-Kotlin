@@ -9,7 +9,7 @@ import com.giedriusmecius.listings.databinding.ItemProfileDrawerBinding
 import com.xwray.groupie.GroupieAdapter
 import com.xwray.groupie.viewbinding.BindableItem
 
-class ProfileDrawerItem(val title: String, val imgList: List<Product>) :
+class ProfileDrawerItem(val title: String, private val imgList: List<Product>) :
     BindableItem<ItemProfileDrawerBinding>() {
     override fun getLayout(): Int = R.layout.item_profile_drawer
 

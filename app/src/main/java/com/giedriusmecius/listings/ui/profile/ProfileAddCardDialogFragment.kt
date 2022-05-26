@@ -10,10 +10,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.navigation.fragment.navArgs
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.remote.model.CC
 import com.giedriusmecius.listings.data.remote.model.CardType
@@ -22,19 +22,21 @@ import com.giedriusmecius.listings.utils.extensions.animateLeave
 import com.giedriusmecius.listings.utils.extensions.animateShowUp
 import com.giedriusmecius.listings.utils.extensions.setNavigationResult
 import com.giedriusmecius.listings.utils.extensions.showAlertDialog
+import com.giedriusmecius.listings.utils.extensions.showToast
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.time.YearMonth
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-class ProfileAddCardDialogFragment(val cc: CC? = null, val isEdit: Boolean) :
+class ProfileAddCardDialogFragment :
     BottomSheetDialogFragment() {
     private var _binding: DialogProfileAddCardBinding? = null
     private val binding get() = _binding!!
     private val cardTypeCheck = ArrayList<CardTypes>()
     private var newCard: CC = CC(null, null, null, null, null)
     private var isExpired: Boolean = false
+    private val navArgs by navArgs<ProfileAddCardDialogFragmentArgs>()
 
     override fun getTheme(): Int = R.style.AppBottomSheetDialogTheme
 
@@ -110,23 +112,9 @@ class ProfileAddCardDialogFragment(val cc: CC? = null, val isEdit: Boolean) :
                         val formattedString = this.text.toString().replace(" ", "")
                         newCard = newCard.copy(number = formattedString.toLong())
                         cardContainerFrontSide.cardNumber.text = this.text
-                        addCardNameTextEdit.apply {
-                            isGone = false
-                            alpha = 0F
-                            translationY = 50F
-                            animate()
-                                .translationY(0F)
-                                .alpha(1F)
-                                .setDuration(700)
-                                .setListener(null)
-                        }
+                        addCardNameTextEdit.animateShowUp()
                         textInputLabel.text = getString(R.string.addCardDialog_nameOnCardlabel)
-                        v.animate()
-                            .translationY(-50F)
-                            .alpha(0F)
-                            .setDuration(400)
-                            .setListener(null)
-                            .withEndAction { v.isGone = true }
+                        v.animateLeave()
                         true
                     } else {
                         false
@@ -139,24 +127,8 @@ class ProfileAddCardDialogFragment(val cc: CC? = null, val isEdit: Boolean) :
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
                         cardContainerFrontSide.cardUserName.text = this.text
                         newCard = newCard.copy(name = this.text.toString())
-                        addCardExpDateTextEdit.apply {
-                            isGone = false
-                            alpha = 0F
-                            translationY = 50F
-                            animate()
-                                .translationY(0F)
-                                .alpha(1F)
-                                .setDuration(700)
-                                .setListener(null)
-                        }
-
-                        v.animate()
-                            .translationY(-50F)
-                            .alpha(0F)
-                            .setDuration(400)
-                            .setListener(null)
-                            .withEndAction { v.isGone = true }
-
+                        addCardExpDateTextEdit.animateShowUp()
+                        v.animateLeave()
                         textInputLabel.text = getString(R.string.addCardDialog_expDatelabel)
                         true
                     } else {
@@ -205,8 +177,7 @@ class ProfileAddCardDialogFragment(val cc: CC? = null, val isEdit: Boolean) :
                                             R.anim.anim_shake
                                         )
                                     )
-                                    Toast.makeText(context, "Card not valid", Toast.LENGTH_SHORT)
-                                        .show()
+                                    showToast(context, "Card not valid")
                                 }
                                 false
                             } else {
@@ -220,24 +191,9 @@ class ProfileAddCardDialogFragment(val cc: CC? = null, val isEdit: Boolean) :
                                     )
                                 }
                                 newCard = newCard.copy(expDate = formattedExpDate.toString())
-                                addCardSecurityTextEdit.apply {
-                                    isGone = false
-                                    alpha = 0F
-                                    translationY = 50F
-                                    animate()
-                                        .translationY(0F)
-                                        .alpha(1F)
-                                        .setDuration(700)
-                                        .setListener(null)
-                                }
+                                addCardSecurityTextEdit.animateShowUp()
                                 rotateCard(cardContainerBack, cardContainerFront)
-                                v.animate()
-                                    .translationY(-50F)
-                                    .alpha(0F)
-                                    .setDuration(400)
-                                    .setStartDelay(100)
-                                    .setListener(null)
-                                    .withEndAction { v.isGone = true }
+                                v.animateLeave()
                                 textInputLabel.text = getString(R.string.addCardDialog_ccvlabel)
 
                                 cardContainerFrontSide.apply {
@@ -250,8 +206,10 @@ class ProfileAddCardDialogFragment(val cc: CC? = null, val isEdit: Boolean) :
 
                         }
                         keyCode == KeyEvent.KEYCODE_DEL && event?.action == KeyEvent.ACTION_DOWN -> {
-                            this.clearComposingText()
-                            this.text.clear()
+                            this.apply {
+                                clearComposingText()
+                                text.clear()
+                            }
                             true
                         }
                         else -> false
@@ -264,27 +222,19 @@ class ProfileAddCardDialogFragment(val cc: CC? = null, val isEdit: Boolean) :
                         cardContainerBackside.cardCvv.text = this.text
                         newCard = newCard.copy(ccv = Integer.parseInt(this.text.toString()))
 //                        setResult(newCard)
-                        Toast.makeText(context, "Card added!", Toast.LENGTH_SHORT).show()
+                        showToast(context, "Card added!")
                         // todo add popup to confirm data or edit
                         showAlertDialog(
                             this.context, "Is everything in order?",
                             "Number: ${newCard.number}\nName: ${newCard.name}\nExp. date: ${newCard.expDate}\nCCV: ${newCard.ccv}",
                             onPositiveClick = {
-                                Toast.makeText(
-                                    context,
-                                    "Positive",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                showToast(context, "Positive")
                                 dismiss()
                             },
                             onNegativeClick = {
-                                Toast.makeText(
-                                    context,
-                                    "Negative!",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                showToast(context, "Negative")
+                                dismiss()
                             })
-//                        dismiss()
                         true
                     } else {
                         false
@@ -310,11 +260,11 @@ class ProfileAddCardDialogFragment(val cc: CC? = null, val isEdit: Boolean) :
                         else -> addCardNumberTextEdit.setText("")
                     }
                 } else {
-                    when {
-                        addCardExpDateTextEdit.isVisible -> addCardExpDateTextEdit.animateLeave()
-                        addCardNameTextEdit.isVisible -> addCardNameTextEdit.animateLeave()
-                    }
-                    addCardNumberTextEdit.animateShowUp()
+                    setupHideAndShow(
+                        addCardNumberTextEdit,
+                        addCardNameTextEdit,
+                        addCardExpDateTextEdit
+                    )
                 }
             }
 
@@ -324,17 +274,19 @@ class ProfileAddCardDialogFragment(val cc: CC? = null, val isEdit: Boolean) :
                 if (addCardNameTextEdit.isVisible) {
                     when {
                         text != "NAME" -> {
-                            addCardNameTextEdit.setText(text)
-                            addCardNameTextEdit.setSelection(text.length)
+                            addCardNameTextEdit.apply {
+                                setText(text)
+                                setSelection(text.length)
+                            }
                         }
                         else -> addCardNameTextEdit.setText("")
                     }
                 } else {
-                    when {
-                        addCardExpDateTextEdit.isVisible -> addCardExpDateTextEdit.animateLeave()
-                        addCardNumberTextEdit.isVisible -> addCardNumberTextEdit.animateLeave()
-                    }
-                    addCardNameTextEdit.animateShowUp()
+                    setupHideAndShow(
+                        addCardNameTextEdit,
+                        addCardExpDateTextEdit,
+                        addCardNumberTextEdit
+                    )
                 }
             }
 
@@ -343,13 +295,14 @@ class ProfileAddCardDialogFragment(val cc: CC? = null, val isEdit: Boolean) :
                 if (addCardExpDateTextEdit.isVisible) {
                     addCardExpDateTextEdit.setText("")
                 } else {
-                    when {
-                        addCardNameTextEdit.isVisible -> addCardNameTextEdit.animateLeave()
-                        addCardNumberTextEdit.isVisible -> addCardNumberTextEdit.animateLeave()
-                    }
-                    addCardExpDateTextEdit.animateShowUp()
+                    setupHideAndShow(
+                        addCardExpDateTextEdit,
+                        addCardNameTextEdit,
+                        addCardNumberTextEdit
+                    )
                 }
             }
+
             cardContainerBackside.cardCvv.setOnClickListener {
                 textInputLabel.text = getString(R.string.addCardDialog_ccvlabel)
                 val text = cardContainerBackside.cardCvv.text
@@ -365,12 +318,20 @@ class ProfileAddCardDialogFragment(val cc: CC? = null, val isEdit: Boolean) :
         }
     }
 
+    private fun setupHideAndShow(viewToShow: View, viewToHide1: View, viewToHide2: View) {
+        when {
+            viewToHide1.isVisible -> viewToHide1.animateLeave()
+            viewToHide2.isVisible -> viewToHide2.animateLeave()
+        }
+        viewToShow.animateShowUp()
+    }
+
     private fun isValidCard(ccExpDate: String): Boolean {
         val monthFormatter = DateTimeFormatter.ofPattern("MM/yy")
         return try {
             val lastValidMonth = YearMonth.parse(ccExpDate, monthFormatter)
             if (YearMonth.now(ZoneId.systemDefault()).isAfter(lastValidMonth)) {
-                println("Credit card has expired")
+                context?.let { showToast(it,"Credit card has expired" ) }
                 true
             } else {
                 false

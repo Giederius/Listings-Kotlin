@@ -1,6 +1,5 @@
 package com.giedriusmecius.listings.utils.extensions
 
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.view.KeyEvent
@@ -8,6 +7,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.isGone
 import com.giedriusmecius.listings.R
 
@@ -69,13 +69,13 @@ fun showAlertDialog(
 
 fun View.animateLeave() {
     this.apply {
-        isGone = true
         alpha = 1F
         animate()
             .translationY(-50F)
             .alpha(0F)
             .setDuration(400)
             .setListener(null)
+            .withEndAction { isGone = true }
     }
 }
 
@@ -91,4 +91,12 @@ fun View.animateShowUp() {
             .setDuration(700)
             .setListener(null)
     }
+}
+
+fun showToast(context: Context, title: String, ) {
+    Toast.makeText(
+        context,
+        title,
+        Toast.LENGTH_SHORT
+    ).show()
 }
