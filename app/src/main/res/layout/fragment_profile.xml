@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:clipToPadding="false"
     android:overScrollMode="always"
-    android:paddingBottom="60dp">
+    android:paddingBottom="32dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -269,29 +269,16 @@
             app:layout_constraintTop_toBottomOf="@id/paymentMethodsTitle" />
 
         <com.giedriusmecius.listings.ui.views.ListingsButton
-            android:id="@+id/paymentMethodsEditButton"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="3.5dp"
-            app:isText="true"
-            android:text="@string/common.edit"
-            app:layout_constraintEnd_toStartOf="@id/paymentMethodsAddCardButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profilePaymentMethodRecyclerView"/>
-
-        <com.giedriusmecius.listings.ui.views.ListingsButton
             android:id="@+id/paymentMethodsAddCardButton"
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:layout_marginStart="3.5dp"
+            android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="24dp"
             app:isText="true"
             android:text="@string/common.addCard"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/paymentMethodsEditButton"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/profilePaymentMethodRecyclerView"/>
 
         <View
@@ -302,7 +289,7 @@
             android:background="@color/neutralLight"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/paymentMethodsEditButton" />
+            app:layout_constraintTop_toBottomOf="@id/paymentMethodsAddCardButton" />
 
         <View
             android:id="@+id/fifthDivider"
@@ -312,7 +299,7 @@
             android:background="@color/neutralLight"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/paymentMethodsEditButton" />
+            app:layout_constraintTop_toBottomOf="@id/paymentMethodsAddCardButton" />
 
         <TextView
             android:id="@+id/addressesTitle"
@@ -342,7 +329,6 @@
             android:layout_height="48dp"
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="32dp"
-            android:layout_marginBottom="32dp"
             android:text="@string/profile.addresses.addButton"
             app:isText="true"
             app:layout_constraintEnd_toEndOf="parent"

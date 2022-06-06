@@ -18,6 +18,7 @@ data class ProfileDrawersState(
         object TappedHorizontalLayout : Event()
         object TappedGridLayout : Event()
         object TappedListLayout : Event()
+        object TappedProfile : Event()
     }
 
     sealed class Request {
@@ -31,6 +32,7 @@ data class ProfileDrawersState(
         object ChangeLayoutHorizontal : Command()
         object ChangeLayoutGrid : Command()
         object ChangeLayoutList : Command()
+        object OpenProfileFragment : Command()
     }
 
     override fun reduce(event: Event): ProfileDrawersState {
@@ -46,6 +48,7 @@ data class ProfileDrawersState(
             Event.TappedHorizontalLayout -> copy(command = Command.ChangeLayoutHorizontal)
             Event.TappedGridLayout -> copy(command = Command.ChangeLayoutGrid)
             Event.TappedListLayout -> copy(command = Command.ChangeLayoutList)
+            Event.TappedProfile -> copy(command = Command.OpenProfileFragment)
         }
     }
 

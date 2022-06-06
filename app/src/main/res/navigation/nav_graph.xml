@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/profileDrawerFragment">
+    app:startDestination="@id/profileFragment">
 
     <fragment
         android:id="@+id/splashFragment"
@@ -42,10 +42,6 @@
         android:name="com.giedriusmecius.listings.ui.profileDrawers.ProfileDrawersFragment"
         android:label="ProfileDrawerFragment"
         tools:layout="@layout/fragment_profile_drawers">
-        <argument
-            android:name="title"
-            android:defaultValue="Drawer"
-            app:argType="string" />
         <action
             android:id="@+id/action_profileDrawerFragment_to_profileFragment"
             app:destination="@id/profileFragment"
@@ -85,7 +81,7 @@
         tools:layout="@layout/dialog_profile_add_card">
         <argument
             android:name="cardInfo"
-            app:argType="com.giedriusmecius.listings.data.remote.model.CC"
+            app:argType="com.giedriusmecius.listings.data.local.PaymentMethod"
             android:defaultValue="@null"
             app:nullable="true" />
         <argument

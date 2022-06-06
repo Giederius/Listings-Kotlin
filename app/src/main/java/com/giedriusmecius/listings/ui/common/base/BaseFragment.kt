@@ -6,9 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
 import androidx.navigation.NavDirections
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
+import com.giedriusmecius.listings.MainActivity
 import com.giedriusmecius.listings.R
 
 abstract class BaseFragment<VB : ViewBinding>(
@@ -46,6 +50,8 @@ abstract class BaseFragment<VB : ViewBinding>(
     fun navigate(directions: NavDirections) {
         try {
             findNavController().navigate(directions)
+//            var navController = Navigation.findNavController(activity as MainActivity, R.id.nav_host_fragment)
+//            navController.navigate(directions)
         } catch (e: IllegalArgumentException) {
             Log.d("errorArgument", e.localizedMessage)
         } catch (e: IllegalStateException) {

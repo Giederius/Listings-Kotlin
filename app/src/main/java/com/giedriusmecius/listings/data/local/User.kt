@@ -2,6 +2,7 @@ package com.giedriusmecius.listings.data.local
 
 import com.giedriusmecius.listings.data.remote.model.CardType
 import com.squareup.moshi.JsonClass
+import java.io.Serializable
 
 @JsonClass(generateAdapter = true)
 data class User(
@@ -29,7 +30,7 @@ data class UserAddress(
     val postCode: String,
     val county: String,
     val country: String
-)
+) : Serializable
 
 @JsonClass(generateAdapter = true)
 data class PaymentMethodResponse(
@@ -38,12 +39,12 @@ data class PaymentMethodResponse(
 
 @JsonClass(generateAdapter = true)
 data class PaymentMethod(
-    val number: Long,
-    val name: String,
-    val type: CardType,
-    val expDate: String,
-    val ccv: Int
-)
+    val number: Long?,
+    val name: String?,
+    val type: CardType?,
+    val expDate: String?,
+    val ccv: Int?
+) : Serializable
 
 enum class CardType {
     VISA, MasterCard

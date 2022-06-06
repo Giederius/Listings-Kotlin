@@ -1,11 +1,14 @@
 package com.giedriusmecius.listings.ui.profileDrawers
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
+import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giedriusmecius.listings.R
@@ -25,12 +28,17 @@ class ProfileDrawersFragment :
 
     private val vm by viewModels<ProfileDrawersViewModel>()
     private val groupie = GroupieAdapter()
-    private val args by navArgs<ProfileDrawersFragmentArgs>()
 
     /* all of the data here should be saved somewhere
        you should create a drawer and add products to it
        make something like a favorite page that should hold
        different items in different categories. */
+
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        val navHostFragment = (R.id.nav_host_fragment) as NavHostFragment
+//        val navController = navHostFragment.navController
+//    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,6 +54,7 @@ class ProfileDrawersFragment :
 
     override fun observeState() {
         vm.subscribeWithAutoDispose(this) { oldState, newState ->
+            Log.d("MANO", "state ${newState.command}")
             if (oldState != newState) {
                 with(binding) {
                     profileDrawersProgressBar.isGone = !newState.isLoading
@@ -73,6 +82,9 @@ class ProfileDrawersFragment :
                     handleLayoutChange(true)
                     displayData(newState.data, true)
                 }
+                ProfileDrawersState.Command.OpenProfileFragment -> {
+                    navigate(ProfileDrawersFragmentDirections.actionProfileDrawerFragmentToProfileFragment())
+                }
                 // todo layout adjustment.
                 else -> {}
             }
@@ -96,7 +108,7 @@ class ProfileDrawersFragment :
     private fun setupUI() {
         with(binding) {
             profilePicture.setOnClickListener {
-                navigate(ProfileDrawersFragmentDirections.actionProfileDrawerFragmentToProfileFragment())
+                vm.transition(ProfileDrawersState.Event.TappedProfile)
             }
 
             profileDrawerRecyclerView.apply {
