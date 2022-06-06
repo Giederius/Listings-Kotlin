@@ -13,14 +13,13 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.navArgs
 import com.giedriusmecius.listings.R
+import com.giedriusmecius.listings.data.local.CardType
 import com.giedriusmecius.listings.data.local.PaymentMethod
-import com.giedriusmecius.listings.data.remote.model.CardType
 import com.giedriusmecius.listings.databinding.DialogProfileAddCardBinding
 import com.giedriusmecius.listings.ui.common.base.BaseDialogFragment
 import com.giedriusmecius.listings.utils.extensions.animateLeave
 import com.giedriusmecius.listings.utils.extensions.animateShowUp
 import com.giedriusmecius.listings.utils.extensions.setNavigationResult
-import com.giedriusmecius.listings.utils.extensions.showAlertDialog
 import com.giedriusmecius.listings.utils.extensions.showToast
 import java.time.YearMonth
 import java.time.ZoneId
@@ -231,17 +230,17 @@ class ProfileAddCardDialogFragment :
                         card = card.copy(ccv = Integer.parseInt(this.text.toString()))
 
                         // todo add popup to confirm data or edit
-
-                        showAlertDialog(
-                            this.context, "Is everything in order?",
-                            "Number: ${card.number}\nName: ${card.name}\nExp. date: ${card.expDate}\nCCV: ${card.ccv}",
-                            onPositiveClick = {
-                                setResult(card)
-                                showToast(context, "Card added!")
-                            },
-                            onNegativeClick = {
-                                showToast(context, "Negative")
-                            })
+                        setResult(card)
+//                        showAlertDialog(
+//                            this.context, "Is everything in order?",
+//                            "Number: ${card.number}\nName: ${card.name}\nExp. date: ${card.expDate}\nCCV: ${card.ccv}",
+//                            onPositiveClick = {
+//
+//                                showToast(context, "Card added!")
+//                            },
+//                            onNegativeClick = {
+//                                showToast(context, "Negative")
+//                            })
                         true
                     } else {
                         false
@@ -396,7 +395,7 @@ class ProfileAddCardDialogFragment :
     }
 
     private fun setResult(value: PaymentMethod) {
-        setNavigationResult(ProfileFragment.RESULT_KEY, value)
+        setNavigationResult(RESULT_KEY, value)
         dismiss()
     }
 

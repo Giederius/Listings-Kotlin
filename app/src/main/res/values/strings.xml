@@ -25,10 +25,15 @@
     <string name="profile.mainDepartment">Main department</string>
     <string name="profile.favoriteColor">Favorite color</string>
     <string name="profile.paymentMethods">Payment methods</string>
+    <string name="profile.payments.noPaymentMethods">You have no payment methods.</string>
+    <string name="profile.payments.cardNumber">****%1$s</string>
+
     <string name="profile.addresses">Addresses</string>
     <string name="profile.addresses.addButton">Add address</string>
     <string name="profile.addresses.editAddress">Edit address</string>
     <string name="profile.addresses.deleteAddress">Delete address</string>
+    <string name="profile.addresses.noAddresses">You have no addresses.</string>
+
 
     // Profile Drawers Fragment
     <string name="profileDrawers.title">Drawers</string>

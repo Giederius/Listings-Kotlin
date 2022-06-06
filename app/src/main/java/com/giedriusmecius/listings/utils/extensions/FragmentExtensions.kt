@@ -1,5 +1,6 @@
 package com.giedriusmecius.listings.utils.extensions
 
+import android.util.Log
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -16,6 +17,7 @@ fun <T> Fragment.setNavigationResult(key: String, value: T) {
 fun <T> Fragment.getNavigationResult(@IdRes id: Int, key: String, onResult: (result: T) -> Unit) {
     try {
         val navBackStackEntry = findNavController().getBackStackEntry(id)
+        Log.d("MANO", navBackStackEntry.toString())
 
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME && navBackStackEntry.savedStateHandle.contains(

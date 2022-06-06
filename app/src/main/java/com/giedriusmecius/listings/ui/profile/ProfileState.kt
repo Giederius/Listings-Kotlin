@@ -19,8 +19,10 @@ data class ProfileState(
             val paymentMethods: List<PaymentMethod>,
             val userAddresses: List<UserAddress>
         ) : Event() // change to use when fully setup
-
-        data class TappedEditPaymentMethod(val method: PaymentMethod?, val isEdit: Boolean) : Event()
+        data class TappedEditPaymentMethod(val method: PaymentMethod?, val isEdit: Boolean) :
+            Event()
+        data class AddedPaymentMethod(val method: PaymentMethod) : Event()
+        object SavedPaymentMethodToPrefs : Event()
     }
 
     sealed class Command {
@@ -31,10 +33,16 @@ data class ProfileState(
 
         data class OpenPaymentMethodDialog(val method: PaymentMethod?, val isEdit: Boolean) :
             Command()
+
+        data class AddPaymentMethod(val method: PaymentMethod) : Command()
     }
 
     sealed class Request {
         object FetchUser : Request()
+        data class SavePaymentMethod(
+            val method: PaymentMethod,
+            val methodList: List<PaymentMethod>
+        ) : Request()
     }
 
     override fun reduce(event: Event): ProfileState {
@@ -52,6 +60,13 @@ data class ProfileState(
                     event.isEdit
                 )
             )
+            is Event.AddedPaymentMethod -> copy(
+                request = Request.SavePaymentMethod(
+                    event.method,
+                    paymentMethods ?: mutableListOf()
+                ), command = Command.AddPaymentMethod(event.method)
+            )
+            Event.SavedPaymentMethodToPrefs -> copy(request = Request.FetchUser)
         }
     }
 

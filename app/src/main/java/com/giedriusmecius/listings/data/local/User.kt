@@ -1,6 +1,5 @@
 package com.giedriusmecius.listings.data.local
 
-import com.giedriusmecius.listings.data.remote.model.CardType
 import com.squareup.moshi.JsonClass
 import java.io.Serializable
 
@@ -47,5 +46,5 @@ data class PaymentMethod(
 ) : Serializable
 
 enum class CardType {
-    VISA, MasterCard
+    VISA, MASTERCARD
 }
