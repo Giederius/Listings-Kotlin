@@ -25,9 +25,18 @@ class ProfileViewModel @Inject constructor(
             is ProfileState.Request.SavePaymentMethod -> {
                 val allMethods = req.methodList as MutableList
                 allMethods.add(req.method)
-                Log.d("MANO", allMethods.toString())
+
+                userPreferences.saveUserPaymentMethods(PaymentMethodResponse(methods = allMethods))
+            }
+            is ProfileState.Request.UpdatePaymentMethods -> {
+                val allMethods = req.allMethods.toMutableList()
+                allMethods.removeAt(allMethods.indexOf(req.oldMethod))
+                allMethods.add(req.newMethod)
                 userPreferences.saveUserPaymentMethods(PaymentMethodResponse(methods = allMethods))
 
+                viewModelScope.launch {
+                    fetchUserData()
+                }
             }
             else -> {}
         }

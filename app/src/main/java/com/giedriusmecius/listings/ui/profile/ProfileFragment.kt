@@ -3,7 +3,6 @@ package com.giedriusmecius.listings.ui.profile
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giedriusmecius.listings.MainActivity
@@ -60,14 +59,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     override fun observeState() {
         vm.subscribeWithAutoDispose(viewLifecycleOwner) { _, newState ->
 
-
             with(binding) {
-                profileNoPaymentMethods.isVisible = newState.paymentMethods?.isEmpty() ?: false
-                profilePaymentMethodRecyclerView.isVisible =
-                    newState.paymentMethods?.isEmpty() ?: true
-
-                profileNoAddresses.isVisible = newState.userAddresses?.isEmpty() ?: false
-                addressesRecyclerView.isVisible = newState.userAddresses?.isEmpty() ?: true
+//                profileNoPaymentMethods.isVisible = newState.paymentMethods?.isEmpty() ?: true
+//                profilePaymentMethodRecyclerView.isVisible =
+//                    newState.paymentMethods?.isEmpty() ?: false
+//
+//                profileNoAddresses.isVisible = newState.userAddresses?.isEmpty() ?: false
+//                addressesRecyclerView.isVisible = newState.userAddresses?.isEmpty() ?: true
             }
 
             when (val cmd = newState.command) {
@@ -104,7 +102,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     }
 
     private fun setupPaymentMethods(methods: List<PaymentMethod>) {
-        Log.d("MANOsetup", methods.toString())
+        paymentMethodAdapter.clear()
         methods.map {
             val numberString = getString(
                 R.string.profile_payments_cardNumber,
@@ -114,11 +112,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                 vm.transition(
                     ProfileState.Event.TappedEditPaymentMethod(it, true)
                 )
-            }.let { card -> paymentMethodAdapter.add(card) }
+            }.also { card -> paymentMethodAdapter.add(card) }
         }
     }
 
     private fun setupUserAddresses(addresses: List<UserAddress>) {
+        addressAdapter.clear()
         addressAdapter.addAll(
             arrayListOf(
                 ProfileAddressItem(
@@ -156,11 +155,16 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     }
 
     private fun listenForCCAdd() {
-        getNavigationResult<PaymentMethod>(
+        getNavigationResult<Triple<Boolean, PaymentMethod, PaymentMethod>>(
+            // isEdit, newCard, oldCard
             R.id.profileFragment,
             ProfileAddCardDialogFragment.RESULT_KEY
         ) {
-            vm.transition(ProfileState.Event.AddedPaymentMethod(it))
+            if (it.first) {
+                vm.transition(ProfileState.Event.EditedPaymentMethod(it.second, it.third))
+            } else {
+                vm.transition(ProfileState.Event.AddedPaymentMethod(it.second))
+            }
         }
     }
 }

@@ -230,7 +230,7 @@ class ProfileAddCardDialogFragment :
                         card = card.copy(ccv = Integer.parseInt(this.text.toString()))
 
                         // todo add popup to confirm data or edit
-                        setResult(card)
+                        setResult(Triple(navArgs.isEdit, card, navArgs.cardInfo))
 //                        showAlertDialog(
 //                            this.context, "Is everything in order?",
 //                            "Number: ${card.number}\nName: ${card.name}\nExp. date: ${card.expDate}\nCCV: ${card.ccv}",
@@ -394,7 +394,8 @@ class ProfileAddCardDialogFragment :
         flipInAnimatorSet.start()
     }
 
-    private fun setResult(value: PaymentMethod) {
+    private fun setResult(value: Triple<Boolean, PaymentMethod, PaymentMethod?>) {
+         // isEdit, newCard, oldCard
         setNavigationResult(RESULT_KEY, value)
         dismiss()
     }

@@ -54,7 +54,6 @@ class ProfileDrawersFragment :
 
     override fun observeState() {
         vm.subscribeWithAutoDispose(this) { oldState, newState ->
-            Log.d("MANO", "state ${newState.command}")
             if (oldState != newState) {
                 with(binding) {
                     profileDrawersProgressBar.isGone = !newState.isLoading

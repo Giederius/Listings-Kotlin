@@ -19,9 +19,16 @@ data class ProfileState(
             val paymentMethods: List<PaymentMethod>,
             val userAddresses: List<UserAddress>
         ) : Event() // change to use when fully setup
+
         data class TappedEditPaymentMethod(val method: PaymentMethod?, val isEdit: Boolean) :
             Event()
+
         data class AddedPaymentMethod(val method: PaymentMethod) : Event()
+        data class EditedPaymentMethod(
+            val newMethod: PaymentMethod,
+            val oldMethod: PaymentMethod
+        ) : Event()
+
         object SavedPaymentMethodToPrefs : Event()
     }
 
@@ -39,9 +46,16 @@ data class ProfileState(
 
     sealed class Request {
         object FetchUser : Request()
+
         data class SavePaymentMethod(
             val method: PaymentMethod,
             val methodList: List<PaymentMethod>
+        ) : Request()
+
+        data class UpdatePaymentMethods(
+            val newMethod: PaymentMethod,
+            val oldMethod: PaymentMethod,
+            val allMethods: List<PaymentMethod>
         ) : Request()
     }
 
@@ -52,7 +66,9 @@ data class ProfileState(
                 command = Command.SetupUserDetails(
                     event.paymentMethods,
                     event.userAddresses,
-                )
+                ),
+                paymentMethods = event.paymentMethods,
+                userAddresses = event.userAddresses
             )
             is Event.TappedEditPaymentMethod -> copy(
                 command = Command.OpenPaymentMethodDialog(
@@ -67,6 +83,13 @@ data class ProfileState(
                 ), command = Command.AddPaymentMethod(event.method)
             )
             Event.SavedPaymentMethodToPrefs -> copy(request = Request.FetchUser)
+            is Event.EditedPaymentMethod -> copy(
+                request = Request.UpdatePaymentMethods(
+                    event.newMethod,
+                    event.oldMethod,
+                    paymentMethods ?: emptyList()
+                )
+            )
         }
     }
 
