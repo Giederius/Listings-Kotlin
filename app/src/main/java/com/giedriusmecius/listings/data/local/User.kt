@@ -10,8 +10,7 @@ data class User(
     val lastName: String,
     val addresses: List<UserAddress>,
     val paymentMethods: List<PaymentMethod>,
-    val userSizeNumber: Int,
-    val userSizeLetter: String,
+    val userSize: Size,
     val favoriteColor: String,
 //    val mainDepartment: Department
 )
@@ -49,6 +48,13 @@ data class PaymentMethod(
     val type: CardType?,
     val expDate: String?,
     val ccv: Int?
+) : Serializable
+
+@JsonClass(generateAdapter = true)
+data class Size(
+    val us: Int,
+    val eu: String,
+    val isFavorite: Boolean
 ) : Serializable
 
 enum class CardType {

@@ -11,6 +11,7 @@ import com.giedriusmecius.listings.data.local.PaymentMethod
 import com.giedriusmecius.listings.data.local.UserAddress
 import com.giedriusmecius.listings.databinding.FragmentProfileBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
+import com.giedriusmecius.listings.ui.common.dialogs.DepartmentSelectionDialogFragment
 import com.giedriusmecius.listings.ui.common.groupie.PaymentMethodCardItem
 import com.giedriusmecius.listings.ui.common.groupie.ProfileAddressItem
 import com.giedriusmecius.listings.utils.extensions.getNavigationResult
@@ -33,6 +34,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         (activity as MainActivity).hideBottomNavBar()
         listenForCCAdd()
         listenForAddressAdd()
+        listenForDepartmentSelection()
     }
 
     private fun setupRecyclerViews() {
@@ -53,11 +55,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
 // todo
 //    susitvarkyti sharedprefsus+
 //    edit button card itemam+
-//              edit add address
-// preferences list and selection
+//              edit add address+
+//                                  preferences list and selection
 
     override fun observeState() {
-        vm.subscribeWithAutoDispose(viewLifecycleOwner) { _, newState ->
+        vm.subscribeWithAutoDispose(viewLifecycleOwner) { oldState, newState ->
 
             with(binding) {
 //                profileNoPaymentMethods.isVisible = newState.paymentMethods?.isEmpty() ?: true
@@ -66,6 +68,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
 //
 //                profileNoAddresses.isVisible = newState.userAddresses?.isEmpty() ?: false
 //                addressesRecyclerView.isVisible = newState.userAddresses?.isEmpty() ?: true
+
+
+//                if (oldState?.departmentName != newState.departmentName) {
+//
+//                }
             }
 
             when (val cmd = newState.command) {
@@ -93,6 +100,22 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                 }
                 is ProfileState.Command.AddUserAddress -> {
                     addressAdapter.add(0, mapAddress(cmd.address))
+                }
+                is ProfileState.Command.OpenSizePicker -> {
+                    navigate(ProfileFragmentDirections.profileFragmentToSizeDialog(cmd.userSize))
+                }
+                is ProfileState.Command.OpenDepartmentPicker -> {
+                    navigate(
+                        ProfileFragmentDirections.profileFragmentToDepartmentSelectionDialog(
+                            cmd.departmentName
+                        )
+                    )
+                }
+                is ProfileState.Command.UpdateDepartment -> {
+                    with(binding) {
+                        departmentIcon.setText(cmd.departmentName.first().lowercase())
+                        userMainDepartmentText.text = cmd.departmentName
+                    }
                 }
                 else -> {}
             }
@@ -129,6 +152,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             addressAddButton.setOnClickListener {
                 vm.transition(ProfileState.Event.TappedUserAddress(null, false))
             }
+            sizeIcon.setOnClickListener {
+                vm.transition(ProfileState.Event.TappedSizePicker)
+            }
+            departmentIcon.setOnClickListener {
+                vm.transition(ProfileState.Event.TappedDepartmentPicker)
+            }
         }
     }
 
@@ -156,6 +185,15 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             } else {
                 vm.transition(ProfileState.Event.AddedUserAddress(it.second))
             }
+        }
+    }
+
+    private fun listenForDepartmentSelection() {
+        getNavigationResult<String>(
+            R.id.profileFragment,
+            DepartmentSelectionDialogFragment.RESULT_KEY
+        ) {
+            vm.transition(ProfileState.Event.ReceivedDepartment(it))
         }
     }
 

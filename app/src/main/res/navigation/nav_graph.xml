@@ -38,6 +38,12 @@
         <action
             android:id="@+id/profileFragment_to_profileAddAddressDialog"
             app:destination="@id/profileAddAddressDialogFragment" />
+        <action
+            android:id="@+id/profileFragment_to_sizeDialog"
+            app:destination="@id/SizeDialogFragment" />
+        <action
+            android:id="@+id/profileFragment_to_departmentSelectionDialog"
+            app:destination="@id/DepartmentSelectionFragment" />
     </fragment>
 
     <fragment
@@ -111,5 +117,27 @@
             android:name="isEdit"
             android:defaultValue="false"
             app:argType="boolean" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/SizeDialogFragment"
+        android:name="com.giedriusmecius.listings.ui.common.dialogs.SizeDialogFragment"
+        tools:layout="@layout/dialog_size">
+        <argument
+            android:name="size"
+            android:defaultValue="@null"
+            app:argType="com.giedriusmecius.listings.data.local.Size"
+            app:nullable="true" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/DepartmentSelectionFragment"
+        android:name="com.giedriusmecius.listings.ui.common.dialogs.DepartmentSelectionDialogFragment"
+        tools:layout="@layout/dialog_department_selection">
+        <argument
+            android:name="departmentName"
+            android:defaultValue=""
+            app:argType="string"
+            app:nullable="true" />
     </dialog>
 </navigation>

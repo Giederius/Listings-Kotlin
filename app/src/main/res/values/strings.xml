@@ -58,4 +58,12 @@
     // Add Address Dialog
     <string name="addAddress.title">Add Your address</string>
 
+    // Department Selection Dialog
+    <string name="departmentDialog.title">Select department</string>
+    <string name="departmentDialog.women">Women</string>
+    <string name="departmentDialog.man">Men</string>
+    <string name="departmentDialog.girl">Girl (0\-12 years old)</string>
+    <string name="departmentDialog.boy">Boy (0\-12 years old)</string>
+    <string name="departmentDialog.none">None</string>
+
 </resources>

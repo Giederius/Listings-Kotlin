@@ -1,6 +1,8 @@
 package com.giedriusmecius.listings.ui.profile
 
 import com.giedriusmecius.listings.data.local.PaymentMethod
+import com.giedriusmecius.listings.data.local.Size
+import com.giedriusmecius.listings.data.local.User
 import com.giedriusmecius.listings.data.local.UserAddress
 import com.giedriusmecius.listings.utils.state.State
 
@@ -8,6 +10,9 @@ import com.giedriusmecius.listings.utils.state.State
 data class ProfileState(
     val request: Request? = null,
     val command: Command? = null,
+    val user: User? = null,
+    val userSize: Size? = null,
+    val departmentName: String? = null,
     val paymentMethods: List<PaymentMethod>? = null,
     val userAddresses: List<UserAddress>? = null
 ) :
@@ -39,6 +44,9 @@ data class ProfileState(
         data class TappedUserAddress(val address: UserAddress?, val isEdit: Boolean) : Event()
         data class TappedDeleteAddress(val address: UserAddress) : Event()
         data class TappedDeletePaymentMethod(val method: PaymentMethod) : Event()
+        object TappedSizePicker : Event()
+        object TappedDepartmentPicker : Event()
+        data class ReceivedDepartment(val department: String) : Event()
     }
 
     sealed class Command {
@@ -53,6 +61,9 @@ data class ProfileState(
         data class AddPaymentMethod(val method: PaymentMethod) : Command()
         data class AddUserAddress(val address: UserAddress) : Command()
         data class OpenUserAddressDialog(val address: UserAddress?, val isEdit: Boolean) : Command()
+        data class OpenSizePicker(val userSize: Size?) : Command()
+        data class OpenDepartmentPicker(val departmentName: String?) : Command()
+        data class UpdateDepartment(val departmentName: String) : Command()
     }
 
     sealed class Request {
@@ -98,7 +109,9 @@ data class ProfileState(
                     event.userAddresses,
                 ),
                 paymentMethods = event.paymentMethods,
-                userAddresses = event.userAddresses
+                userAddresses = event.userAddresses,
+                userSize = Size(26, "s", true),
+                departmentName = "Girl"
             )
             is Event.TappedPaymentMethod -> copy(
                 command = Command.OpenPaymentMethodDialog(
@@ -147,6 +160,16 @@ data class ProfileState(
                     event.method,
                     paymentMethods ?: emptyList()
                 )
+            )
+            Event.TappedSizePicker -> copy(command = Command.OpenSizePicker(userSize))
+            Event.TappedDepartmentPicker -> copy(
+                command = Command.OpenDepartmentPicker(
+                    departmentName = departmentName
+                )
+            )
+            is Event.ReceivedDepartment -> copy(
+                departmentName = event.department,
+                command = Command.UpdateDepartment(event.department)
             )
         }
     }

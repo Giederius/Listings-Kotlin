@@ -26,8 +26,8 @@ abstract class BaseDialogFragment<VB : ViewBinding>(private val inflate: Inflate
 
     override fun onStart() {
         super.onStart()
-        val bottomSheet = dialog?.window?.findViewById<View>(R.id.design_bottom_sheet)
-        bottomSheet?.layoutParams?.height = ViewGroup.LayoutParams.MATCH_PARENT
+//        val bottomSheet = dialog?.window?.findViewById<View>(R.id.design_bottom_sheet)
+//        bottomSheet?.layoutParams?.height = ViewGroup.LayoutParams.MATCH_PARENT
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
