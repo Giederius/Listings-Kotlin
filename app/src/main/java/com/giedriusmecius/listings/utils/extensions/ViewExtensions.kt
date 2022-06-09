@@ -8,8 +8,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.StringRes
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.view.isGone
 import com.giedriusmecius.listings.R
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 fun EditText.hideKeyboard() {
     val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -51,21 +54,23 @@ fun EditText.addCardAnimationWithSetText(
     }
 }
 
-fun showAlertDialog(
-    context: Context,
-    title: String = "",
-    message: String = "",
-    onPositiveClick: () -> Unit,
-    onNegativeClick: () -> Unit,
-) {
-    AlertDialog.Builder(context, R.style.MyDialogTheme)
-        .setTitle(title)
-        .setMessage(message)
-        .setCancelable(true)
-        .setPositiveButton("OK") { _, _ -> onPositiveClick() }
-        .setNegativeButton("Edit") { _, _ -> onNegativeClick() }
-        .show()
-}
+//fun showAlertDialog(
+//    context: Context,
+//    title: String = "",
+//    message: String = "",
+//    positiveBtnText: String = "",
+//    negativeBtnText: String = "",
+//    onPositiveClick: () -> Unit,
+//    onNegativeClick: () -> Unit,
+//) {
+//    AlertDialog.Builder(context, R.style.MyDialogTheme)
+//        .setTitle(title)
+//        .setMessage(message)
+//        .setCancelable(true)
+//        .setPositiveButton(positiveBtnText) { _, _ -> onPositiveClick() }
+//        .setNegativeButton(negativeBtnText) { _, _ -> onNegativeClick() }
+//        .show()
+//}
 
 fun View.animateLeave() {
     this.apply {
@@ -93,7 +98,7 @@ fun View.animateShowUp() {
     }
 }
 
-fun showToast(context: Context, title: String, ) {
+fun showToast(context: Context, title: String) {
     Toast.makeText(
         context,
         title,

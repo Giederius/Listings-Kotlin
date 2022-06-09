@@ -31,7 +31,7 @@ class ProfileViewModel @Inject constructor(
             }
             is ProfileState.Request.UpdatePaymentMethods -> {
                 val allMethods = req.allMethods.toMutableList()
-                allMethods.removeAt(allMethods.indexOf(req.oldMethod))
+                allMethods.remove(req.oldMethod)
                 allMethods.add(req.newMethod)
                 userPreferences.saveUserPaymentMethods(PaymentMethodResponse(methods = allMethods))
 
@@ -46,7 +46,7 @@ class ProfileViewModel @Inject constructor(
             }
             is ProfileState.Request.UpdateUserAddresses -> {
                 val allAddresses = req.allAddresses.toMutableList()
-                allAddresses.removeAt(allAddresses.indexOf(req.oldAddress))
+                allAddresses.remove(req.oldAddress)
                 allAddresses.add(req.newAddress)
                 userPreferences.saveUserAddresses(UserAddressResponse(addresses = allAddresses))
 
@@ -63,6 +63,16 @@ class ProfileViewModel @Inject constructor(
                     fetchUserData()
                 }
             }
+            is ProfileState.Request.DeletePaymentMethod -> {
+                val allMethods = req.allMethods.toMutableList()
+                allMethods.remove(req.method)
+
+                userPreferences.saveUserPaymentMethods(PaymentMethodResponse(methods = allMethods))
+
+                viewModelScope.launch {
+                    fetchUserData()
+                }
+            }
             else -> {}
         }
     }
@@ -71,7 +81,6 @@ class ProfileViewModel @Inject constructor(
         val paymentMethods = userPreferences.getUserPaymentMethods().methods
         val userAddresses = userPreferences.getUserAddresses().addresses
         delay(300)
-        Log.d("MANOaddress", userAddresses.toString())
         transition(ProfileState.Event.ReceivedUserDetails(paymentMethods, userAddresses))
     }
 }

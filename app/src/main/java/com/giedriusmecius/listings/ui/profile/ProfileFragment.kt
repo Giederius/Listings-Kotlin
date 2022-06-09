@@ -81,19 +81,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                     )
                 }
                 is ProfileState.Command.AddPaymentMethod -> {
-                    val numberString = getString(
-                        R.string.profile_payments_cardNumber,
-                        cmd.method.number.toString().takeLast(4)
-                    )
-
-                    paymentMethodAdapter.add(
-                        0,
-                        PaymentMethodCardItem(cmd.method.type ?: CardType.VISA, numberString) {
-                            vm.transition(
-                                ProfileState.Event.TappedPaymentMethod(cmd.method, true)
-                            )
-                        }
-                    )
+                    paymentMethodAdapter.add(0, mapPaymentMethod(cmd.method))
                 }
                 is ProfileState.Command.OpenUserAddressDialog -> {
                     navigate(
@@ -104,33 +92,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                     )
                 }
                 is ProfileState.Command.AddUserAddress -> {
-                    addressAdapter.add(
-                        0, ProfileAddressItem(
-                            houseNumber = cmd.address.addressHouseNumber,
-                            streetName = cmd.address.addressStreetName,
-                            county = cmd.address.county,
-                            state = cmd.address.state,
-                            country = cmd.address.country,
-                            zipCode = cmd.address.zipCode,
-                            addressDescription = cmd.address.addressLabel,
-                            userFullName = "${cmd.address.firstName} ${cmd.address.lastName}",
-                            onEditClick = {
-                                vm.transition(
-                                    ProfileState.Event.TappedUserAddress(
-                                        cmd.address,
-                                        true
-                                    )
-                                )
-                            },
-                            onDeleteClick = {
-                                vm.transition(
-                                    ProfileState.Event.TappedDeleteAddress(
-                                        cmd.address
-                                    )
-                                )
-                            }
-                        )
-                    )
+                    addressAdapter.add(0, mapAddress(cmd.address))
                 }
                 else -> {}
             }
@@ -140,34 +102,16 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     private fun setupPaymentMethods(methods: List<PaymentMethod>) {
         paymentMethodAdapter.clear()
         methods.map {
-            val numberString = getString(
-                R.string.profile_payments_cardNumber,
-                it.number.toString().takeLast(4)
-            )
-            PaymentMethodCardItem(it.type ?: CardType.VISA, numberString) {
-                vm.transition(
-                    ProfileState.Event.TappedPaymentMethod(it, true)
-                )
-            }.also { card -> paymentMethodAdapter.add(card) }
+            mapPaymentMethod(it).also { card -> paymentMethodAdapter.add(card) }
         }
     }
 
     private fun setupUserAddresses(addresses: List<UserAddress>) {
         addressAdapter.clear()
         addresses.map {
-            ProfileAddressItem(
-                houseNumber = it.addressHouseNumber,
-                streetName = it.addressStreetName,
-                county = it.county,
-                state = it.state,
-                country = it.country,
-                zipCode = it.zipCode,
-                addressDescription = it.addressLabel,
-                userFullName = "${it.firstName} ${it.lastName}",
-                onEditClick = { vm.transition(ProfileState.Event.TappedUserAddress(it, true)) },
-                onDeleteClick = { vm.transition(ProfileState.Event.TappedDeleteAddress(it)) },
-            ).also { addressAdapter.add(it) }
+            mapAddress(it).also { addressAdapter.add(it) }
         }
+
     }
 
     private fun setupUI() {
@@ -213,5 +157,33 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                 vm.transition(ProfileState.Event.AddedUserAddress(it.second))
             }
         }
+    }
+
+    private fun mapAddress(address: UserAddress): ProfileAddressItem {
+        return ProfileAddressItem(
+            houseNumber = address.addressHouseNumber,
+            streetName = address.addressStreetName,
+            county = address.county,
+            state = address.state,
+            country = address.country,
+            zipCode = address.zipCode,
+            addressDescription = address.addressLabel,
+            userFullName = "${address.firstName} ${address.lastName}",
+            onEditClick = { vm.transition(ProfileState.Event.TappedUserAddress(address, true)) },
+            onDeleteClick = { vm.transition(ProfileState.Event.TappedDeleteAddress(address)) },
+        )
+    }
+
+    private fun mapPaymentMethod(method: PaymentMethod): PaymentMethodCardItem {
+        val numberString = getString(
+            R.string.profile_payments_cardNumber,
+            method.number.toString().takeLast(4)
+        )
+        return PaymentMethodCardItem(method.type ?: CardType.VISA, numberString, {
+            vm.transition(
+                ProfileState.Event.TappedPaymentMethod(method, true)
+            )
+        },
+            { vm.transition(ProfileState.Event.TappedDeletePaymentMethod(method)) })
     }
 }

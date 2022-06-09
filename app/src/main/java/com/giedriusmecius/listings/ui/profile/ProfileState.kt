@@ -38,6 +38,7 @@ data class ProfileState(
         object SavedPaymentMethodToPrefs : Event()
         data class TappedUserAddress(val address: UserAddress?, val isEdit: Boolean) : Event()
         data class TappedDeleteAddress(val address: UserAddress) : Event()
+        data class TappedDeletePaymentMethod(val method: PaymentMethod) : Event()
     }
 
     sealed class Command {
@@ -80,6 +81,11 @@ data class ProfileState(
         data class DeleteUserAddress(
             val address: UserAddress,
             val allAddresses: List<UserAddress>
+        ) : Request()
+
+        data class DeletePaymentMethod(
+            val method: PaymentMethod,
+            val allMethods: List<PaymentMethod>
         ) : Request()
     }
 
@@ -134,6 +140,12 @@ data class ProfileState(
                 request = Request.DeleteUserAddress(
                     event.address,
                     userAddresses ?: emptyList()
+                )
+            )
+            is Event.TappedDeletePaymentMethod -> copy(
+                request = Request.DeletePaymentMethod(
+                    event.method,
+                    paymentMethods ?: emptyList()
                 )
             )
         }
