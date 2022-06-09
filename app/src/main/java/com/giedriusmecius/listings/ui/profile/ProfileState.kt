@@ -20,7 +20,7 @@ data class ProfileState(
             val userAddresses: List<UserAddress>
         ) : Event() // change to use when fully setup
 
-        data class TappedEditPaymentMethod(val method: PaymentMethod?, val isEdit: Boolean) :
+        data class TappedPaymentMethod(val method: PaymentMethod?, val isEdit: Boolean) :
             Event()
 
         data class AddedPaymentMethod(val method: PaymentMethod) : Event()
@@ -29,7 +29,15 @@ data class ProfileState(
             val oldMethod: PaymentMethod
         ) : Event()
 
+        data class AddedUserAddress(val address: UserAddress) : Event()
+        data class EditedUserAddress(
+            val newAddress: UserAddress,
+            val oldAddress: UserAddress
+        ) : Event()
+
         object SavedPaymentMethodToPrefs : Event()
+        data class TappedUserAddress(val address: UserAddress?, val isEdit: Boolean) : Event()
+        data class TappedDeleteAddress(val address: UserAddress) : Event()
     }
 
     sealed class Command {
@@ -42,6 +50,8 @@ data class ProfileState(
             Command()
 
         data class AddPaymentMethod(val method: PaymentMethod) : Command()
+        data class AddUserAddress(val address: UserAddress) : Command()
+        data class OpenUserAddressDialog(val address: UserAddress?, val isEdit: Boolean) : Command()
     }
 
     sealed class Request {
@@ -57,6 +67,20 @@ data class ProfileState(
             val oldMethod: PaymentMethod,
             val allMethods: List<PaymentMethod>
         ) : Request()
+
+        data class SaveUserAddress(val address: UserAddress, val addressList: List<UserAddress>) :
+            Request()
+
+        data class UpdateUserAddresses(
+            val newAddress: UserAddress,
+            val oldAddress: UserAddress,
+            val allAddresses: List<UserAddress>
+        ) : Request()
+
+        data class DeleteUserAddress(
+            val address: UserAddress,
+            val allAddresses: List<UserAddress>
+        ) : Request()
     }
 
     override fun reduce(event: Event): ProfileState {
@@ -70,7 +94,7 @@ data class ProfileState(
                 paymentMethods = event.paymentMethods,
                 userAddresses = event.userAddresses
             )
-            is Event.TappedEditPaymentMethod -> copy(
+            is Event.TappedPaymentMethod -> copy(
                 command = Command.OpenPaymentMethodDialog(
                     event.method,
                     event.isEdit
@@ -88,6 +112,28 @@ data class ProfileState(
                     event.newMethod,
                     event.oldMethod,
                     paymentMethods ?: emptyList()
+                )
+            )
+            is Event.AddedUserAddress -> copy(
+                request = Request.SaveUserAddress(
+                    event.address,
+                    userAddresses ?: mutableListOf()
+                ), command = Command.AddUserAddress(event.address)
+            )
+            is Event.EditedUserAddress -> copy(
+                request = Request.UpdateUserAddresses(
+                    event.newAddress,
+                    event.oldAddress,
+                    userAddresses ?: emptyList()
+                )
+            )
+            is Event.TappedUserAddress -> copy(
+                command = Command.OpenUserAddressDialog(event.address, event.isEdit)
+            )
+            is Event.TappedDeleteAddress -> copy(
+                request = Request.DeleteUserAddress(
+                    event.address,
+                    userAddresses ?: emptyList()
                 )
             )
         }

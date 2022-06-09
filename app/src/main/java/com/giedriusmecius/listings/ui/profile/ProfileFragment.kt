@@ -1,7 +1,6 @@
 package com.giedriusmecius.listings.ui.profile
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -33,6 +32,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         setupUI()
         (activity as MainActivity).hideBottomNavBar()
         listenForCCAdd()
+        listenForAddressAdd()
     }
 
     private fun setupRecyclerViews() {
@@ -51,9 +51,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
 
 
 // todo
-// susitvarkyti sharedprefsus+
-//              edit button card itemam
-// edit add address
+//    susitvarkyti sharedprefsus+
+//    edit button card itemam+
+//              edit add address
 // preferences list and selection
 
     override fun observeState() {
@@ -90,11 +90,47 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                         0,
                         PaymentMethodCardItem(cmd.method.type ?: CardType.VISA, numberString) {
                             vm.transition(
-                                ProfileState.Event.TappedEditPaymentMethod(cmd.method, true)
+                                ProfileState.Event.TappedPaymentMethod(cmd.method, true)
                             )
                         }
                     )
-
+                }
+                is ProfileState.Command.OpenUserAddressDialog -> {
+                    navigate(
+                        ProfileFragmentDirections.profileFragmentToProfileAddAddressDialog(
+                            cmd.address,
+                            cmd.isEdit
+                        )
+                    )
+                }
+                is ProfileState.Command.AddUserAddress -> {
+                    addressAdapter.add(
+                        0, ProfileAddressItem(
+                            houseNumber = cmd.address.addressHouseNumber,
+                            streetName = cmd.address.addressStreetName,
+                            county = cmd.address.county,
+                            state = cmd.address.state,
+                            country = cmd.address.country,
+                            zipCode = cmd.address.zipCode,
+                            addressDescription = cmd.address.addressLabel,
+                            userFullName = "${cmd.address.firstName} ${cmd.address.lastName}",
+                            onEditClick = {
+                                vm.transition(
+                                    ProfileState.Event.TappedUserAddress(
+                                        cmd.address,
+                                        true
+                                    )
+                                )
+                            },
+                            onDeleteClick = {
+                                vm.transition(
+                                    ProfileState.Event.TappedDeleteAddress(
+                                        cmd.address
+                                    )
+                                )
+                            }
+                        )
+                    )
                 }
                 else -> {}
             }
@@ -110,7 +146,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             )
             PaymentMethodCardItem(it.type ?: CardType.VISA, numberString) {
                 vm.transition(
-                    ProfileState.Event.TappedEditPaymentMethod(it, true)
+                    ProfileState.Event.TappedPaymentMethod(it, true)
                 )
             }.also { card -> paymentMethodAdapter.add(card) }
         }
@@ -118,23 +154,20 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
 
     private fun setupUserAddresses(addresses: List<UserAddress>) {
         addressAdapter.clear()
-        addressAdapter.addAll(
-            arrayListOf(
-                ProfileAddressItem(
-                    "3480",
-                    "Crim Lane",
-                    "Greendale County",
-                    "Colorado",
-                    789456,
-                    "Home",
-                    "Ava Johnson",
-                    onEditClick = { Log.d("MANO", "edit") },
-                    onDeleteClick = { Log.d("MANO", "edit") }
-                ) {
-                    Log.d("MANO", "first")
-                },
-            )
-        )
+        addresses.map {
+            ProfileAddressItem(
+                houseNumber = it.addressHouseNumber,
+                streetName = it.addressStreetName,
+                county = it.county,
+                state = it.state,
+                country = it.country,
+                zipCode = it.zipCode,
+                addressDescription = it.addressLabel,
+                userFullName = "${it.firstName} ${it.lastName}",
+                onEditClick = { vm.transition(ProfileState.Event.TappedUserAddress(it, true)) },
+                onDeleteClick = { vm.transition(ProfileState.Event.TappedDeleteAddress(it)) },
+            ).also { addressAdapter.add(it) }
+        }
     }
 
     private fun setupUI() {
@@ -147,9 +180,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                 navigate(ProfileFragmentDirections.profileFragmentToProfileFollowingDialog())
             }
             paymentMethodsAddCardButton.setOnClickListener {
-                vm.transition(ProfileState.Event.TappedEditPaymentMethod(null, false))
+                vm.transition(ProfileState.Event.TappedPaymentMethod(null, false))
             }
             addressAddButton.setOnClickListener {
+                vm.transition(ProfileState.Event.TappedUserAddress(null, false))
             }
         }
     }
@@ -164,6 +198,19 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                 vm.transition(ProfileState.Event.EditedPaymentMethod(it.second, it.third))
             } else {
                 vm.transition(ProfileState.Event.AddedPaymentMethod(it.second))
+            }
+        }
+    }
+
+    private fun listenForAddressAdd() {
+        getNavigationResult<Triple<Boolean, UserAddress, UserAddress>>(
+            R.id.profileFragment,
+            ProfileAddAddressDialogFragment.RESULT_KEY
+        ) {
+            if (it.first) {
+                vm.transition(ProfileState.Event.EditedUserAddress(it.second, it.third))
+            } else {
+                vm.transition(ProfileState.Event.AddedUserAddress(it.second))
             }
         }
     }

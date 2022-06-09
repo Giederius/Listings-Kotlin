@@ -13,6 +13,7 @@
     <string name="common.card.visa">Visa</string>
     <string name="common.card.cvv">CVV</string>
     <string name="common.zipCode">Zip Code</string>
+    <string name="common.country">Zip Code</string>
     <string name="common.sortBy">Sort by</string>
     <string name="common.layout">Layout</string>
     <string name="common.feed">Feed</string>
@@ -53,5 +54,8 @@
     <string name="addCardDialog.nameOnCardlabel">Name on card</string>
     <string name="addCardDialog.expDatelabel">Expiration date on card</string>
     <string name="addCardDialog.ccvlabel">Security code</string>
+
+    // Add Address Dialog
+    <string name="addAddress.title">Add Your address</string>
 
 </resources>

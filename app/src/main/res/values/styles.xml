@@ -95,9 +95,13 @@
         <item name="android:textColor">@color/grayedOutTextColor</item>
     </style>
 
-
     <style name="oneLetterBold" parent="Raleway">
         <item name="android:textSize">32sp</item>
         <item name="android:textFontWeight">700</item>
+    </style>
+
+    <style name="inputLabelText" parent="Raleway">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textFontWeight">500</item>
     </style>
 </resources>

@@ -9,4 +9,11 @@
         <attr name="android:layout_height" />
         <attr name="android:layout_width" />
     </declare-styleable>
+
+    <declare-styleable name="ListingsEditText">
+        <attr name="labelText" format="string" />
+        <attr name="errorText" format="string" />
+        <attr name="android:nextFocusDown" />
+        <attr name="android:imeOptions" />
+    </declare-styleable>
 </resources>

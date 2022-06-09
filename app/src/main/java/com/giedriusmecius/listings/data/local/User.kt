@@ -24,11 +24,17 @@ data class UserAddressResponse(
 @JsonClass(generateAdapter = true)
 data class UserAddress(
     val addressLabel: String,
-    val addressLine1: String?,
-    val addressLine2: String,
-    val postCode: String,
+    val firstName: String,
+    val lastName: String,
+    val addressStreetName: String,
+    val addressHouseNumber: String,
+    val addressLine2: String?,
+    val zipCode: Int,
+    val city: String,
     val county: String,
-    val country: String
+    val state: String,
+    val country: String,
+    val email: String
 ) : Serializable
 
 @JsonClass(generateAdapter = true)

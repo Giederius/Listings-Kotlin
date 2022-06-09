@@ -3,6 +3,7 @@ package com.giedriusmecius.listings.ui.profile
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.giedriusmecius.listings.data.local.PaymentMethodResponse
+import com.giedriusmecius.listings.data.local.UserAddressResponse
 import com.giedriusmecius.listings.utils.UserPreferences
 import com.giedriusmecius.listings.utils.state.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +24,7 @@ class ProfileViewModel @Inject constructor(
                 }
             }
             is ProfileState.Request.SavePaymentMethod -> {
-                val allMethods = req.methodList as MutableList
+                val allMethods = req.methodList.toMutableList()
                 allMethods.add(req.method)
 
                 userPreferences.saveUserPaymentMethods(PaymentMethodResponse(methods = allMethods))
@@ -38,6 +39,30 @@ class ProfileViewModel @Inject constructor(
                     fetchUserData()
                 }
             }
+            is ProfileState.Request.SaveUserAddress -> {
+                val allAddresses = req.addressList.toMutableList()
+                allAddresses.add(req.address)
+                userPreferences.saveUserAddresses(UserAddressResponse(addresses = allAddresses))
+            }
+            is ProfileState.Request.UpdateUserAddresses -> {
+                val allAddresses = req.allAddresses.toMutableList()
+                allAddresses.removeAt(allAddresses.indexOf(req.oldAddress))
+                allAddresses.add(req.newAddress)
+                userPreferences.saveUserAddresses(UserAddressResponse(addresses = allAddresses))
+
+                viewModelScope.launch {
+                    fetchUserData()
+                }
+            }
+            is ProfileState.Request.DeleteUserAddress -> {
+                val allAddresses = req.allAddresses.toMutableList()
+                allAddresses.remove(req.address)
+                userPreferences.saveUserAddresses(UserAddressResponse(addresses = allAddresses))
+
+                viewModelScope.launch {
+                    fetchUserData()
+                }
+            }
             else -> {}
         }
     }
@@ -46,6 +71,7 @@ class ProfileViewModel @Inject constructor(
         val paymentMethods = userPreferences.getUserPaymentMethods().methods
         val userAddresses = userPreferences.getUserAddresses().addresses
         delay(300)
+        Log.d("MANOaddress", userAddresses.toString())
         transition(ProfileState.Event.ReceivedUserDetails(paymentMethods, userAddresses))
     }
 }

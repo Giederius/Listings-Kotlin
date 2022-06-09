@@ -51,6 +51,7 @@ class ProfileAddCardDialogFragment :
             setupEditClicks()
 
             addCardNumberTextEdit.apply {
+                requestFocus()
                 if (navArgs.isEdit) {
                     setText(cardContainerFrontSide.cardNumber.text)
                 }

@@ -35,6 +35,9 @@
         <action
             android:id="@+id/profileFragment_to_profileDrawerFragment"
             app:destination="@id/profileDrawerFragment" />
+        <action
+            android:id="@+id/profileFragment_to_profileAddAddressDialog"
+            app:destination="@id/profileAddAddressDialogFragment" />
     </fragment>
 
     <fragment
@@ -81,8 +84,8 @@
         tools:layout="@layout/dialog_profile_add_card">
         <argument
             android:name="cardInfo"
-            app:argType="com.giedriusmecius.listings.data.local.PaymentMethod"
             android:defaultValue="@null"
+            app:argType="com.giedriusmecius.listings.data.local.PaymentMethod"
             app:nullable="true" />
         <argument
             android:name="isEdit"
@@ -94,4 +97,19 @@
         android:id="@+id/profileDrawerAdjustDialogFragment"
         android:name="com.giedriusmecius.listings.ui.profileDrawers.ProfileDrawersAdjustDialogFragment"
         tools:layout="@layout/dialog_profile_drawers_adjust" />
+
+    <dialog
+        android:id="@+id/profileAddAddressDialogFragment"
+        android:name="com.giedriusmecius.listings.ui.profile.ProfileAddAddressDialogFragment"
+        tools:layout="@layout/dialog_profile_add_address">
+        <argument
+            android:name="addressInfo"
+            android:defaultValue="@null"
+            app:argType="com.giedriusmecius.listings.data.local.UserAddress"
+            app:nullable="true" />
+        <argument
+            android:name="isEdit"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </dialog>
 </navigation>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dialogAddAddress"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/dialogPill"
+        android:layout_width="50dp"
+        android:layout_height="6dp"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/bg_rounded_rect_sm_borderless"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/dialogLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_dialog_rounded_top"
+        app:layout_constraintTop_toBottomOf="@id/dialogPill">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/inputScrollField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/addAddressTitle"
+                    style="@style/H2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/addAddress.title"
+                    android:textAlignment="center" />
+
+                <EditText
+                    android:id="@+id/addressLabel"
+                    style="@style/RegularTextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="8dp"
+                    android:hint="Address label" />
+
+                <EditText
+                    android:id="@+id/firstName"
+                    style="@style/RegularTextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="8dp"
+                    android:hint="First name" />
+
+                <EditText
+                    android:id="@+id/lastName"
+                    style="@style/RegularTextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:hint="Last name" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="8dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/addressStreenName"
+                        style="@style/RegularTextInputStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp"
+                        android:layout_weight="1"
+                        android:hint="Street name"
+                        android:imeOptions="actionNext" />
+
+                    <EditText
+                        android:id="@+id/addressHouseNumber"
+                        style="@style/RegularTextInputStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="8dp"
+                        android:layout_weight=".55"
+                        android:hint="House number"
+                        android:inputType="number" />
+
+
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/addressLine2"
+                    style="@style/RegularTextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="8dp"
+                    android:hint="Address line 2" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="8dp"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/addressZipCode"
+                        style="@style/RegularTextInputStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:hint="Zip code"
+                        android:imeOptions="actionNext"
+                        android:nextFocusRight="@id/addressCity" />
+
+                    <EditText
+                        android:id="@+id/addressCity"
+                        style="@style/RegularTextInputStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="City"
+                        android:nextFocusDown="@id/addressCounty" />
+
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/addressCounty"
+                    style="@style/RegularTextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="8dp"
+                    android:hint="County" />
+
+                <EditText
+                    android:id="@+id/addressState"
+                    style="@style/RegularTextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="8dp"
+                    android:hint="State" />
+
+                <EditText
+                    android:id="@+id/addressCountry"
+                    style="@style/RegularTextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="8dp"
+                    android:hint="Country" />
+
+                <EditText
+                    android:id="@+id/addressEmail"
+                    style="@style/RegularTextInputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginVertical="8dp"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:nextFocusDown="@id/saveAddressBtn" />
+
+                <com.giedriusmecius.listings.ui.views.ListingsButton
+                    android:id="@+id/saveAddressBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="24dp"
+                    android:text="Save address"
+                    app:isText="true" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
