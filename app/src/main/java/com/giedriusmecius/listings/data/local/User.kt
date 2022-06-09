@@ -29,7 +29,7 @@ data class UserAddress(
     val addressStreetName: String,
     val addressHouseNumber: String,
     val addressLine2: String?,
-    val zipCode: Int,
+    val zipCode: String,
     val city: String,
     val county: String,
     val state: String,

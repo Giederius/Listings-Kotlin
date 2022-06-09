@@ -14,7 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 class ProfileAddAddressDialogFragment :
     BaseDialogFragment<DialogProfileAddAddressBinding>(DialogProfileAddAddressBinding::inflate) {
     private val navArgs by navArgs<ProfileAddAddressDialogFragmentArgs>()
-    var address = UserAddress("", "", "", "", "", "", 0, "", "", "", "", "")
+    var address = UserAddress("", "", "", "", "", "", "", "", "", "", "", "")
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -24,6 +24,49 @@ class ProfileAddAddressDialogFragment :
 
     private fun setupUI() {
         with(binding) {
+
+            if (navArgs.isEdit) {
+                address = navArgs.addressInfo!!
+                addressLabel.setText(navArgs.addressInfo?.addressLabel)
+                firstName.setText(navArgs.addressInfo?.firstName)
+                lastName.setText(navArgs.addressInfo?.lastName)
+                addressStreenName.setText(navArgs.addressInfo?.addressStreetName)
+                addressHouseNumber.setText(navArgs.addressInfo?.addressHouseNumber)
+                addressLine2.setText(navArgs.addressInfo?.addressLine2)
+                addressZipCode.setText(navArgs.addressInfo?.zipCode)
+                addressCity.setText(navArgs.addressInfo?.city)
+                addressCounty.setText(navArgs.addressInfo?.county)
+                addressCountry.setText(navArgs.addressInfo?.country)
+                addressEmail.setText(navArgs.addressInfo?.email)
+                addressState.setText(navArgs.addressInfo?.state)
+            }
+
+            addressLabel.apply {
+                requestFocus()
+                this.doAfterTextChanged { address = address.copy(addressLabel = it.toString()) }
+            }
+            firstName.doAfterTextChanged { address = address.copy(firstName = it.toString()) }
+            lastName.doAfterTextChanged { address = address.copy(lastName = it.toString()) }
+            addressStreenName.doAfterTextChanged {
+                address = address.copy(addressStreetName = it.toString())
+            }
+            addressHouseNumber.doAfterTextChanged {
+                address = address.copy(addressHouseNumber = it.toString())
+            }
+            addressLine2.doAfterTextChanged {
+                address = address.copy(addressLine2 = it.toString())
+            }
+            addressZipCode.doAfterTextChanged {
+                address = address.copy(zipCode = it.toString())
+            }
+            addressCity.doAfterTextChanged { address = address.copy(city = it.toString()) }
+            addressCounty.doAfterTextChanged { address = address.copy(county = it.toString()) }
+            addressCountry.doAfterTextChanged {
+                address = address.copy(country = it.toString())
+            }
+            addressEmail.doAfterTextChanged { address = address.copy(email = it.toString()) }
+            addressState.doAfterTextChanged { address = address.copy(state = it.toString()) }
+
 
             addAddressTitle.setOnClickListener {
                 addressLabel.setText("Main")
@@ -39,29 +82,6 @@ class ProfileAddAddressDialogFragment :
                 addressEmail.setText("test@test.com")
                 addressState.setText("Zemaiciu")
             }
-
-
-            addressLabel.apply {
-                requestFocus()
-                this.doAfterTextChanged { address = address.copy(addressLabel = it.toString()) }
-            }
-            firstName.doAfterTextChanged { address = address.copy(firstName = it.toString()) }
-            lastName.doAfterTextChanged { address = address.copy(lastName = it.toString()) }
-            addressStreenName.doAfterTextChanged {
-                address = address.copy(addressStreetName = it.toString())
-            }
-            addressHouseNumber.doAfterTextChanged {
-                address = address.copy(addressHouseNumber = it.toString())
-            }
-            addressLine2.doAfterTextChanged { address = address.copy(addressLine2 = it.toString()) }
-            addressZipCode.doAfterTextChanged {
-                address = address.copy(zipCode = Integer.parseInt(it.toString()))
-            }
-            addressCity.doAfterTextChanged { address = address.copy(city = it.toString()) }
-            addressCounty.doAfterTextChanged { address = address.copy(county = it.toString()) }
-            addressCountry.doAfterTextChanged { address = address.copy(country = it.toString()) }
-            addressEmail.doAfterTextChanged { address = address.copy(email = it.toString()) }
-            addressState.doAfterTextChanged { address = address.copy(state = it.toString()) }
 
             saveAddressBtn.setOnClickListener {
                 setResult(Triple(navArgs.isEdit, address, navArgs.addressInfo))

@@ -17,7 +17,7 @@ data class ProfileAddressItem(
     val county: String,
     val state: String,
     val country: String,
-    val zipCode: Int,
+    val zipCode: String,
     val addressDescription: String,
     val userFullName: String,
     val onEditClick: () -> Unit,
