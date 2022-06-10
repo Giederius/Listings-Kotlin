@@ -1,6 +1,7 @@
 package com.giedriusmecius.listings.ui.profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -230,6 +231,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             R.id.profileFragment,
             SizeDialogFragment.RESULT_KEY
         ) {
+            Log.d("Manosize", it.toString())
             vm.transition(ProfileState.Event.ReceivedUserSize(it))
         }
     }

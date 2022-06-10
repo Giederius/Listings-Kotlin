@@ -75,6 +75,7 @@ class ProfileViewModel @Inject constructor(
             }
             is ProfileState.Request.SaveUserSize -> {
                 Log.d("MANOsize", "savedSize ${req.size}, NOOT")
+                transition(ProfileState.Event.SavedUserSize)
             }
             is ProfileState.Request.SaveUserDepartment -> {
                 Log.d("MANOsize", "savedDepartment ${req.departmentName}, NOOT")

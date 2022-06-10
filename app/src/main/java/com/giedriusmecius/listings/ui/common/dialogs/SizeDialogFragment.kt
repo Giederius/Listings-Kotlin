@@ -77,7 +77,9 @@ class SizeDialogFragment : BaseDialogFragment<DialogSizeBinding>(DialogSizeBindi
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        userSize?.let { setResult(it) }
+        if (userSize != navArgs.size) {
+            setResult(userSize!!)
+        }
     }
 
     fun setResult(value: Size) {

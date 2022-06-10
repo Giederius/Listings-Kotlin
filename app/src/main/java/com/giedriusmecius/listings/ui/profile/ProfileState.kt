@@ -51,6 +51,7 @@ data class ProfileState(
         data class ReceivedUserSize(val size: Size) : Event()
         object TappedColorPicker : Event()
         data class ReceivedUserColor(val color: Pair<String, String>) : Event()
+        object SavedUserSize : Event()
     }
 
     sealed class Command {
@@ -186,7 +187,6 @@ data class ProfileState(
             )
             is Event.ReceivedUserSize -> copy(
                 request = Request.SaveUserSize(event.size),
-                command = Command.UpdateSize(userSize!!),
                 userSize = event.size
             )
             Event.TappedColorPicker -> copy(command = Command.OpenColorPicker(colorName?.second))
@@ -195,6 +195,7 @@ data class ProfileState(
                 request = Request.SaveUserColor(event.color),
                 colorName = event.color
             )
+            Event.SavedUserSize -> copy(command = Command.UpdateSize(userSize!!))
         }
     }
 
