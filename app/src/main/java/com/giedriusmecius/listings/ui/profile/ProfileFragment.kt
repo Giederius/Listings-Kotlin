@@ -8,10 +8,13 @@ import com.giedriusmecius.listings.MainActivity
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.local.CardType
 import com.giedriusmecius.listings.data.local.PaymentMethod
+import com.giedriusmecius.listings.data.local.Size
 import com.giedriusmecius.listings.data.local.UserAddress
 import com.giedriusmecius.listings.databinding.FragmentProfileBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
+import com.giedriusmecius.listings.ui.common.dialogs.ColorSelectionDialogFragment
 import com.giedriusmecius.listings.ui.common.dialogs.DepartmentSelectionDialogFragment
+import com.giedriusmecius.listings.ui.common.dialogs.SizeDialogFragment
 import com.giedriusmecius.listings.ui.common.groupie.PaymentMethodCardItem
 import com.giedriusmecius.listings.ui.common.groupie.ProfileAddressItem
 import com.giedriusmecius.listings.utils.extensions.getNavigationResult
@@ -32,9 +35,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         vm.transition(ProfileState.Event.ViewCreated)
         setupUI()
         (activity as MainActivity).hideBottomNavBar()
+
         listenForCCAdd()
         listenForAddressAdd()
         listenForDepartmentSelection()
+        listenForSizeSelection()
+        listenForColorSelection()
     }
 
     private fun setupRecyclerViews() {
@@ -117,6 +123,25 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
                         userMainDepartmentText.text = cmd.departmentName
                     }
                 }
+                is ProfileState.Command.UpdateSize -> {
+                    with(binding) {
+                        userSizeText.text = getString(
+                            R.string.profile_preferences_sizeDescription,
+                            cmd.size.us,
+                            cmd.size.eu.uppercase()
+                        )
+                        sizeIcon.setText(cmd.size.eu)
+                    }
+                }
+                is ProfileState.Command.OpenColorPicker -> {
+                    navigate(ProfileFragmentDirections.profileFragmentToColorSelectionDialog(cmd.colorName))
+                }
+                is ProfileState.Command.UpdateColor -> {
+                    with(binding) {
+                        userFavoriteColorText.text = cmd.color.second
+                        favoriteColorIcon.setIconTintWithString(cmd.color.first)
+                    }
+                }
                 else -> {}
             }
         }
@@ -158,6 +183,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             departmentIcon.setOnClickListener {
                 vm.transition(ProfileState.Event.TappedDepartmentPicker)
             }
+            favoriteColorIcon.setOnClickListener {
+                vm.transition(ProfileState.Event.TappedColorPicker)
+            }
         }
     }
 
@@ -194,6 +222,24 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             DepartmentSelectionDialogFragment.RESULT_KEY
         ) {
             vm.transition(ProfileState.Event.ReceivedDepartment(it))
+        }
+    }
+
+    private fun listenForSizeSelection() {
+        getNavigationResult<Size>(
+            R.id.profileFragment,
+            SizeDialogFragment.RESULT_KEY
+        ) {
+            vm.transition(ProfileState.Event.ReceivedUserSize(it))
+        }
+    }
+
+    private fun listenForColorSelection() {
+        getNavigationResult<Pair<String, String>>(
+            R.id.profileFragment,
+            ColorSelectionDialogFragment.RESULT_KEY
+        ) {
+            vm.transition(ProfileState.Event.ReceivedUserColor(it))
         }
     }
 

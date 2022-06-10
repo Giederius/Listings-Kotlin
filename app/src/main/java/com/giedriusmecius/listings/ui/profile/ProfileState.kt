@@ -13,6 +13,7 @@ data class ProfileState(
     val user: User? = null,
     val userSize: Size? = null,
     val departmentName: String? = null,
+    val colorName: Pair<String, String>? = null,
     val paymentMethods: List<PaymentMethod>? = null,
     val userAddresses: List<UserAddress>? = null
 ) :
@@ -47,6 +48,9 @@ data class ProfileState(
         object TappedSizePicker : Event()
         object TappedDepartmentPicker : Event()
         data class ReceivedDepartment(val department: String) : Event()
+        data class ReceivedUserSize(val size: Size) : Event()
+        object TappedColorPicker : Event()
+        data class ReceivedUserColor(val color: Pair<String, String>) : Event()
     }
 
     sealed class Command {
@@ -64,6 +68,9 @@ data class ProfileState(
         data class OpenSizePicker(val userSize: Size?) : Command()
         data class OpenDepartmentPicker(val departmentName: String?) : Command()
         data class UpdateDepartment(val departmentName: String) : Command()
+        data class UpdateSize(val size: Size) : Command()
+        data class OpenColorPicker(val colorName: String?) : Command()
+        data class UpdateColor(val color: Pair<String, String>) : Command()
     }
 
     sealed class Request {
@@ -98,6 +105,10 @@ data class ProfileState(
             val method: PaymentMethod,
             val allMethods: List<PaymentMethod>
         ) : Request()
+
+        data class SaveUserSize(val size: Size) : Request()
+        data class SaveUserDepartment(val departmentName: String) : Request()
+        data class SaveUserColor(val color: Pair<String, String>) : Request()
     }
 
     override fun reduce(event: Event): ProfileState {
@@ -110,8 +121,9 @@ data class ProfileState(
                 ),
                 paymentMethods = event.paymentMethods,
                 userAddresses = event.userAddresses,
-                userSize = Size(26, "s", true),
-                departmentName = "Girl"
+                userSize = Size(26, "s"),
+                departmentName = "Girl",
+                colorName = Pair("#000000", "black")
             )
             is Event.TappedPaymentMethod -> copy(
                 command = Command.OpenPaymentMethodDialog(
@@ -169,7 +181,19 @@ data class ProfileState(
             )
             is Event.ReceivedDepartment -> copy(
                 departmentName = event.department,
+                request = Request.SaveUserDepartment(event.department),
                 command = Command.UpdateDepartment(event.department)
+            )
+            is Event.ReceivedUserSize -> copy(
+                request = Request.SaveUserSize(event.size),
+                command = Command.UpdateSize(userSize!!),
+                userSize = event.size
+            )
+            Event.TappedColorPicker -> copy(command = Command.OpenColorPicker(colorName?.second))
+            is Event.ReceivedUserColor -> copy(
+                command = Command.UpdateColor(event.color),
+                request = Request.SaveUserColor(event.color),
+                colorName = event.color
             )
         }
     }

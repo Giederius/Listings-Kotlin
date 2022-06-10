@@ -34,6 +34,7 @@
     <string name="profile.addresses.editAddress">Edit address</string>
     <string name="profile.addresses.deleteAddress">Delete address</string>
     <string name="profile.addresses.noAddresses">You have no addresses.</string>
+    <string name="profile.preferences.sizeDescription">%1$s - %2$s</string>
 
 
     // Profile Drawers Fragment

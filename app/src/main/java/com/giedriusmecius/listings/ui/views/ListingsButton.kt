@@ -2,6 +2,7 @@ package com.giedriusmecius.listings.ui.views
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -57,6 +58,12 @@ class ListingsButton @JvmOverloads constructor(
     fun setIconTint(color: Int) {
         binding.buttonImage.imageTintList =
             ColorStateList.valueOf(ContextCompat.getColor(context, color))
+    }
+
+    fun setIconTintWithString(color: String) {
+        ColorStateList.valueOf(Color.parseColor(color)).let {
+            binding.buttonImage.imageTintList = it
+        }
     }
 
 }

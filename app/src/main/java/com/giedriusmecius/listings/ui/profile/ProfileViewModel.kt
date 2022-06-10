@@ -73,6 +73,15 @@ class ProfileViewModel @Inject constructor(
                     fetchUserData()
                 }
             }
+            is ProfileState.Request.SaveUserSize -> {
+                Log.d("MANOsize", "savedSize ${req.size}, NOOT")
+            }
+            is ProfileState.Request.SaveUserDepartment -> {
+                Log.d("MANOsize", "savedDepartment ${req.departmentName}, NOOT")
+            }
+            is ProfileState.Request.SaveUserColor -> {
+                Log.d("MANOsize", "savedColor ${req.color}, NOOT")
+            }
             else -> {}
         }
     }

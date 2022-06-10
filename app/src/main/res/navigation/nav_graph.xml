@@ -44,6 +44,9 @@
         <action
             android:id="@+id/profileFragment_to_departmentSelectionDialog"
             app:destination="@id/DepartmentSelectionFragment" />
+        <action
+            android:id="@+id/profileFragment_to_colorSelectionDialog"
+            app:destination="@id/ColorSelectionDialogFragment" />
     </fragment>
 
     <fragment
@@ -136,6 +139,17 @@
         tools:layout="@layout/dialog_department_selection">
         <argument
             android:name="departmentName"
+            android:defaultValue=""
+            app:argType="string"
+            app:nullable="true" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/ColorSelectionDialogFragment"
+        android:name="com.giedriusmecius.listings.ui.common.dialogs.ColorSelectionDialogFragment"
+        tools:layout="@layout/dialog_color_selection_fragment">
+        <argument
+            android:name="colorName"
             android:defaultValue=""
             app:argType="string"
             app:nullable="true" />

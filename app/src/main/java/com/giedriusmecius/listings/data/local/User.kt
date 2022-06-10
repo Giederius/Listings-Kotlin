@@ -54,7 +54,6 @@ data class PaymentMethod(
 data class Size(
     val us: Int,
     val eu: String,
-    val isFavorite: Boolean
 ) : Serializable
 
 enum class CardType {

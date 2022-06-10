@@ -1,5 +1,6 @@
 package com.giedriusmecius.listings.ui.common.dialogs
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.navArgs
@@ -17,20 +18,22 @@ class SizeDialogFragment : BaseDialogFragment<DialogSizeBinding>(DialogSizeBindi
     private val navArgs by navArgs<SizeDialogFragmentArgs>()
 
     val groupie = GroupieAdapter()
-    private val selectedSize: Size = Size(0, "", false)
+    private var userSize: Size? = null
 
     private val sizes = listOf(
-        Size(22, "xxs", false),
-        Size(24, "xs", false),
-        Size(26, "s", false),
-        Size(28, "m", false),
-        Size(30, "l", false),
-        Size(32, "xl", false),
-        Size(34, "xxl", false)
+        SizeItem(22, "xxs", false, ::onSizeSelected),
+        SizeItem(24, "xs", false, ::onSizeSelected),
+        SizeItem(26, "s", false, ::onSizeSelected),
+        SizeItem(28, "m", false, ::onSizeSelected),
+        SizeItem(30, "l", false, ::onSizeSelected),
+        SizeItem(32, "xl", false, ::onSizeSelected),
+        SizeItem(34, "xxl", false, ::onSizeSelected)
     )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        userSize = navArgs.size
 
         (dialog as BottomSheetDialog).behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
@@ -39,33 +42,42 @@ class SizeDialogFragment : BaseDialogFragment<DialogSizeBinding>(DialogSizeBindi
                 layoutManager = LinearLayoutManager(requireContext())
                 adapter = groupie
             }
-
-            if (navArgs.size != null) {
-                sizes.map {
-                    if (it == navArgs.size) {
-                        SizeItem(
-                            navArgs.size!!.us,
-                            navArgs.size!!.eu,
-                           true
-                        ).also { groupie.add(it) }
-                    } else {
-                        SizeItem(it.us, it.eu, it.isFavorite).also { groupie.add(it) }
-                    }
-                }
-            } else {
-                sizes.map {
-                    SizeItem(it.us, it.eu, it.isFavorite).also { groupie.add(it) }
-                }
-            }
-
-            saveBtn.setOnClickListener {
-                setResult(selectedSize)
+            groupie.addAll(sizes)
+            if (userSize != null) {
+                setupView()
             }
         }
     }
 
-    private fun onItemClick(size: Size, isSelected: Boolean) {
-        val sizeItem = SizeItem(size.us, size.eu, !isSelected).also { }
+    private fun setupView() {
+        sizes.firstOrNull() {
+            it.us == userSize?.us
+        }.let {
+            val sizeIndex = sizes.indexOf(it)
+            sizes[sizeIndex].isSelected = true
+        }
+    }
+
+    private fun onSizeSelected(selectedSize: Int) {
+        val updateItems = arrayListOf<Int>()
+        sizes.forEachIndexed { index, size ->
+            if (size.isSelected && size.us != selectedSize) {
+                updateItems.add(index)
+                size.isSelected = false
+            } else if (!size.isSelected && size.us == selectedSize) {
+                updateItems.add(index)
+                size.isSelected = true
+                userSize = Size(size.us, size.eu)
+            }
+        }
+        updateItems.forEach { updateIndex ->
+            groupie.notifyItemChanged(updateIndex, sizes.size)
+        }
+    }
+
+    override fun onCancel(dialog: DialogInterface) {
+        super.onCancel(dialog)
+        userSize?.let { setResult(it) }
     }
 
     fun setResult(value: Size) {

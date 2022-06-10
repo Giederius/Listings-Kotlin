@@ -16,4 +16,10 @@
         <attr name="android:nextFocusDown" />
         <attr name="android:imeOptions" />
     </declare-styleable>
+
+    <declare-styleable name="ListingsSizeRadioButton">
+        <attr name="usSize" format="integer" />
+        <attr name="euSize" format="string" />
+        <attr name="android:checked"/>
+    </declare-styleable>
 </resources>

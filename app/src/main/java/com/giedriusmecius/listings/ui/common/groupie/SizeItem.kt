@@ -1,7 +1,6 @@
 package com.giedriusmecius.listings.ui.common.groupie
 
 import android.graphics.Color
-import android.util.Log
 import android.view.View
 import androidx.core.view.isGone
 import com.giedriusmecius.listings.R
@@ -9,9 +8,10 @@ import com.giedriusmecius.listings.databinding.ItemSizeBinding
 import com.xwray.groupie.viewbinding.BindableItem
 
 class SizeItem(
-    private val us: Int,
-    private val eu: String,
-    private var isSelected: Boolean,
+    val us: Int,
+    val eu: String,
+    var isSelected: Boolean,
+    val onClick: (Int) -> Unit
 ) :
     BindableItem<ItemSizeBinding>() {
     override fun getLayout(): Int = R.layout.item_size
@@ -26,12 +26,13 @@ class SizeItem(
 
             if (isSelected) {
                 root.setBackgroundColor(Color.parseColor("#D2CEF6"))
+            } else {
+                root.setBackgroundColor(Color.TRANSPARENT)
             }
             selectedIcon.isGone = !isSelected
 
             root.setOnClickListener {
-                Log.d("MANO", "cliek")
-//                isSelected = !isSelected
+                onClick(us)
             }
         }
     }
