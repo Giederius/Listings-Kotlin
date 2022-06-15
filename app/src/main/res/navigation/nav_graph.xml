@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/profileFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/splashFragment"
@@ -20,6 +20,12 @@
         android:name="com.giedriusmecius.listings.ui.home.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/marketFragment"
+        android:name="com.giedriusmecius.listings.ui.market.MarketFragment"
+        android:label="MarketFragment"
+        tools:layout="@layout/fragment_market" />
 
     <fragment
         android:id="@+id/profileFragment"

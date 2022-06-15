@@ -4,15 +4,9 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
-import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.giedriusmecius.listings.databinding.ActivityMainBinding
-import com.giedriusmecius.listings.ui.home.HomeFragment
-import com.giedriusmecius.listings.ui.market.MarketFragment
-import com.giedriusmecius.listings.ui.profileDrawers.ProfileDrawersFragment
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,42 +23,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater).also {
             setContentView(it.root)
         }
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
-        setupBottomNav(navController)
-    }
-
-    private fun setupBottomNav(navController : NavController) {
-
-        binding.mainBottomNav.apply {
-            setupWithNavController(navController)
-
-            setOnItemSelectedListener {
-                when (it.itemId) {
-                    R.id.mainBottomNavFeed -> {
-                        openFragment(HomeFragment())
-                        true
-                    }
-                    R.id.mainBottomNavMarket -> {
-                        openFragment(MarketFragment())
-                        true
-                    }
-                    R.id.mainBottomNavProfile -> {
-                        openFragment(ProfileDrawersFragment())
-                        true
-                    }
-                    else -> {
-                        false
-                    }
-                }
-            }
-        }
-    }
-
-    private fun openFragment(fragment: Fragment) {
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.nav_host_fragment, fragment)
-            .commit()
+        binding.mainBottomNav.setupWithNavController(navController)
     }
 
     private fun setFullscreenActivity() {
