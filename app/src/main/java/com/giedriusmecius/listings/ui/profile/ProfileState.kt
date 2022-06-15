@@ -10,7 +10,7 @@ import com.giedriusmecius.listings.utils.state.State
 data class ProfileState(
     val request: Request? = null,
     val command: Command? = null,
-    val user: User? = null,
+    val user: User? = User(),
     val userSize: Size? = null,
     val departmentName: String? = null,
     val colorName: Pair<String, String>? = null,
@@ -22,9 +22,8 @@ data class ProfileState(
     sealed class Event {
         object ViewCreated : Event()
         data class ReceivedUserDetails(
-            val paymentMethods: List<PaymentMethod>,
-            val userAddresses: List<UserAddress>
-        ) : Event() // change to use when fully setup
+            val user: User
+        ) : Event()
 
         data class TappedPaymentMethod(val method: PaymentMethod?, val isEdit: Boolean) :
             Event()
@@ -52,14 +51,12 @@ data class ProfileState(
         object TappedColorPicker : Event()
         data class ReceivedUserColor(val color: Pair<String, String>) : Event()
         object SavedUserSize : Event()
+        data class UpdatedUserAddresses(val addresses: List<UserAddress>) : Event()
+        data class UpdatedUserPaymentMethods(val methods: List<PaymentMethod>) : Event()
     }
 
     sealed class Command {
-        data class SetupUserDetails(
-            val paymentMethods: List<PaymentMethod>,
-            val userAddresses: List<UserAddress>
-        ) : Command()
-
+        data class SetupUserDetails(val user: User) : Command()
         data class OpenPaymentMethodDialog(val method: PaymentMethod?, val isEdit: Boolean) :
             Command()
 
@@ -78,38 +75,44 @@ data class ProfileState(
         object FetchUser : Request()
 
         data class SavePaymentMethod(
+            val user: User,
             val method: PaymentMethod,
-            val methodList: List<PaymentMethod>
         ) : Request()
 
         data class UpdatePaymentMethods(
+            val user: User,
             val newMethod: PaymentMethod,
             val oldMethod: PaymentMethod,
             val allMethods: List<PaymentMethod>
         ) : Request()
 
-        data class SaveUserAddress(val address: UserAddress, val addressList: List<UserAddress>) :
-            Request()
+        data class SaveUserAddress(
+            val user: User,
+            val address: UserAddress,
+        ) : Request()
 
         data class UpdateUserAddresses(
+            val user: User,
             val newAddress: UserAddress,
             val oldAddress: UserAddress,
             val allAddresses: List<UserAddress>
         ) : Request()
 
         data class DeleteUserAddress(
+            val user: User,
             val address: UserAddress,
             val allAddresses: List<UserAddress>
         ) : Request()
 
         data class DeletePaymentMethod(
+            val user: User,
             val method: PaymentMethod,
             val allMethods: List<PaymentMethod>
         ) : Request()
 
-        data class SaveUserSize(val size: Size) : Request()
-        data class SaveUserDepartment(val departmentName: String) : Request()
-        data class SaveUserColor(val color: Pair<String, String>) : Request()
+        data class SaveUserSize(val user: User, val size: Size) : Request()
+        data class SaveUserDepartment(val user: User, val departmentName: String) : Request()
+        data class SaveUserColor(val user: User, val color: Pair<String, String>) : Request()
     }
 
     override fun reduce(event: Event): ProfileState {
@@ -117,14 +120,14 @@ data class ProfileState(
             Event.ViewCreated -> copy(request = Request.FetchUser)
             is Event.ReceivedUserDetails -> copy(
                 command = Command.SetupUserDetails(
-                    event.paymentMethods,
-                    event.userAddresses,
+                    event.user
                 ),
-                paymentMethods = event.paymentMethods,
-                userAddresses = event.userAddresses,
-                userSize = Size(26, "s"),
-                departmentName = "Girl",
-                colorName = Pair("#000000", "black")
+                user = event.user,
+                paymentMethods = event.user.paymentMethods,
+                userAddresses = event.user.addresses,
+                userSize = event.user.userSize,
+                departmentName = event.user.mainDepartment,
+                colorName = event.user.favoriteColor
             )
             is Event.TappedPaymentMethod -> copy(
                 command = Command.OpenPaymentMethodDialog(
@@ -134,13 +137,14 @@ data class ProfileState(
             )
             is Event.AddedPaymentMethod -> copy(
                 request = Request.SavePaymentMethod(
+                    user ?: User(),
                     event.method,
-                    paymentMethods ?: mutableListOf()
                 ), command = Command.AddPaymentMethod(event.method)
             )
             Event.SavedPaymentMethodToPrefs -> copy(request = Request.FetchUser)
             is Event.EditedPaymentMethod -> copy(
                 request = Request.UpdatePaymentMethods(
+                    user ?: User(),
                     event.newMethod,
                     event.oldMethod,
                     paymentMethods ?: emptyList()
@@ -148,12 +152,13 @@ data class ProfileState(
             )
             is Event.AddedUserAddress -> copy(
                 request = Request.SaveUserAddress(
+                    user ?: User(),
                     event.address,
-                    userAddresses ?: mutableListOf()
                 ), command = Command.AddUserAddress(event.address)
             )
             is Event.EditedUserAddress -> copy(
                 request = Request.UpdateUserAddresses(
+                    user ?: User(),
                     event.newAddress,
                     event.oldAddress,
                     userAddresses ?: emptyList()
@@ -164,12 +169,14 @@ data class ProfileState(
             )
             is Event.TappedDeleteAddress -> copy(
                 request = Request.DeleteUserAddress(
+                    user ?: User(),
                     event.address,
                     userAddresses ?: emptyList()
                 )
             )
             is Event.TappedDeletePaymentMethod -> copy(
                 request = Request.DeletePaymentMethod(
+                    user ?: User(),
                     event.method,
                     paymentMethods ?: emptyList()
                 )
@@ -182,20 +189,22 @@ data class ProfileState(
             )
             is Event.ReceivedDepartment -> copy(
                 departmentName = event.department,
-                request = Request.SaveUserDepartment(event.department),
+                request = Request.SaveUserDepartment(user ?: User(), event.department),
                 command = Command.UpdateDepartment(event.department)
             )
             is Event.ReceivedUserSize -> copy(
-                request = Request.SaveUserSize(event.size),
+                request = Request.SaveUserSize(user ?: User(), event.size),
                 userSize = event.size
             )
             Event.TappedColorPicker -> copy(command = Command.OpenColorPicker(colorName?.second))
             is Event.ReceivedUserColor -> copy(
                 command = Command.UpdateColor(event.color),
-                request = Request.SaveUserColor(event.color),
+                request = Request.SaveUserColor(user ?: User(), event.color),
                 colorName = event.color
             )
             Event.SavedUserSize -> copy(command = Command.UpdateSize(userSize!!))
+            is Event.UpdatedUserAddresses -> copy(userAddresses = event.addresses)
+            is Event.UpdatedUserPaymentMethods -> copy(paymentMethods = event.methods)
         }
     }
 

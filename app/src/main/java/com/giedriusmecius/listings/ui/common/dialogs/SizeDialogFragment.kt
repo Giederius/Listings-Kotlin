@@ -43,18 +43,18 @@ class SizeDialogFragment : BaseDialogFragment<DialogSizeBinding>(DialogSizeBindi
                 adapter = groupie
             }
             groupie.addAll(sizes)
-            if (userSize != null) {
                 setupView()
-            }
         }
     }
 
     private fun setupView() {
-        sizes.firstOrNull() {
-            it.us == userSize?.us
-        }.let {
-            val sizeIndex = sizes.indexOf(it)
-            sizes[sizeIndex].isSelected = true
+        if (userSize?.us != 0) {
+            sizes.firstOrNull() {
+                it.us == userSize?.us
+            }.let {
+                val sizeIndex = sizes.indexOf(it)
+                sizes[sizeIndex].isSelected = true
+            }
         }
     }
 

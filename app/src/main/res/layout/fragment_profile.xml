@@ -277,7 +277,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/paymentMethodsTitle" />
+            app:layout_constraintTop_toBottomOf="@id/profileNoPaymentMethods" />
 
         <com.giedriusmecius.listings.ui.views.ListingsButton
             android:id="@+id/paymentMethodsAddCardButton"
@@ -327,7 +327,7 @@
             android:id="@+id/profileNoAddresses"
             android:text="@string/profile.addresses.noAddresses"
             android:layout_width="wrap_content"
-            android:padding="24dp"
+            android:layout_margin="24dp"
             android:visibility="gone"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -341,7 +341,7 @@
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/addressesTitle"
+            app:layout_constraintTop_toBottomOf="@id/profileNoAddresses"
             tools:itemCount="2"
             tools:listitem="" />
 

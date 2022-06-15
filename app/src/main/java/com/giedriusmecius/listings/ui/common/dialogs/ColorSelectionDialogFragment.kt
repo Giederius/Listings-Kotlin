@@ -45,15 +45,17 @@ class ColorSelectionDialogFragment :
     }
 
     private fun setupView() {
-        colors.firstOrNull {
-            it.colorName.equals(userColor.second, true)
-        }.let {
-            val sizeIndex = colors.indexOf(it)
-            colors[sizeIndex].isSelected = true
+        if (userColor.second.isNotBlank()) {
+            colors.firstOrNull {
+                it.colorName.equals(userColor.second, true)
+            }.let {
+                val sizeIndex = colors.indexOf(it)
+                colors[sizeIndex].isSelected = true
+            }
         }
     }
 
-    private fun onColorSelected(selectedColor: String, colorName: String) {
+    private fun onColorSelected(colorName: String) {
         val updateItems = arrayListOf<Int>()
         colors.forEachIndexed { index, color ->
             if (color.isSelected && color.colorName != colorName) {

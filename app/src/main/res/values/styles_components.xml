@@ -2,7 +2,7 @@
 <resources>
 
     <style name="homeTabLayoutStyle" parent="Base.Widget.Design.TabLayout">
-        <item name="tabIndicator">@drawable/item_dot_selected</item>
+        <item name="tabIndicator">@drawable/item_dot_small</item>
         <item name="tabIndicatorHeight">4dp</item>
         <item name="android:width">4dp</item>
         <item name="tabIndicatorColor">@color/accentPurple</item>

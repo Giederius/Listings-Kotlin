@@ -36,8 +36,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupBottomNav(navController : NavController) {
 
-//        val navHostFragment = findNavController(R.id.nav_host_fragment)
-//        navController?.findNavController()?.let { binding.mainBottomNav.setupWithNavController(it) }
         binding.mainBottomNav.apply {
             setupWithNavController(navController)
 
@@ -66,7 +64,6 @@ class MainActivity : AppCompatActivity() {
     private fun openFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.nav_host_fragment, fragment)
-            .addToBackStack(null)
             .commit()
     }
 
@@ -87,5 +84,9 @@ class MainActivity : AppCompatActivity() {
 
     fun hideBottomNavBar() {
         binding.mainBottomNav.isGone = true
+    }
+
+    fun showBottomNavBar() {
+        binding.mainBottomNav.isGone = false
     }
 }

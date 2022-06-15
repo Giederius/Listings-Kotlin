@@ -4,16 +4,18 @@ import com.squareup.moshi.JsonClass
 import java.io.Serializable
 
 @JsonClass(generateAdapter = true)
+
+// do user setup when logging in?
 data class User(
-    val userName: String,
-    val firstName: String,
-    val lastName: String,
-    val addresses: List<UserAddress>,
-    val paymentMethods: List<PaymentMethod>,
-    val userSize: Size,
-    val favoriteColor: String,
-//    val mainDepartment: Department
-)
+    val userName: String = "Ava",
+    val firstName: String = "Johnson",
+    val lastName: String = "",
+    val addresses: List<UserAddress> = emptyList(),
+    val paymentMethods: List<PaymentMethod> = emptyList(),
+    val userSize: Size = Size(0, ""),
+    val favoriteColor: Pair<String,String> = Pair("", ""),
+    val mainDepartment: String = ""
+) : Serializable
 
 @JsonClass(generateAdapter = true)
 data class UserAddressResponse(

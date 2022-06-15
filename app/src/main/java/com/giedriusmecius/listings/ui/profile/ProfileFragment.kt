@@ -1,8 +1,9 @@
 package com.giedriusmecius.listings.ui.profile
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.giedriusmecius.listings.MainActivity
@@ -10,6 +11,7 @@ import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.local.CardType
 import com.giedriusmecius.listings.data.local.PaymentMethod
 import com.giedriusmecius.listings.data.local.Size
+import com.giedriusmecius.listings.data.local.User
 import com.giedriusmecius.listings.data.local.UserAddress
 import com.giedriusmecius.listings.databinding.FragmentProfileBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
@@ -58,34 +60,23 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         }
     }
 
-
-// todo
-//    susitvarkyti sharedprefsus+
-//    edit button card itemam+
-//              edit add address+
-//                                  preferences list and selection
-
     override fun observeState() {
         vm.subscribeWithAutoDispose(viewLifecycleOwner) { oldState, newState ->
 
-            with(binding) {
-//                profileNoPaymentMethods.isVisible = newState.paymentMethods?.isEmpty() ?: true
-//                profilePaymentMethodRecyclerView.isVisible =
-//                    newState.paymentMethods?.isEmpty() ?: false
-//
-//                profileNoAddresses.isVisible = newState.userAddresses?.isEmpty() ?: false
-//                addressesRecyclerView.isVisible = newState.userAddresses?.isEmpty() ?: true
+            if (oldState != newState) {
+                with(binding) {
+                    addressesRecyclerView.isInvisible = newState.userAddresses?.isEmpty() ?: false
+                    profileNoAddresses.isVisible = newState.userAddresses?.isEmpty() ?: true
 
-
-//                if (oldState?.departmentName != newState.departmentName) {
-//
-//                }
+                    profilePaymentMethodRecyclerView.isInvisible =
+                        newState.paymentMethods?.isEmpty() ?: false
+                    profileNoPaymentMethods.isVisible = newState.paymentMethods?.isEmpty() ?: true
+                }
             }
 
             when (val cmd = newState.command) {
                 is ProfileState.Command.SetupUserDetails -> {
-                    setupPaymentMethods(cmd.paymentMethods)
-                    setupUserAddresses(cmd.userAddresses)
+                    setupUser(cmd.user)
                 }
                 is ProfileState.Command.OpenPaymentMethodDialog -> {
                     navigate(
@@ -148,17 +139,60 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
         }
     }
 
+    private fun setupUser(user: User) {
+
+        with(binding) {
+//            userFullName.text = getString(
+//                        R.string.profile_preferences_sizeDescription,
+//                        newState.user?.firstName,
+//                        newState.user?.lastName
+//                    )
+//
+//                    userHandle.text = "@${newState.user?.userName}"
+
+            userMainDepartmentText.text = user.mainDepartment
+            departmentIcon.setText(user.mainDepartment.first().lowercase())
+            userSizeText.text = getString(
+                R.string.profile_preferences_sizeDescription,
+                user.userSize.us,
+                user.userSize.eu.uppercase()
+            )
+            sizeIcon.setText(user.userSize.eu)
+
+            userFavoriteColorText.text = user.favoriteColor.second
+            favoriteColorIcon.setIconTintWithString(user.favoriteColor.first)
+        }
+
+
+        setupPaymentMethods(user.paymentMethods)
+        setupUserAddresses(user.addresses)
+    }
+
     private fun setupPaymentMethods(methods: List<PaymentMethod>) {
         paymentMethodAdapter.clear()
-        methods.map {
-            mapPaymentMethod(it).also { card -> paymentMethodAdapter.add(card) }
+        if (methods.isNotEmpty()) {
+            methods.map {
+                mapPaymentMethod(it).also { card -> paymentMethodAdapter.add(card) }
+            }
+        } else {
+            with(binding) {
+                profilePaymentMethodRecyclerView.isVisible = false
+                profileNoPaymentMethods.isVisible = true
+            }
         }
     }
 
     private fun setupUserAddresses(addresses: List<UserAddress>) {
         addressAdapter.clear()
-        addresses.map {
-            mapAddress(it).also { addressAdapter.add(it) }
+        if (addresses.isNotEmpty()) {
+            addresses.map {
+                mapAddress(it).also { addressAdapter.add(it) }
+            }
+        } else {
+            with(binding) {
+                addressesRecyclerView.isVisible = false
+                profileNoAddresses.isVisible = true
+            }
         }
 
     }
@@ -231,7 +265,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             R.id.profileFragment,
             SizeDialogFragment.RESULT_KEY
         ) {
-            Log.d("Manosize", it.toString())
             vm.transition(ProfileState.Event.ReceivedUserSize(it))
         }
     }

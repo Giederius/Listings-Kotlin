@@ -21,6 +21,7 @@
     <string name="common.profile">Profile</string>
 
     // Profile fragment
+    <string name="profile.fullName">%1$s %2$s</string>
     <string name="profile.ordersAndMessages">My orders and messages</string>
     <string name="profile.myPreferences">My Preferences</string>
     <string name="profile.mainDepartment">Main department</string>

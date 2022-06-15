@@ -50,8 +50,6 @@ abstract class BaseFragment<VB : ViewBinding>(
     fun navigate(directions: NavDirections) {
         try {
             findNavController().navigate(directions)
-//            var navController = Navigation.findNavController(activity as MainActivity, R.id.nav_host_fragment)
-//            navController.navigate(directions)
         } catch (e: IllegalArgumentException) {
             Log.d("errorArgument", e.localizedMessage)
         } catch (e: IllegalStateException) {

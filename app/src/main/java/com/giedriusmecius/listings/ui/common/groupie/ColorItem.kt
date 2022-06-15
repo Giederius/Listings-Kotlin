@@ -11,7 +11,7 @@ class ColorItem(
     val color: String,
     val colorName: String,
     var isSelected: Boolean,
-    val onClick: (String, String) -> Unit
+    val onClick: (String) -> Unit
 ) :
     BindableItem<ItemColorBinding>() {
 
@@ -35,7 +35,7 @@ class ColorItem(
             selectedIcon.isGone = !isSelected
 
             root.setOnClickListener {
-                onClick(color, colorName)
+                onClick(colorName)
             }
         }
     }

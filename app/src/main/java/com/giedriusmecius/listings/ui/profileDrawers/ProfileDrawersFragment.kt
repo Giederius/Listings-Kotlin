@@ -5,12 +5,12 @@ import android.util.Log
 import android.view.View
 import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.giedriusmecius.listings.MainActivity
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.remote.model.category.Category
 import com.giedriusmecius.listings.databinding.FragmentProfileDrawersBinding
@@ -34,15 +34,12 @@ class ProfileDrawersFragment :
        make something like a favorite page that should hold
        different items in different categories. */
 
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        val navHostFragment = (R.id.nav_host_fragment) as NavHostFragment
-//        val navController = navHostFragment.navController
-//    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vm.transition(ProfileDrawersState.Event.ViewCreated)
+
+        (activity as MainActivity).showBottomNavBar()
+
         setupUI()
         listenForAdjustDialogResult()
     }
@@ -84,7 +81,6 @@ class ProfileDrawersFragment :
                 ProfileDrawersState.Command.OpenProfileFragment -> {
                     navigate(ProfileDrawersFragmentDirections.actionProfileDrawerFragmentToProfileFragment())
                 }
-                // todo layout adjustment.
                 else -> {}
             }
         }
@@ -107,7 +103,8 @@ class ProfileDrawersFragment :
     private fun setupUI() {
         with(binding) {
             profilePicture.setOnClickListener {
-                vm.transition(ProfileDrawersState.Event.TappedProfile)
+//                vm.transition(ProfileDrawersState.Event.TappedProfile)
+                navigate(ProfileDrawersFragmentDirections.actionProfileDrawerFragmentToProfileFragment())
             }
 
             profileDrawerRecyclerView.apply {
