@@ -28,16 +28,7 @@ class ProfileDrawersViewModel
         val response = productRepo.getAllCategories()
         val data = response.getOrNull()
         if (!data.isNullOrEmpty()) {
-            Log.d("MANO", data.toString())
             transition(ProfileDrawersState.Event.ReceivedProducts(data))
         }
     }
-
-//    private suspend fun fetchProducts() {
-//        val response = productRepo.getAllProducts()
-//        val data = response.getOrNull()
-//        if (!data.isNullOrEmpty()) {
-//            transition(ProfileDrawersState.Event.ReceivedProducts(response.getOrNull()!!))
-//        }
-//    }
 }

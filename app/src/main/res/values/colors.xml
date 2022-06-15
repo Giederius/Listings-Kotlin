@@ -12,6 +12,8 @@
     <color name="darkTextColor">#1a1a1c</color>
     <color name="normalTextColor">#272728</color>
     <color name="grayedOutTextColor">#6e6e70</color>
+    <color name="disabledGrey">#CFCFCF</color>
+    <color name="activeGrey">#868687</color>
     <color name="neutralLight">#dbdbdb</color>
     <color name="highlightRed">#DF0707</color>
 

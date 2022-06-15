@@ -9,4 +9,17 @@
         <attr name="android:layout_height" />
         <attr name="android:layout_width" />
     </declare-styleable>
+
+    <declare-styleable name="ListingsEditText">
+        <attr name="labelText" format="string" />
+        <attr name="errorText" format="string" />
+        <attr name="android:nextFocusDown" />
+        <attr name="android:imeOptions" />
+    </declare-styleable>
+
+    <declare-styleable name="ListingsSizeRadioButton">
+        <attr name="usSize" format="integer" />
+        <attr name="euSize" format="string" />
+        <attr name="android:checked"/>
+    </declare-styleable>
 </resources>

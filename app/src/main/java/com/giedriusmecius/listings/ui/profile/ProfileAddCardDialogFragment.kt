@@ -6,51 +6,35 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.navArgs
 import com.giedriusmecius.listings.R
-import com.giedriusmecius.listings.data.remote.model.CC
-import com.giedriusmecius.listings.data.remote.model.CardType
+import com.giedriusmecius.listings.data.local.CardType
+import com.giedriusmecius.listings.data.local.PaymentMethod
 import com.giedriusmecius.listings.databinding.DialogProfileAddCardBinding
+import com.giedriusmecius.listings.ui.common.base.BaseDialogFragment
 import com.giedriusmecius.listings.utils.extensions.animateLeave
 import com.giedriusmecius.listings.utils.extensions.animateShowUp
 import com.giedriusmecius.listings.utils.extensions.setNavigationResult
-import com.giedriusmecius.listings.utils.extensions.showAlertDialog
 import com.giedriusmecius.listings.utils.extensions.showToast
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import java.time.YearMonth
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
 class ProfileAddCardDialogFragment :
-    BottomSheetDialogFragment() {
-    private var _binding: DialogProfileAddCardBinding? = null
-    private val binding get() = _binding!!
+    BaseDialogFragment<DialogProfileAddCardBinding>(DialogProfileAddCardBinding::inflate) {
     private val cardTypeCheck = ArrayList<CardTypes>()
-    private var newCard: CC = CC(null, null, null, null, null)
+    private var card = PaymentMethod(null, null, null, null, null)
     private var isExpired: Boolean = false
     private val navArgs by navArgs<ProfileAddCardDialogFragmentArgs>()
 
-    override fun getTheme(): Int = R.style.AppBottomSheetDialogTheme
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = DialogProfileAddCardBinding.inflate(inflater, container, false)
-        return binding.root
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         cardTypeCheck.add(CardTypes.Visa)
         cardTypeCheck.add(CardTypes.MasterCard)
 
@@ -58,10 +42,19 @@ class ProfileAddCardDialogFragment :
 
         // todo fix the checks for lengths for every field everywhere after done setting up.
 
+        if (navArgs.cardInfo != null && navArgs.isEdit) {
+            setupEditPaymentMethod(navArgs.cardInfo!!)
+            card = navArgs.cardInfo!!
+        }
+
         with(binding) {
             setupEditClicks()
 
             addCardNumberTextEdit.apply {
+                requestFocus()
+                if (navArgs.isEdit) {
+                    setText(cardContainerFrontSide.cardNumber.text)
+                }
                 this.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
@@ -86,7 +79,7 @@ class ProfileAddCardDialogFragment :
                                 when (p) {
                                     CardTypes.Visa -> {
                                         if (formattedString.matches(p.regex)) {
-                                            newCard = newCard.copy(type = CardType.VISA)
+                                            card = card.copy(type = CardType.VISA)
                                             binding.cardContainerFrontSide.cardTypeImg.apply {
                                                 isGone = false
                                             }
@@ -94,9 +87,14 @@ class ProfileAddCardDialogFragment :
                                     }
                                     CardTypes.MasterCard -> {
                                         if (formattedString.matches(p.regex)) {
-                                            newCard = newCard.copy(type = CardType.MASTERCARD)
+                                            card = card.copy(type = CardType.MASTERCARD)
                                             binding.cardContainerFrontSide.cardTypeImg.apply {
-                                                setImageDrawable(resources.getDrawable(R.drawable.icon_mastercard))
+                                                setImageDrawable(
+                                                    ContextCompat.getDrawable(
+                                                        context,
+                                                        R.drawable.icon_mastercard
+                                                    )
+                                                )
                                                 isGone = false
                                             }
                                         }
@@ -110,7 +108,7 @@ class ProfileAddCardDialogFragment :
                 this.setOnKeyListener { v, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
                         val formattedString = this.text.toString().replace(" ", "")
-                        newCard = newCard.copy(number = formattedString.toLong())
+                        card = card.copy(number = formattedString.toLong())
                         cardContainerFrontSide.cardNumber.text = this.text
                         addCardNameTextEdit.animateShowUp()
                         textInputLabel.text = getString(R.string.addCardDialog_nameOnCardlabel)
@@ -123,10 +121,13 @@ class ProfileAddCardDialogFragment :
             }
 
             addCardNameTextEdit.apply {
+                if (navArgs.isEdit) {
+                    setText(cardContainerFrontSide.cardUserName.text)
+                }
                 this.setOnKeyListener { v, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
                         cardContainerFrontSide.cardUserName.text = this.text
-                        newCard = newCard.copy(name = this.text.toString())
+                        card = card.copy(name = this.text.toString())
                         addCardExpDateTextEdit.animateShowUp()
                         v.animateLeave()
                         textInputLabel.text = getString(R.string.addCardDialog_expDatelabel)
@@ -138,6 +139,9 @@ class ProfileAddCardDialogFragment :
             }
 
             addCardExpDateTextEdit.apply {
+                if (navArgs.isEdit) {
+                    setText(cardContainerFrontSide.cardExpDate.text)
+                }
                 this.addTextChangedListener(object : TextWatcher {
                     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
@@ -190,7 +194,7 @@ class ProfileAddCardDialogFragment :
                                         )
                                     )
                                 }
-                                newCard = newCard.copy(expDate = formattedExpDate.toString())
+                                card = card.copy(expDate = formattedExpDate.toString())
                                 addCardSecurityTextEdit.animateShowUp()
                                 rotateCard(cardContainerBack, cardContainerFront)
                                 v.animateLeave()
@@ -216,28 +220,59 @@ class ProfileAddCardDialogFragment :
                     }
                 }
             }
+
             addCardSecurityTextEdit.apply {
+                if (navArgs.isEdit) {
+                    setText(cardContainerBackside.cardCvv.text)
+                }
                 this.setOnKeyListener { v, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
                         cardContainerBackside.cardCvv.text = this.text
-                        newCard = newCard.copy(ccv = Integer.parseInt(this.text.toString()))
-//                        setResult(newCard)
-                        showToast(context, "Card added!")
+                        card = card.copy(ccv = Integer.parseInt(this.text.toString()))
+
                         // todo add popup to confirm data or edit
-                        showAlertDialog(
-                            this.context, "Is everything in order?",
-                            "Number: ${newCard.number}\nName: ${newCard.name}\nExp. date: ${newCard.expDate}\nCCV: ${newCard.ccv}",
-                            onPositiveClick = {
-                                showToast(context, "Positive")
-                                dismiss()
-                            },
-                            onNegativeClick = {
-                                showToast(context, "Negative")
-                                dismiss()
-                            })
+                        setResult(Triple(navArgs.isEdit, card, navArgs.cardInfo))
+//                        showAlertDialog(
+//                            this.context, "Is everything in order?",
+//                            "Number: ${card.number}\nName: ${card.name}\nExp. date: ${card.expDate}\nCCV: ${card.ccv}",
+//                            onPositiveClick = {
+//
+//                                showToast(context, "Card added!")
+//                            },
+//                            onNegativeClick = {
+//                                showToast(context, "Negative")
+//                            })
                         true
                     } else {
                         false
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.addCardNumberTextEdit.requestFocus()
+    }
+
+    private fun setupEditPaymentMethod(method: PaymentMethod) {
+        with(binding) {
+            cardContainerBackside.cardCvv.text = method.ccv.toString()
+            cardContainerFrontSide.apply {
+                cardNumber.text =
+                    method.number.toString().chunked(CARD_NUMBER_CHUNKS).joinToString(" ")
+                cardUserName.text = method.name
+                cardExpDate.text = method.expDate
+                cardTypeImg.apply {
+                    when (method.type) {
+                        CardType.VISA -> isGone = false
+                        CardType.MASTERCARD -> setImageDrawable(
+                            ContextCompat.getDrawable(
+                                context,
+                                R.drawable.icon_mastercard
+                            )
+                        )
                     }
                 }
             }
@@ -331,7 +366,7 @@ class ProfileAddCardDialogFragment :
         return try {
             val lastValidMonth = YearMonth.parse(ccExpDate, monthFormatter)
             if (YearMonth.now(ZoneId.systemDefault()).isAfter(lastValidMonth)) {
-                context?.let { showToast(it,"Credit card has expired" ) }
+                context?.let { showToast(it, "Credit card has expired") }
                 true
             } else {
                 false
@@ -360,18 +395,9 @@ class ProfileAddCardDialogFragment :
         flipInAnimatorSet.start()
     }
 
-    override fun onResume() {
-        super.onResume()
-        binding.addCardNumberTextEdit.requestFocus()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
-
-    private fun setResult(value: CC) {
-        setNavigationResult(ProfileFragment.RESULT_KEY, value)
+    private fun setResult(value: Triple<Boolean, PaymentMethod, PaymentMethod?>) {
+         // isEdit, newCard, oldCard
+        setNavigationResult(RESULT_KEY, value)
         dismiss()
     }
 

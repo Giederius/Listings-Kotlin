@@ -1,13 +1,16 @@
 package com.giedriusmecius.listings.ui.profileDrawers
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isGone
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.giedriusmecius.listings.MainActivity
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.remote.model.category.Category
 import com.giedriusmecius.listings.databinding.FragmentProfileDrawersBinding
@@ -25,7 +28,6 @@ class ProfileDrawersFragment :
 
     private val vm by viewModels<ProfileDrawersViewModel>()
     private val groupie = GroupieAdapter()
-    private val args by navArgs<ProfileDrawersFragmentArgs>()
 
     /* all of the data here should be saved somewhere
        you should create a drawer and add products to it
@@ -35,6 +37,9 @@ class ProfileDrawersFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         vm.transition(ProfileDrawersState.Event.ViewCreated)
+
+        (activity as MainActivity).showBottomNavBar()
+
         setupUI()
         listenForAdjustDialogResult()
     }
@@ -73,7 +78,9 @@ class ProfileDrawersFragment :
                     handleLayoutChange(true)
                     displayData(newState.data, true)
                 }
-                // todo layout adjustment.
+                ProfileDrawersState.Command.OpenProfileFragment -> {
+                    navigate(ProfileDrawersFragmentDirections.actionProfileDrawerFragmentToProfileFragment())
+                }
                 else -> {}
             }
         }
@@ -96,6 +103,7 @@ class ProfileDrawersFragment :
     private fun setupUI() {
         with(binding) {
             profilePicture.setOnClickListener {
+//                vm.transition(ProfileDrawersState.Event.TappedProfile)
                 navigate(ProfileDrawersFragmentDirections.actionProfileDrawerFragmentToProfileFragment())
             }
 

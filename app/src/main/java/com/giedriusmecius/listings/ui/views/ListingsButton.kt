@@ -2,6 +2,7 @@ package com.giedriusmecius.listings.ui.views
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -18,9 +19,9 @@ class ListingsButton @JvmOverloads constructor(
     private var text = ""
     private var icon: Drawable? = null
     private var padding: Int = 0
+    private var isText: Boolean
 
     init {
-        var isText = false
 
         context.theme.obtainStyledAttributes(attrs, R.styleable.ListingsButton, 0, 0).use {
             isText = it.getBoolean(R.styleable.ListingsButton_isText, false)
@@ -59,15 +60,15 @@ class ListingsButton @JvmOverloads constructor(
             ColorStateList.valueOf(ContextCompat.getColor(context, color))
     }
 
+    fun setIconTintWithString(color: String) {
+        ColorStateList.valueOf(Color.parseColor(color)).let {
+            binding.buttonImage.imageTintList = it
+        }
+    }
+
 }
 
 fun ListingsButton.setupButton(text: String, iconColor: Int) {
     setText(text)
     setIconTint(iconColor)
 }
-
-// susitvarkyti su paddingais
-// issiaiskinti dydzius burbuliuko
-// perpanaudot ant edit / add card
-// marginus susitvarkyti prie fragment profile edit add card
-//

@@ -45,6 +45,16 @@
         app:layout_constraintTop_toBottomOf="@id/addressLine2" />
 
     <TextView
+        android:id="@+id/userCountry"
+        style="@style/H4.Grey.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/common.zipCode"
+        app:layout_constraintStart_toEndOf="@id/userZipCode"
+        app:layout_constraintTop_toBottomOf="@id/addressLine2" />
+
+    <TextView
         android:id="@+id/addressDescriptionTitle"
         style="@style/labelTitleText"
         android:layout_width="wrap_content"

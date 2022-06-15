@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/profileDrawerFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
         android:id="@+id/splashFragment"
@@ -22,6 +22,12 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
+        android:id="@+id/marketFragment"
+        android:name="com.giedriusmecius.listings.ui.market.MarketFragment"
+        android:label="MarketFragment"
+        tools:layout="@layout/fragment_market" />
+
+    <fragment
         android:id="@+id/profileFragment"
         android:name="com.giedriusmecius.listings.ui.profile.ProfileFragment"
         android:label="ProfileFragment"
@@ -35,6 +41,18 @@
         <action
             android:id="@+id/profileFragment_to_profileDrawerFragment"
             app:destination="@id/profileDrawerFragment" />
+        <action
+            android:id="@+id/profileFragment_to_profileAddAddressDialog"
+            app:destination="@id/profileAddAddressDialogFragment" />
+        <action
+            android:id="@+id/profileFragment_to_sizeDialog"
+            app:destination="@id/SizeDialogFragment" />
+        <action
+            android:id="@+id/profileFragment_to_departmentSelectionDialog"
+            app:destination="@id/DepartmentSelectionFragment" />
+        <action
+            android:id="@+id/profileFragment_to_colorSelectionDialog"
+            app:destination="@id/ColorSelectionDialogFragment" />
     </fragment>
 
     <fragment
@@ -42,10 +60,6 @@
         android:name="com.giedriusmecius.listings.ui.profileDrawers.ProfileDrawersFragment"
         android:label="ProfileDrawerFragment"
         tools:layout="@layout/fragment_profile_drawers">
-        <argument
-            android:name="title"
-            android:defaultValue="Drawer"
-            app:argType="string" />
         <action
             android:id="@+id/action_profileDrawerFragment_to_profileFragment"
             app:destination="@id/profileFragment"
@@ -85,8 +99,8 @@
         tools:layout="@layout/dialog_profile_add_card">
         <argument
             android:name="cardInfo"
-            app:argType="com.giedriusmecius.listings.data.remote.model.CC"
             android:defaultValue="@null"
+            app:argType="com.giedriusmecius.listings.data.local.PaymentMethod"
             app:nullable="true" />
         <argument
             android:name="isEdit"
@@ -98,4 +112,52 @@
         android:id="@+id/profileDrawerAdjustDialogFragment"
         android:name="com.giedriusmecius.listings.ui.profileDrawers.ProfileDrawersAdjustDialogFragment"
         tools:layout="@layout/dialog_profile_drawers_adjust" />
+
+    <dialog
+        android:id="@+id/profileAddAddressDialogFragment"
+        android:name="com.giedriusmecius.listings.ui.profile.ProfileAddAddressDialogFragment"
+        tools:layout="@layout/dialog_profile_add_address">
+        <argument
+            android:name="addressInfo"
+            android:defaultValue="@null"
+            app:argType="com.giedriusmecius.listings.data.local.UserAddress"
+            app:nullable="true" />
+        <argument
+            android:name="isEdit"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/SizeDialogFragment"
+        android:name="com.giedriusmecius.listings.ui.common.dialogs.SizeDialogFragment"
+        tools:layout="@layout/dialog_size">
+        <argument
+            android:name="size"
+            android:defaultValue="@null"
+            app:argType="com.giedriusmecius.listings.data.local.Size"
+            app:nullable="true" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/DepartmentSelectionFragment"
+        android:name="com.giedriusmecius.listings.ui.common.dialogs.DepartmentSelectionDialogFragment"
+        tools:layout="@layout/dialog_department_selection">
+        <argument
+            android:name="departmentName"
+            android:defaultValue=""
+            app:argType="string"
+            app:nullable="true" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/ColorSelectionDialogFragment"
+        android:name="com.giedriusmecius.listings.ui.common.dialogs.ColorSelectionDialogFragment"
+        tools:layout="@layout/dialog_color_selection_fragment">
+        <argument
+            android:name="colorName"
+            android:defaultValue=""
+            app:argType="string"
+            app:nullable="true" />
+    </dialog>
 </navigation>

@@ -5,13 +5,16 @@ import android.graphics.Color
 import android.view.View
 import coil.load
 import com.giedriusmecius.listings.R
+import com.giedriusmecius.listings.data.local.CardType
 import com.giedriusmecius.listings.databinding.ItemPaymentMethodCardBinding
+import com.giedriusmecius.listings.utils.extensions.showDialog
 import com.xwray.groupie.viewbinding.BindableItem
 
 data class PaymentMethodCardItem(
-    private val paymentType: PaymentType,
+    private val cardType: CardType,
     val cardNumber: String,
-    val onEditClick: () -> Unit
+    val onEditClick: () -> Unit,
+    val onDeleteClick: () -> Unit
 ) :
     BindableItem<ItemPaymentMethodCardBinding>() {
     override fun getLayout(): Int = R.layout.item_payment_method_card
@@ -21,13 +24,24 @@ data class PaymentMethodCardItem(
 
     @SuppressLint("ResourceAsColor")
     override fun bind(viewBinding: ItemPaymentMethodCardBinding, position: Int) {
+        val paymentType: PaymentType = if (cardType == CardType.VISA) {
+            PaymentType.VISA
+        } else {
+            PaymentType.MASTERCARD
+        }
         with(viewBinding) {
             paymentMethodCardContainer.setCardBackgroundColor(paymentType.bgColor)
             paymentMethodsCardImage.load(paymentType.cardImage)
             paymentMethodsCardType.text = paymentType.cardName
             paymentMethodsCardNumber.text = cardNumber
             paymentMethodsEditButton.setOnClickListener {
-                onEditClick()
+                it.context.showDialog(
+                    "Choose your action",
+                    "",
+                    "Edit",
+                    "Delete",
+                    { onEditClick() },
+                    { onDeleteClick() })
             }
         }
     }

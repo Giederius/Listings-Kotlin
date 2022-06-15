@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="20dp">
+
+        <TextView
+            android:id="@+id/us"
+            style="@style/H4.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="34dp"
+            android:layout_marginEnd="22dp"
+            android:text="22" />
+
+        <TextView
+            android:id="@+id/eu"
+            style="@style/H4.Grey.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="xs" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="0dp"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:visibility="gone"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_checkmark" />
+
+    </LinearLayout>
+</merge>

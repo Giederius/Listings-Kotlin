@@ -13,6 +13,7 @@
     <string name="common.card.visa">Visa</string>
     <string name="common.card.cvv">CVV</string>
     <string name="common.zipCode">Zip Code</string>
+    <string name="common.country">Zip Code</string>
     <string name="common.sortBy">Sort by</string>
     <string name="common.layout">Layout</string>
     <string name="common.feed">Feed</string>
@@ -20,15 +21,22 @@
     <string name="common.profile">Profile</string>
 
     // Profile fragment
+    <string name="profile.fullName">%1$s %2$s</string>
     <string name="profile.ordersAndMessages">My orders and messages</string>
     <string name="profile.myPreferences">My Preferences</string>
     <string name="profile.mainDepartment">Main department</string>
     <string name="profile.favoriteColor">Favorite color</string>
     <string name="profile.paymentMethods">Payment methods</string>
+    <string name="profile.payments.noPaymentMethods">You have no payment methods.</string>
+    <string name="profile.payments.cardNumber">****%1$s</string>
+
     <string name="profile.addresses">Addresses</string>
     <string name="profile.addresses.addButton">Add address</string>
     <string name="profile.addresses.editAddress">Edit address</string>
     <string name="profile.addresses.deleteAddress">Delete address</string>
+    <string name="profile.addresses.noAddresses">You have no addresses.</string>
+    <string name="profile.preferences.sizeDescription">%1$s - %2$s</string>
+
 
     // Profile Drawers Fragment
     <string name="profileDrawers.title">Drawers</string>
@@ -48,5 +56,16 @@
     <string name="addCardDialog.nameOnCardlabel">Name on card</string>
     <string name="addCardDialog.expDatelabel">Expiration date on card</string>
     <string name="addCardDialog.ccvlabel">Security code</string>
+
+    // Add Address Dialog
+    <string name="addAddress.title">Add Your address</string>
+
+    // Department Selection Dialog
+    <string name="departmentDialog.title">Select department</string>
+    <string name="departmentDialog.women">Women</string>
+    <string name="departmentDialog.man">Men</string>
+    <string name="departmentDialog.girl">Girl (0\-12 years old)</string>
+    <string name="departmentDialog.boy">Boy (0\-12 years old)</string>
+    <string name="departmentDialog.none">None</string>
 
 </resources>

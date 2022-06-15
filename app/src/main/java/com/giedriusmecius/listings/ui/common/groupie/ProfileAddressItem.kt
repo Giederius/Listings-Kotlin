@@ -2,6 +2,7 @@ package com.giedriusmecius.listings.ui.common.groupie
 
 import android.annotation.SuppressLint
 import android.view.ContextThemeWrapper
+import android.view.Gravity
 import android.view.View
 import android.widget.PopupMenu
 import android.widget.PopupWindow
@@ -15,12 +16,12 @@ data class ProfileAddressItem(
     val streetName: String,
     val county: String,
     val state: String,
-    val zipCode: Int,
+    val country: String,
+    val zipCode: String,
     val addressDescription: String,
     val userFullName: String,
     val onEditClick: () -> Unit,
     val onDeleteClick: () -> Unit,
-    val onMoreClick: () -> Unit
 ) :
     BindableItem<ItemProfileAddressBinding>() {
 
@@ -35,10 +36,10 @@ data class ProfileAddressItem(
             addressLine1.text = "$houseNumber $streetName"
             addressLine2.text = "$county, $state"
             userZipCode.text = "$zipCode"
+            userCountry.text = ", $country"
             addressDescriptionTitle.text = "$userFullName - "
             addressDescriptionTag.text = addressDescription
             addressItemMenu.setOnClickListener {
-                onMoreClick()
                 showPopUpMenu(it, R.menu.menu_address_item_more)
             }
         }
@@ -50,6 +51,7 @@ data class ProfileAddressItem(
         val popUp = PopupMenu(wrapper, v, 0, 0, 0)
 
         popUp.menuInflater.inflate(menuRes, popUp.menu)
+        popUp.gravity = Gravity.END
         popUp.setOnMenuItemClickListener { item ->
             when (item!!.itemId) {
                 R.id.menuEditAddress -> {
