@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fillViewport="true"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="12dp"
-        android:layout_width="match_parent">
+        android:layout_marginEnd="24dp">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/profilePicture"
-            android:layout_height="48dp"
             android:layout_width="48dp"
+            android:layout_height="48dp"
             android:src="@drawable/sample_image"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -25,8 +25,8 @@
 
         <ImageView
             android:id="@+id/profileSettingsButton"
-            android:layout_height="20dp"
             android:layout_width="20dp"
+            android:layout_height="20dp"
             android:src="@drawable/ic_settings"
             app:layout_constraintBottom_toBottomOf="@id/profilePicture"
             app:layout_constraintEnd_toEndOf="parent"
@@ -34,49 +34,51 @@
             app:tint="@color/darkTextColor" />
 
         <TextView
-            style="@style/H1"
             android:id="@+id/profileDrawersTitle"
+            style="@style/H1"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            android:layout_width="wrap_content"
             android:text="@string/profileDrawers.title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/profilePicture" />
 
         <EditText
+            android:id="@+id/profileSearchField"
             style="@style/ListingsSearchField"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="4dp"
             android:background="@drawable/bg_rounded_rect_sm_borderless"
             android:backgroundTint="@color/neutralLight"
             android:hint="@string/profileDrawers.filterSearch"
-            android:id="@+id/profileSearchField"
-            android:layout_height="48dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginTop="24dp"
-            android:layout_width="0dp"
-            android:paddingEnd="16dp"
+            android:inputType="text"
+            android:maxLines="1"
             android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:textCursorDrawable="@null"
             app:layout_constraintEnd_toStartOf="@id/adjustDrawersButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/profileDrawersTitle" />
 
         <View
-            android:background="@drawable/ic_search"
             android:id="@+id/profileSearchButton"
+            android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginRight="16dp"
-            android:layout_width="20dp"
+            android:background="@drawable/ic_search"
             app:layout_constraintBottom_toBottomOf="@id/profileSearchField"
             app:layout_constraintEnd_toEndOf="@id/profileSearchField"
             app:layout_constraintTop_toTopOf="@id/profileSearchField" />
 
         <com.giedriusmecius.listings.ui.views.ListingsButton
-            android:drawable="@drawable/ic_adjust_settings"
             android:id="@+id/adjustDrawersButton"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginHorizontal="4dp"
-            android:layout_width="48dp"
+            android:drawable="@drawable/ic_adjust_settings"
             android:visibility="visible"
             app:isText="false"
             app:layout_constraintEnd_toStartOf="@id/addDrawersButton"
@@ -84,11 +86,11 @@
             app:layout_constraintTop_toTopOf="@id/profileSearchField" />
 
         <com.giedriusmecius.listings.ui.views.ListingsButton
-            android:drawable="@drawable/ic_plus"
             android:id="@+id/addDrawersButton"
+            android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_marginStart="4dp"
-            android:layout_width="48dp"
+            android:drawable="@drawable/ic_plus"
             android:visibility="visible"
             app:isText="false"
             app:layout_constraintEnd_toEndOf="parent"
@@ -97,9 +99,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/profileDrawerRecyclerView"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="40dp"
-            android:layout_width="match_parent"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -108,9 +110,9 @@
 
         <ProgressBar
             android:id="@+id/profileDrawersProgressBar"
+            android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginTop="150dp"
-            android:layout_width="60dp"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

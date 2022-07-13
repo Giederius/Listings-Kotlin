@@ -22,8 +22,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
     override fun observeState() {
         vm.subscribeWithAutoDispose(viewLifecycleOwner) { _, newState ->
             when (val cmd = newState.command) {
-                HomeState.Command.ChangeName -> {
-                    binding.homeTitle.text = "THIS IS NEW HOME TITLE"
+                HomeState.Command.OpenSearch -> {
+                    navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
                 }
                 else -> {}
             }
@@ -32,6 +32,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
 
     private fun setupView() {
         with(binding) {
+
+            homeSearchBar.setOnClickListener {
+                vm.transition(HomeState.Event.TappedSearch)
+            }
             homeScreenViewPager.adapter = HomeTabLayoutAdapter(this@HomeFragment)
             homeScreenViewPager.isUserInputEnabled = false
 
@@ -46,7 +50,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             )
             val tabArray = arrayOf("Featured", "Latest", "WatchList")
 
-            TabLayoutMediator(homeScreenViewPagerTabLayout, homeScreenViewPager){ tab, position ->
+            TabLayoutMediator(homeScreenViewPagerTabLayout, homeScreenViewPager) { tab, position ->
                 tab.text = tabArray[position]
             }.attach()
         }

@@ -59,6 +59,18 @@
         <item name="android:textColor">@color/grayedOutTextColor</item>
     </style>
 
+    <style name="H4.18" parent="Raleway">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textColor">@color/normalTextColor</item>
+    </style>
+
+    <style name="H4" parent="Raleway">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textFontWeight">600</item>
+        <item name="android:textColor">@color/normalTextColor</item>
+    </style>
+
     <style name="H4.Grey.Bold" parent="Raleway">
         <item name="android:textSize">16sp</item>
         <item name="android:textFontWeight">700</item>
@@ -75,6 +87,12 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textFontWeight">800</item>
         <item name="android:textColor">@color/darkTextColor</item>
+    </style>
+
+    <style name="H5.Grey" parent="Raleway">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textColor">@color/grayedOutTextColor</item>
     </style>
 
     <style name="BoldRegularText" parent="Raleway">

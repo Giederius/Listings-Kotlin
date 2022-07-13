@@ -68,4 +68,9 @@
     <string name="departmentDialog.boy">Boy (0\-12 years old)</string>
     <string name="departmentDialog.none">None</string>
 
+    //Search Fragment
+    <string name="search.hint">Search the markets</string>
+    <string name="search.recentSearches">Recent search</string>
+    <string name="search.emptySearches">You have no recent searches.</string>
+
 </resources>

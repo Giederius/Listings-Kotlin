@@ -6,16 +6,20 @@ data class HomeState(val request: Request? = null, val command: Command? = null)
     State<HomeState, HomeState.Event> {
     sealed class Event {
         object ViewCreated : Event()
+        object TappedSearch : Event()
     }
 
     sealed class Request {}
     sealed class Command {
-        object ChangeName: Command()
+        object OpenSearch : Command()
     }
 
     override fun reduce(event: Event): HomeState {
         return when (event) {
-            Event.ViewCreated -> copy(command = Command.ChangeName)
+            Event.TappedSearch -> copy(command = Command.OpenSearch)
+            else -> {
+                copy()
+            }
         }
     }
 

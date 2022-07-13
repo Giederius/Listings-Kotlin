@@ -1,6 +1,5 @@
 package com.giedriusmecius.listings.ui.profileDrawers
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.giedriusmecius.listings.data.remote.repository.ProductRepository
 import com.giedriusmecius.listings.utils.state.BaseViewModel
@@ -25,7 +24,7 @@ class ProfileDrawersViewModel
     }
 
     private suspend fun fetchCategories() {
-        val response = productRepo.getAllCategories()
+        val response = productRepo.getAllProducts()
         val data = response.getOrNull()
         if (!data.isNullOrEmpty()) {
             transition(ProfileDrawersState.Event.ReceivedProducts(data))

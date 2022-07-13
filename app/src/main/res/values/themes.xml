@@ -26,7 +26,13 @@
         <item name="android:radioButtonStyle">@style/AppRadioButton</item>
         <item name="popupTheme">@style/BasePopUpMenu</item>
         <item name="popupMenuStyle">@style/BasePopUpMenu</item>
-<!--        <item name="materialAlertDialogTheme">@style/MyDialogTheme</item>-->
+        <item name="android:progressBarStyle">@style/BaseProgressIndicator</item>
+        <!--        <item name="materialAlertDialogTheme">@style/MyDialogTheme</item>-->
+    </style>
+
+    <!--    // todo change progress-->
+    <style name="BaseProgressIndicator" parent="Widget.AppCompat.ProgressBar">
+        <item name="colorAccent">@color/accentPurple</item>
     </style>
 
     <style name="AppBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
@@ -39,27 +45,27 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
-<!--    <style name="MyDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">-->
-<!--        <item name="materialAlertDialogTitleTextStyle">@style/H4.Bold</item>-->
-<!--        <item name="android:buttonBarPositiveButtonStyle">@style/AlertDialogPositiveButton</item>-->
-<!--        <item name="android:buttonBarNegativeButtonStyle">@style/AlertDialogNegativeButton</item>-->
-<!--    </style>-->
+    <!--    <style name="MyDialogTheme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">-->
+    <!--        <item name="materialAlertDialogTitleTextStyle">@style/H4.Bold</item>-->
+    <!--        <item name="android:buttonBarPositiveButtonStyle">@style/AlertDialogPositiveButton</item>-->
+    <!--        <item name="android:buttonBarNegativeButtonStyle">@style/AlertDialogNegativeButton</item>-->
+    <!--    </style>-->
 
 
-<!--&lt;!&ndash;    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">&ndash;&gt;-->
-<!--        <item name="android:buttonBarPositiveButtonStyle">@style/AlertDialogPositiveButton</item>-->
-<!--        <item name="android:buttonBarNegativeButtonStyle">@style/AlertDialogNegativeButton</item>-->
-<!--&lt;!&ndash;    </style>&ndash;&gt;-->
+    <!--&lt;!&ndash;    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">&ndash;&gt;-->
+    <!--        <item name="android:buttonBarPositiveButtonStyle">@style/AlertDialogPositiveButton</item>-->
+    <!--        <item name="android:buttonBarNegativeButtonStyle">@style/AlertDialogNegativeButton</item>-->
+    <!--&lt;!&ndash;    </style>&ndash;&gt;-->
 
-<!--    <style name="AlertDialogPositiveButton">-->
-<!--        <item name="background">@null</item>-->
-<!--        <item name="android:textColor">@color/accentPurple</item>-->
-<!--    </style>-->
+    <!--    <style name="AlertDialogPositiveButton">-->
+    <!--        <item name="background">@null</item>-->
+    <!--        <item name="android:textColor">@color/accentPurple</item>-->
+    <!--    </style>-->
 
-<!--    <style name="AlertDialogNegativeButton">-->
-<!--        <item name="background">@null</item>-->
-<!--        <item name="android:paddingEnd">12dp</item>-->
-<!--        <item name="android:textColor">@color/highlightRed</item>-->
-<!--    </style>-->
+    <!--    <style name="AlertDialogNegativeButton">-->
+    <!--        <item name="background">@null</item>-->
+    <!--        <item name="android:paddingEnd">12dp</item>-->
+    <!--        <item name="android:textColor">@color/highlightRed</item>-->
+    <!--    </style>-->
 
 </resources>
