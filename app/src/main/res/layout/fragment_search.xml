@@ -128,6 +128,16 @@
             app:layout_constraintTop_toBottomOf="@id/searchTopBar"
             tools:listitem="@layout/item_search_suggestion_category" />
 
+        <View
+            android:id="@+id/categoryDivider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/disabledGrey"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/categorySuggestionRV" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recentSearchResultsRV"
             android:layout_width="match_parent"

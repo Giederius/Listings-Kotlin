@@ -2,8 +2,6 @@ package com.giedriusmecius.listings.ui.search
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.giedriusmecius.listings.data.remote.model.category.Category
-import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.data.remote.repository.ProductRepository
 import com.giedriusmecius.listings.utils.UserPreferences
 import com.giedriusmecius.listings.utils.state.BaseViewModel
@@ -30,9 +28,7 @@ class SearchViewModel @Inject constructor(
             }
             is SearchState.Request.SaveSearchQueryAndGetResults -> {
                 val searchList = req.recentSearchList.toMutableList()
-                if (searchList[0] != req.query) {
-                    searchList.add(0, req.query)
-                }
+                searchList.add(0, req.query)
                 if (searchList.size > 5) {
                     searchList.removeLast()
                 }
@@ -49,25 +45,42 @@ class SearchViewModel @Inject constructor(
                 transition(SearchState.Event.SearchQueryRemoved(searchList.toList()))
             }
             is SearchState.Request.GenerateSuggestions -> {
-                val foundCatList: MutableList<Category> = mutableListOf()
-                val foundProductList: MutableList<Product> = mutableListOf()
+                val foundCatList: MutableList<Triple<String, String, String>> = mutableListOf()
+                val foundProductList: MutableList<String> = mutableListOf()
+                foundCatList.clear()
+                foundProductList.clear()
                 val products = req.products
-                products.forEach { category ->
-                    category.title.contains(req.query).let {
-                        if (it) {
-                            foundCatList.add(category)
+                if (req.query.length >= 2) {
+                    products.forEach { category ->
+                        category.title.contains(req.query, ignoreCase = true).let {
+                            if (it) {
+                                foundCatList.add(
+                                    Triple(
+                                        category.title,
+                                        category.products[0].image,
+                                        "something"
+                                    )
+                                )
+                            }
+                        }
+                        category.products.filter { product ->
+                            product.title.contains(req.query, ignoreCase = true)
+                                    || product.description.contains(req.query)
+                                    || product.category.contains(req.query)
+                        }.let {
+                            it.forEach {
+                                foundProductList.add(it.title)
+                            }
                         }
                     }
-                    category.products.filter { product ->
-                        product.title.contains(req.query)
-                                || product.description.contains(req.query)
-                                || product.category.contains(req.query)
-                    }.let {
-                        foundProductList.addAll(it)
-                    }
+                    transition(
+                        SearchState.Event.ReceivedSuggestions(
+                            foundCatList.toList(),
+                            foundProductList.toList(),
+                            req.query
+                        )
+                    )
                 }
-                Log.d("MANO3", "$foundCatList, $foundProductList")
-                Log.d("MANO3", "${foundCatList.size}, ${foundProductList.size}")
             }
 
             else -> {}

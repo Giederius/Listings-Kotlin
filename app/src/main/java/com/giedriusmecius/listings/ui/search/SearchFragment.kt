@@ -3,10 +3,12 @@ package com.giedriusmecius.listings.ui.search
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isGone
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +17,7 @@ import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.databinding.FragmentSearchBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.groupie.RecentSearchItem
+import com.giedriusmecius.listings.ui.common.groupie.SuggestionCategoryItem
 import com.giedriusmecius.listings.utils.extensions.hideKeyboard
 import com.giedriusmecius.listings.utils.extensions.showKeyboard
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
@@ -38,6 +41,123 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
         (activity as MainActivity).hideBottomNavBar()
 
         setupUI()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        (activity as MainActivity).showBottomNavBar()
+    }
+
+    override fun observeState() {
+        vm.subscribeWithAutoDispose(this) { oldState, newState ->
+
+            if (oldState?.isResultPage != newState.isResultPage) {
+                binding.searchField.setOnClickListener {
+//                    setupUIForSearch()
+                    setupUIForSuggestions()
+                }
+            }
+
+            if (oldState?.isSuggestionPage != newState.isSuggestionPage) {
+                binding.apply {
+                    searchField.setOnClickListener {
+                        setupUIForSearch()
+                        groupie.clear()
+                        groupie.addAll(recentSearchQueries)
+                    }
+                    searchButton.setOnClickListener {
+                        searchField.setText("")
+                        setupUIForSearch()
+                    }
+                }
+            }
+
+            when (val cmd = newState.command) {
+                is SearchState.Command.DisplayRecentSearches -> {
+                    handleRecentSearches(cmd.list)
+                }
+                is SearchState.Command.UpdateRecentSearchQueries -> {
+                    recentSearchQueries = mutableListOf()
+                    groupie.clear()
+                    handleRecentSearches(cmd.list)
+                }
+                is SearchState.Command.DisplaySuggestions -> {
+                    val suggestionList: MutableList<RecentSearchItem> = mutableListOf()
+                    val categoryList: MutableList<SuggestionCategoryItem> = mutableListOf()
+                    suggestionList.clear()
+                    categoryList.clear()
+                    if (cmd.categorySuggestion.isNotEmpty()) {
+                        groupieCat.clear()
+                        cmd.categorySuggestion.map {
+                            SuggestionCategoryItem(it.second, it.first, it.third) {
+                                Toast.makeText(context, "Not implemented", Toast.LENGTH_SHORT)
+                                    .show()
+                            }.also {
+                                categoryList.add(it)
+                            }
+                        }
+                        groupieCat.addAll(categoryList)
+                        binding.apply {
+                            recentSearchesTitle.isGone = true
+                            categorySuggestionRV.isGone = false
+                            categoryDivider.isGone = false
+                            recentSearchResultsRV.apply {
+                                updateLayoutParams<ConstraintLayout.LayoutParams> {
+                                    topToBottom = categoryDivider.id
+                                }
+                            }
+                        }
+                    }
+                    if (cmd.simpleSuggestion.isNotEmpty()) {
+                        groupie.clear()
+                        cmd.simpleSuggestion.map {
+                            RecentSearchItem(cmd.query, it, true, {
+                                binding.searchField.setText(it)
+                                vm.transition(SearchState.Event.PressedToSearch(it))
+                                setupUIForSearchResults()
+                            }, {})
+                        }.also {
+                            suggestionList.addAll(it)
+                        }
+                        groupie.addAll(suggestionList)
+                    }
+                }
+                is SearchState.Command.DisplaySearchResults -> {
+                    binding.apply {
+                        categorySuggestionRV.isGone = false
+                        categoryDivider.isGone = false
+                        searchProgressIndicator.isGone = false
+                    }
+                    setupUIForSearchResults()
+                }
+                else -> {
+
+                }
+            }
+        }
+    }
+
+    private fun handleRecentSearches(list: List<String>) {
+        if (list.isEmpty()) {
+            binding.recentSearchesEmpty.isGone = false
+        } else {
+            binding.recentSearchResultsRV.isGone = false
+            list.map {
+                RecentSearchItem(it, "", false, {
+                    binding.searchField.setText(it)
+                    vm.transition(SearchState.Event.PressedToSearch(it))
+                    setupUIForSearchResults()
+                }, {
+                    vm.transition(
+                        SearchState.Event.RemovedRecentSearch(
+                            it,
+                            list.indexOf(it)
+                        )
+                    )
+                }).also { query -> recentSearchQueries.add(query) }
+            }
+            groupie.addAll(recentSearchQueries)
+        }
     }
 
     private fun setupUI() {
@@ -95,8 +215,16 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
 
                     override fun afterTextChanged(s: Editable?) {
                         lifecycleScope.launch {
-                            delay(500)
-                            vm.transition(SearchState.Event.TypedInSearch(s.toString()))
+                            if (s.toString() == "") {
+                                binding.apply {
+                                    setupUIForSearch()
+                                    groupie.clear()
+                                    groupie.addAll(recentSearchQueries)
+                                }
+                            } else {
+                                delay(800)
+                                vm.transition(SearchState.Event.TypedInSearch(s.toString()))
+                            }
                         }
                     }
 
@@ -116,6 +244,19 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
         }
     }
 
+    private fun setupUIForSuggestions() {
+        binding.apply {
+            searchTopBar.apply {
+                transitionToStart()
+            }
+            searchResultViewPagerTabLayout.isGone = false
+            searchResultRV.isGone = true
+            categorySuggestionRV.isGone = false
+            categoryDivider.isGone = false
+            searchField.showKeyboard()
+        }
+    }
+
     private fun setupUIForSearchResults() {
         with(binding) {
             recentSearchesTitle.isGone = true
@@ -126,15 +267,27 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                 setTransition(R.id.fromSearchToResult)
                 transitionToEnd()
             }
+            categorySuggestionRV.isGone = true
+            categoryDivider.isGone = true
+            searchProgressIndicator.isGone = true
+            recentSearchResultsRV.isGone = true
+            searchResultViewPagerTabLayout.isGone = false
         }
     }
 
     private fun setupUIForSearch() {
         with(binding) {
             recentSearchesTitle.isGone = false
-            recentSearchResultsRV.isGone = false
+            recentSearchResultsRV.apply {
+                isGone = false
+                updateLayoutParams<ConstraintLayout.LayoutParams> {
+                    topToBottom = recentSearchesTitle.id
+                }
+            }
             searchResultViewPagerTabLayout.isGone = true
             searchResultRV.isGone = true
+            categorySuggestionRV.isGone = true
+            categoryDivider.isGone = true
             searchField.showKeyboard()
             searchTopBar.transitionToStart()
         }
@@ -170,71 +323,6 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                     }
                 })
             }
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        (activity as MainActivity).showBottomNavBar()
-    }
-
-    override fun observeState() {
-        vm.subscribeWithAutoDispose(this) { oldState, newState ->
-
-            if (newState.isResultPage) {
-                binding.searchField.setOnClickListener {
-                    setupUIForSearch()
-                }
-            }
-
-            when (val cmd = newState.command) {
-                is SearchState.Command.DisplayRecentSearches -> {
-                    handleRecentSearches(cmd.list)
-                }
-                is SearchState.Command.UpdateRecentSearchQueries -> {
-                    recentSearchQueries = mutableListOf()
-                    groupie.clear()
-                    handleRecentSearches(cmd.list)
-                }
-                is SearchState.Command.DisplaySuggestions -> {
-                    Log.d("MANO", cmd.query)
-                }
-                is SearchState.Command.DisplaySearchResults -> {
-                    with(binding) {
-                        searchProgressIndicator.isGone = true
-                        recentSearchResultsRV.isGone = true
-                        searchResultViewPagerTabLayout.isGone = false
-                    }
-
-                }
-                else -> {
-
-                }
-            }
-        }
-    }
-
-    private fun handleRecentSearches(list: List<String>) {
-        if (list.isEmpty()) {
-            binding.recentSearchesEmpty.isGone = false
-        } else {
-            Log.d("MANO", list.toString())
-            binding.recentSearchResultsRV.isGone = false
-            list.map {
-                RecentSearchItem(it, false, {
-                    binding.searchField.setText(it)
-                    vm.transition(SearchState.Event.PressedToSearch(it))
-                    setupUIForSearchResults()
-                }, {
-                    vm.transition(
-                        SearchState.Event.RemovedRecentSearch(
-                            it,
-                            list.indexOf(it)
-                        )
-                    )
-                }).also { query -> recentSearchQueries.add(query) }
-            }
-            groupie.addAll(recentSearchQueries)
         }
     }
 

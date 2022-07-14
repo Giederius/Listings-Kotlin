@@ -8,7 +8,8 @@ data class SearchState(
     val request: Request? = null, val command: Command? = null,
     val products: List<Category>? = null,
     val recentSearchResults: List<String>? = null,
-    val isResultPage: Boolean = false
+    val isResultPage: Boolean = false,
+    val isSuggestionPage: Boolean = false
 ) :
     State<SearchState, SearchState.Event> {
     sealed class Event {
@@ -21,11 +22,21 @@ data class SearchState(
         data class RemovedRecentSearch(val query: String, val queryIndex: Int) : Event()
         data class SearchQueryRemoved(val queries: List<String>) : Event()
         data class ReceivedSearchResults(val results: List<Product>) : Event()
+        data class ReceivedSuggestions(
+            val catResults: List<Triple<String, String, String>>,
+            val productResults: List<String>,
+            val query: String
+        ) : Event()
     }
 
     sealed class Command {
         data class DisplayRecentSearches(val list: List<String>) : Command()
-        data class DisplaySuggestions(val query: String) : Command()
+        data class DisplaySuggestions(
+            val categorySuggestion: List<Triple<String, String, String>>,
+            val simpleSuggestion: List<String>,
+            val query: String
+        ) : Command()
+
         data class UpdateRecentSearchQueries(val list: List<String>) : Command()
         data class DisplaySearchResults(val results: List<Product>) : Command()
     }
@@ -57,14 +68,15 @@ data class SearchState(
                 request = Request.GenerateSuggestions(
                     event.query,
                     products ?: emptyList()
-                ), isResultPage = false
+                ), isSuggestionPage = true
             )
             is Event.PressedToSearch -> copy(
                 request = Request.SaveSearchQueryAndGetResults(
                     event.query,
                     recentSearchResults ?: emptyList()
                 ),
-                isResultPage = true
+                isResultPage = true,
+                isSuggestionPage = false
             )
             is Event.RemovedRecentSearch -> copy(
                 request = Request.RemoveSearchQuery(
@@ -78,6 +90,13 @@ data class SearchState(
                 command = Command.UpdateRecentSearchQueries(event.queries)
             )
             is Event.ReceivedSearchResults -> copy(command = Command.DisplaySearchResults(event.results))
+            is Event.ReceivedSuggestions -> copy(
+                command = Command.DisplaySuggestions(
+                    event.catResults,
+                    event.productResults,
+                    event.query
+                )
+            )
             else -> {
                 copy()
             }
