@@ -19,6 +19,19 @@
     <string name="common.feed">Feed</string>
     <string name="common.market">Market</string>
     <string name="common.profile">Profile</string>
+    <string name="common.sort.LastSavedTo">Last saved to</string>
+    <string name="common.sort.alphabeticallyAZ">Alphabetically (A - Z)</string>
+    <string name="common.sort.alphabeticallyZA">Alphabetically (Z - A)</string>
+    <string name="common.sort.priceHighLow">Price (High - Low)</string>
+    <string name="common.sort.priceLowHigh">Price (Low - High)</string>
+    <string name="common.sort.title">Sorting</string>
+    <string name="common.filter.title">Filter</string>
+    <string name="common.filterByPrice">Filter by price</string>
+    <string name="common.filterByCategory">Filter by Category</string>
+    <string name="common.filterByColor">Filter by Color</string>
+    <string name="common.saveFilter">Save filter</string>
+    <string name="common.clearFilter">Clear filter</string>
+    <string name="common.noResultsFound">No search results found.</string>
 
     // Profile fragment
     <string name="profile.fullName">%1$s %2$s</string>
@@ -42,8 +55,6 @@
     <string name="profileDrawers.title">Drawers</string>
     <string name="profileDrawers.filterSearch">Filter drawers</string>
     <string name="profileDrawers.adjustDialog.Adjust">Adjust</string>
-    <string name="profileDrawers.adjustDialog.LastSavedTo">Last saved to</string>
-    <string name="profileDrawers.adjustDialog.alphabetically">Alphabetically (A - Z)</string>
 
     // Add Card Dialog
     <string name="addCardDialog.addYourCardNumbers">Add Your card numbers</string>
@@ -67,5 +78,10 @@
     <string name="departmentDialog.girl">Girl (0\-12 years old)</string>
     <string name="departmentDialog.boy">Boy (0\-12 years old)</string>
     <string name="departmentDialog.none">None</string>
+
+    //Search Fragment
+    <string name="search.hint">Search the markets</string>
+    <string name="search.recentSearches">Recent search</string>
+    <string name="search.emptySearches">You have no recent searches.</string>
 
 </resources>

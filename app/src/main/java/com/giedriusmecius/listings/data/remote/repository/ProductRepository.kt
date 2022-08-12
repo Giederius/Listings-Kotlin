@@ -6,6 +6,6 @@ import javax.inject.Singleton
 
 @Singleton
 interface ProductRepository {
-    suspend fun getAllProducts(): Result<List<Product>>
-    suspend fun getAllCategories(): Result<List<Category>>
+    suspend fun getProducts(): Result<List<Product>>
+    suspend fun getAllProducts(): Result<List<Category>>
 }

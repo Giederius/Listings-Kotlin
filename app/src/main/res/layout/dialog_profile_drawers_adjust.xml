@@ -34,7 +34,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/adjustDrawerSortBy"
+            android:id="@+id/searchFilterFilterByPrice"
             style="@style/H4.Grey.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,20 +52,20 @@
             android:layout_marginTop="12dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/adjustDrawerSortBy">
+            app:layout_constraintTop_toBottomOf="@id/searchFilterFilterByPrice">
 
             <RadioButton
                 style="@style/AppRadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="@string/profileDrawers.adjustDialog.LastSavedTo" />
+                android:text="@string/common.sort.LastSavedTo" />
 
             <RadioButton
                 style="@style/AppRadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/profileDrawers.adjustDialog.alphabetically" />
+                android:text="@string/common.sort.alphabeticallyAZ" />
         </RadioGroup>
 
         <View

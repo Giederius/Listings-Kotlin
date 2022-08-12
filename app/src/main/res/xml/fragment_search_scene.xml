@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ConstraintSet android:id="@+id/search"/>
+
+    <ConstraintSet android:id="@+id/suggestions">
+        <Constraint
+            android:id="@id/recentSearchesTitle"
+            android:visibility="gone" />
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/results">
+        <Constraint
+            android:id="@+id/searchField"
+            style="@style/ListingsSearchField"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/bg_rounded_rect_sm_borderless"
+            android:backgroundTint="@color/neutralLight"
+            android:hint="@string/search.hint"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textCursorDrawable="@null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/backBtn" />
+        <Constraint
+            android:id="@id/resultSortBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_sort"
+            android:visibility="visible"
+            android:alpha="1"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintBottom_toBottomOf="@id/backBtn"
+            app:layout_constraintEnd_toStartOf="@id/resultFilterBtn"
+            app:layout_constraintTop_toTopOf="@id/backBtn" />
+        <Constraint
+            android:id="@id/resultFilterBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="4dp"
+            android:alpha="1"
+            android:src="@drawable/ic_filter"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@id/backBtn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/backBtn" />
+    </ConstraintSet>
+
+    <Transition
+        android:id="@+id/fromSearchToSuggestions"
+        app:constraintSetEnd="@id/suggestions"
+        app:constraintSetStart="@id/search" />
+
+    <Transition
+        android:id="@+id/fromSuggestionsToResult"
+        app:constraintSetEnd="@id/results"
+        app:constraintSetStart="@id/suggestions" />
+
+    <Transition
+        android:id="@+id/fromSearchToResult"
+        app:constraintSetEnd="@id/results"
+        app:constraintSetStart="@id/search"
+        app:duration="500"
+        app:motionInterpolator="easeOut" />
+</MotionScene>

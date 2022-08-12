@@ -1,5 +1,7 @@
 package com.giedriusmecius.listings.data.local
 
+import com.giedriusmecius.listings.data.remote.model.category.Category
+import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.squareup.moshi.JsonClass
 import java.io.Serializable
 
@@ -13,7 +15,7 @@ data class User(
     val addresses: List<UserAddress> = emptyList(),
     val paymentMethods: List<PaymentMethod> = emptyList(),
     val userSize: Size = Size(0, ""),
-    val favoriteColor: Pair<String,String> = Pair("", ""),
+    val favoriteColor: Pair<String, String> = Pair("", ""),
     val mainDepartment: String = ""
 ) : Serializable
 
@@ -56,6 +58,14 @@ data class PaymentMethod(
 data class Size(
     val us: Int,
     val eu: String,
+) : Serializable
+
+@JsonClass(generateAdapter = true)
+data class FilterOptions(
+    val priceRange: List<Float> = listOf(1F, 1000F),
+    val userSelectedCategories: List<String> = listOf(),
+    val allCategories: List<String> = listOf()
+//    val color: List<String>,
 ) : Serializable
 
 enum class CardType {

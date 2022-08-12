@@ -1,6 +1,5 @@
 package com.giedriusmecius.listings.ui.common.groupie
 
-import android.net.Uri
 import android.view.View
 import coil.load
 import com.giedriusmecius.listings.R

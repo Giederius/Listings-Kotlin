@@ -9,7 +9,7 @@ class ProductRepositoryImpl(
     private val api: ProductApi
 ) : ProductRepository {
 
-    override suspend fun getAllProducts(): Result<List<Product>> {
+    override suspend fun getProducts(): Result<List<Product>> {
         return try {
             val products = api.getAllProducts()
             Result.success(products)
@@ -18,7 +18,7 @@ class ProductRepositoryImpl(
         }
     }
 
-    override suspend fun getAllCategories(): Result<List<Category>> {
+    override suspend fun getAllProducts(): Result<List<Category>> {
         return try {
             val categories = api.getAllCategories()
             val products = api.getAllProducts()

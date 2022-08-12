@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/homeFragment"
+        android:id="@+id/feedFragment"
         android:icon="@drawable/ic_feed"
         android:checked="true"
         android:title="@string/common.feed" />
     <item
-        android:id="@+id/marketFragment"
+        android:id="@+id/homeFragment"
         android:icon="@drawable/ic_market"
         android:title="@string/common.market" />
     <item

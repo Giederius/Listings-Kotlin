@@ -4,15 +4,20 @@
     <style name="homeTabLayoutStyle" parent="Base.Widget.Design.TabLayout">
         <item name="tabIndicator">@drawable/item_dot_small</item>
         <item name="tabIndicatorHeight">4dp</item>
-        <item name="android:width">4dp</item>
+        <item name="tabGravity">fill</item>
+        <item name="tabMaxWidth">0dp</item>
+        <item name="tabMode">auto</item>
+        <item name="rippleColor">@null</item>
+        <item name="tabRippleColor">@null</item>
         <item name="tabIndicatorColor">@color/accentPurple</item>
-        <item name="tabSelectedTextColor">@color/normalTextColor</item>
+        <item name="tabSelectedTextColor">@color/darkTextColor</item>
         <item name="tabTextColor">@color/grayedOutTextColor</item>
         <item name="tabIndicatorFullWidth">false</item>
     </style>
 
     <style name="homeTabStyle" parent="TextAppearance.Design.Tab">
         <item name="font">@font/raleway_bold</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:textColor">@color/grayedOutTextColor</item>
     </style>
 
@@ -92,6 +97,12 @@
 
     <style name="MainBottomNavStyle" parent="Widget.Design.BottomNavigationView">
         <item name="android:textColor">@color/grayedOutTextColor</item>
+    </style>
+
+    <style name="AppStyleCheckBox" parent="Widget.Material3.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/ic_checkbox_selector</item>
+        <item name="android:textAppearance">@style/H4</item>
+        <item name="android:paddingLeft">16dp</item>
     </style>
 
 </resources>

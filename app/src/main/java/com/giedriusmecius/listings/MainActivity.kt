@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        setFullscreenActivity()
+        vm.transition(MainActivityState.Event.ViewCreated)
         observeState()
         binding = ActivityMainBinding.inflate(layoutInflater).also {
             setContentView(it.root)
