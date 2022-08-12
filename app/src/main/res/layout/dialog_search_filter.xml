@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minHeight="500dp">
+
+    <ImageView
+        android:id="@+id/dialogPill"
+        android:layout_width="50dp"
+        android:layout_height="6dp"
+        android:layout_marginBottom="30dp"
+        android:src="@drawable/bg_rounded_rect_sm_borderless"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/dialogLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_dialog_rounded_top"
+        app:layout_constraintTop_toBottomOf="@id/dialogPill">
+
+        <TextView
+            android:id="@+id/searchFilterTitle"
+            style="@style/H2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/common.filter.title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/searchFilterFilterByPrice"
+            style="@style/H4.Grey.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/common.filterByPrice"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchFilterTitle" />
+
+        <TextView
+            android:id="@+id/searchFilterLowPrice"
+            style="@style/H3.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="12dp"
+            android:text="$1"
+            app:layout_constraintStart_toStartOf="@id/searchFilterPriceSlider"
+            app:layout_constraintTop_toBottomOf="@id/searchFilterFilterByPrice" />
+
+        <TextView
+            android:id="@+id/searchFilterHighPrice"
+            style="@style/H3.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="24dp"
+            android:text="$1"
+            app:layout_constraintEnd_toEndOf="@id/searchFilterPriceSlider"
+            app:layout_constraintTop_toBottomOf="@id/searchFilterFilterByPrice" />
+
+        <com.google.android.material.slider.RangeSlider
+            android:id="@+id/searchFilterPriceSlider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:valueTo="1000.0"
+            android:valueFrom="1.0"
+            app:layout_constraintTop_toBottomOf="@id/searchFilterLowPrice"
+            app:thumbColor="@color/accentPurple"
+            app:trackColorActive="@color/accentPurple"
+            app:trackColorInactive="@color/warmPurple"
+            app:trackHeight="2dp" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/neutralLight"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchFilterPriceSlider" />
+
+        <TextView
+            android:id="@+id/searchFilterFilterByCategory"
+            style="@style/H4.Grey.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/common.filterByCategory"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/checkboxGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchFilterFilterByCategory" />
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/neutralLight"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/checkboxGroup" />
+
+
+        <!--        <com.google.android.material.button.MaterialButtonToggleGroup-->
+        <!--            android:id="@+id/toggleButtonGroup"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="48dp"-->
+        <!--            android:layout_margin="24dp"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/adjustDrawerLayout"-->
+        <!--            app:singleSelection="true">-->
+
+        <!--            <Button-->
+        <!--                android:id="@+id/horizontalLayout"-->
+        <!--                style="@style/ToggleButtonWithIcon"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:layout_weight="1"-->
+        <!--                app:icon="@drawable/radio_button_horizontal_layout" />-->
+
+        <!--            <Button-->
+        <!--                android:id="@+id/gridLayout"-->
+        <!--                style="@style/ToggleButtonWithIcon"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:layout_weight="1"-->
+        <!--                app:icon="@drawable/ic_layout_grid" />-->
+
+        <!--            <Button-->
+        <!--                android:id="@+id/listLayout"-->
+        <!--                style="@style/ToggleButtonWithIcon"-->
+        <!--                android:layout_width="wrap_content"-->
+        <!--                android:layout_height="match_parent"-->
+        <!--                android:layout_weight="1"-->
+        <!--                app:icon="@drawable/ic_layout_list" />-->
+        <!--        </com.google.android.material.button.MaterialButtonToggleGroup>-->
+
+        <TextView
+            android:id="@+id/searchFilterFilterByColor"
+            style="@style/H4.Grey.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/common.filterByColor"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider2" />
+
+        <View
+            android:id="@+id/divider3"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:background="@color/neutralLight"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchFilterFilterByColor" />
+
+        <com.giedriusmecius.listings.ui.views.ListingsButton
+            android:id="@+id/searchFilterSaveFilter"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="4dp"
+            android:text="@string/common.saveFilter"
+            app:isText="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/searchFilterClearFilter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider3" />
+
+        <com.giedriusmecius.listings.ui.views.ListingsButton
+            android:id="@+id/searchFilterClearFilter"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="24dp"
+            android:text="@string/common.clearFilter"
+            app:isText="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/searchFilterSaveFilter"
+            app:layout_constraintTop_toBottomOf="@id/divider3" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -1,11 +1,14 @@
 package com.giedriusmecius.listings.ui.common.base
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.giedriusmecius.listings.R
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 abstract class BaseDialogFragment<VB : ViewBinding>(private val inflate: Inflate<VB>) :
@@ -22,6 +25,12 @@ abstract class BaseDialogFragment<VB : ViewBinding>(private val inflate: Inflate
     ): View? {
         _binding = inflate.invoke(inflater, container, false)
         return binding.root
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = BottomSheetDialog(requireContext())
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        return dialog
     }
 
     override fun onStart() {

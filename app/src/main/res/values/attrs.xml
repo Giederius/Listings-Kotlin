@@ -20,6 +20,10 @@
     <declare-styleable name="ListingsSizeRadioButton">
         <attr name="usSize" format="integer" />
         <attr name="euSize" format="string" />
-        <attr name="android:checked"/>
+        <attr name="android:checked" />
+    </declare-styleable>
+
+    <declare-styleable name="ListingsIcon">
+        <attr name="android:src"/>
     </declare-styleable>
 </resources>

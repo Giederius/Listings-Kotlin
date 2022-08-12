@@ -27,6 +27,7 @@
         <item name="popupTheme">@style/BasePopUpMenu</item>
         <item name="popupMenuStyle">@style/BasePopUpMenu</item>
         <item name="android:progressBarStyle">@style/BaseProgressIndicator</item>
+        <item name="android:checkboxStyle">@style/AppStyleCheckBox</item>
         <!--        <item name="materialAlertDialogTheme">@style/MyDialogTheme</item>-->
     </style>
 

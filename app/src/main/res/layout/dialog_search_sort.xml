@@ -23,12 +23,12 @@
         app:layout_constraintTop_toBottomOf="@id/dialogPill">
 
         <TextView
-            android:id="@+id/adjustDrawersTitle"
+            android:id="@+id/sortDialogTitle"
             style="@style/H2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:text="@string/profileDrawers.adjustDialog.Adjust"
+            android:text="@string/common.sort.title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -42,10 +42,10 @@
             android:layout_marginTop="16dp"
             android:text="@string/common.sortBy"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/adjustDrawersTitle" />
+            app:layout_constraintTop_toBottomOf="@id/sortDialogTitle" />
 
         <RadioGroup
-            android:id="@+id/adjustDrawerRadioGroup"
+            android:id="@+id/searchSortRadioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
@@ -55,17 +55,33 @@
             app:layout_constraintTop_toBottomOf="@id/searchFilterFilterByPrice">
 
             <RadioButton
+                android:id="@+id/az"
                 style="@style/AppRadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="@string/common.sort.LastSavedTo" />
+                android:text="@string/common.sort.alphabeticallyAZ" />
 
             <RadioButton
+                android:id="@+id/za"
                 style="@style/AppRadioButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/common.sort.alphabeticallyAZ" />
+                android:text="@string/common.sort.alphabeticallyZA" />
+
+            <RadioButton
+                android:id="@+id/priceLow"
+                style="@style/AppRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/common.sort.priceLowHigh" />
+
+            <RadioButton
+                android:id="@+id/priceHigh"
+                style="@style/AppRadioButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/common.sort.priceHighLow" />
         </RadioGroup>
 
         <View
@@ -73,57 +89,11 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
             android:background="@color/neutralLight"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/adjustDrawerRadioGroup" />
-
-        <TextView
-            android:id="@+id/adjustDrawerLayout"
-            style="@style/H4.Grey.Bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:text="@string/common.layout"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/divider" />
-
-        <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/toggleButtonGroup"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_margin="24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/adjustDrawerLayout"
-            app:singleSelection="true">
-
-            <Button
-                android:id="@+id/horizontalLayout"
-                style="@style/ToggleButtonWithIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                app:icon="@drawable/radio_button_horizontal_layout" />
-
-            <Button
-                android:id="@+id/gridLayout"
-                style="@style/ToggleButtonWithIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                app:icon="@drawable/ic_layout_grid" />
-
-            <Button
-                android:id="@+id/listLayout"
-                style="@style/ToggleButtonWithIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                app:icon="@drawable/ic_layout_list" />
-        </com.google.android.material.button.MaterialButtonToggleGroup>
+            app:layout_constraintTop_toBottomOf="@id/searchSortRadioGroup" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

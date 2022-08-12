@@ -92,7 +92,15 @@
         android:id="@+id/searchFragment"
         android:name="com.giedriusmecius.listings.ui.search.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/fragment_search" />
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/searchFragment_to_sortDialog"
+            app:destination="@id/SearchSortDialogFragment" />
+        <action
+            android:id="@+id/searchFragment_to_filterDialog"
+            app:destination="@id/SearchFilterDialogFragment" />
+
+    </fragment>
 
     <action
         android:id="@+id/globalProductFragmentAction"
@@ -169,5 +177,27 @@
             android:defaultValue=""
             app:argType="string"
             app:nullable="true" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/SearchSortDialogFragment"
+        android:name="com.giedriusmecius.listings.ui.common.dialogs.SearchSortByDialogFragment"
+        tools:layout="@layout/dialog_search_sort">
+        <argument
+            android:name="sortBy"
+            android:defaultValue="az"
+            app:argType="string" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/SearchFilterDialogFragment"
+        android:name="com.giedriusmecius.listings.ui.common.dialogs.SearchFilterByDialogFragment"
+        tools:layout="@layout/dialog_search_filter">
+        <argument
+            android:name="filterOptions"
+            app:argType="com.giedriusmecius.listings.data.local.FilterOptions" />
+        <argument
+            android:name="mainFilterOptions"
+            app:argType="com.giedriusmecius.listings.data.local.FilterOptions" />
     </dialog>
 </navigation>

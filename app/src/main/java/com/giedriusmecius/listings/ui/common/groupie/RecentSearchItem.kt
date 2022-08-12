@@ -16,9 +16,7 @@ class RecentSearchItem(
     private val isSuggestion: Boolean,
     val onItemClick: (String) -> Unit,
     val onRemoveClick: () -> Unit
-) :
-    BindableItem<ItemRecentSearchBinding>() {
-
+) : BindableItem<ItemRecentSearchBinding>() {
     private var startIndex = 0
     private var endIndex = 0
 

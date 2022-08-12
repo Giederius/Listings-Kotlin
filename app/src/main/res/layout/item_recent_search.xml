@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@drawable/bg_generic_selector"
     android:layout_height="60dp">
 
     <LinearLayout
@@ -10,7 +11,6 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
         android:layout_marginVertical="12dp"
-        android:background="@drawable/bg_generic_selector"
         android:orientation="horizontal"
         android:showDividers="middle"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -23,8 +23,10 @@
             style="@style/H4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxWidth="300dp"
             android:layout_gravity="center|start"
             android:maxLines="1"
+            android:ellipsize="end"
             android:text="buns"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

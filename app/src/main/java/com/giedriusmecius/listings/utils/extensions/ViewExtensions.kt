@@ -3,6 +3,7 @@ package com.giedriusmecius.listings.utils.extensions
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.isGone
 
