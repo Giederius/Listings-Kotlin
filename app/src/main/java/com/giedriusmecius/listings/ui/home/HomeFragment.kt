@@ -36,18 +36,14 @@ class HomeFragment : BaseFragment<FragmentHomeBinding>(FragmentHomeBinding::infl
             homeSearchBar.setOnClickListener {
                 vm.transition(HomeState.Event.TappedSearch)
             }
-            homeScreenViewPager.adapter = HomeTabLayoutAdapter(this@HomeFragment)
-            homeScreenViewPager.isUserInputEnabled = false
+            setupViewPager()
+        }
+    }
 
-            homeScreenViewPagerTabLayout.addTab(
-                homeScreenViewPagerTabLayout.newTab().setText(R.string.home_featured)
-            )
-            homeScreenViewPagerTabLayout.addTab(
-                homeScreenViewPagerTabLayout.newTab().setText(R.string.home_latest)
-            )
-            homeScreenViewPagerTabLayout.addTab(
-                homeScreenViewPagerTabLayout.newTab().setText(R.string.home_watchList)
-            )
+    private fun setupViewPager() {
+        with(binding) {
+            homeScreenViewPager.adapter = HomeTabLayoutAdapter(this@HomeFragment)
+
             val tabArray = arrayOf("Featured", "Latest", "WatchList")
 
             TabLayoutMediator(homeScreenViewPagerTabLayout, homeScreenViewPager) { tab, position ->

@@ -28,11 +28,14 @@ import com.giedriusmecius.listings.ui.common.dialogs.SearchSortByDialogFragment
 import com.giedriusmecius.listings.ui.common.groupie.ProductItem
 import com.giedriusmecius.listings.ui.common.groupie.RecentSearchItem
 import com.giedriusmecius.listings.ui.common.groupie.SuggestionCategoryItem
+import com.giedriusmecius.listings.ui.search.viewPagerFragments.SearchResultProductsFragment
 import com.giedriusmecius.listings.utils.extensions.getNavigationResult
 import com.giedriusmecius.listings.utils.extensions.hideKeyboard
+import com.giedriusmecius.listings.utils.extensions.setMotionLayoutVisibility
 import com.giedriusmecius.listings.utils.extensions.showKeyboard
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
-import com.google.android.material.tabs.TabLayout
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayoutMediator
 import com.xwray.groupie.GroupieAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -159,11 +162,14 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                 image = it.image,
                 price = it.price,
                 discountedPrice = it.price,
-                onClick = {}).also {
+                onClick = {
+                    Snackbar.make(binding.root, "Snack", Snackbar.LENGTH_SHORT).show()
+                }).also {
                 products.add(it)
             }
         }
         groupieResults.addAll(products)
+        vm.searchResults.setValue(products)
     }
 
     private fun handleRecentSearches(list: List<String>) {
@@ -197,6 +203,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
 
     private fun setupUI() {
         binding.apply {
+
             backBtn.setOnClickListener {
                 navigateUp()
             }
@@ -233,7 +240,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
             }
 
             searchNestedScroll.setOnScrollChangeListener(NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-                if (searchResultRV.isVisible) {
+                if (searchFragmentViewPager.isVisible) {
                     val bottom = searchTopBar.y + searchTopBar.height
                     when {
                         scrollY > bottom -> {
@@ -243,6 +250,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                                     translationY = 500F
                                     animate()
                                         .translationY(0F)
+                                    searchTopBar.apply {
+                                        setTransition(R.id.fromResultToOnScroll)
+                                        transitionToEnd()
+                                    }
                                 }
                             }
                             hasScrolledToTop = false
@@ -253,6 +264,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                                     translationY = 0F
                                     animate()
                                         .translationY(500F).withEndAction { isGone = true }
+                                    searchTopBar.transitionToStart()
                                 }
                             }
                             hasScrolledToTop = true
@@ -281,6 +293,10 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
                             vm.transition(SearchState.Event.TappedSearchField)
+                            searchTopBar.apply {
+                                setTransition(R.id.fromSearchToResult)
+                                transitionToStart()
+                            }
                             true
                         }
                     }
@@ -353,14 +369,11 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                     transitionToStart()
                 }
                 recentSearchesTitle.isGone = true
-                searchResultViewPagerTabLayout.isGone = true
+                searchResultViewPagerTabLayout.setMotionLayoutVisibility(View.GONE)
+                searchFragmentViewPager.isGone = true
                 searchResultRV.isGone = true
                 categorySuggestionRV.isGone = false
                 recentSearchResultsRV.isGone = false
-                Log.d(
-                    "MANOsug",
-                    "${groupie.itemCount}  ${groupieCat.itemCount} ${categorySuggestionRV.isVisible}"
-                )
                 categoryDivider.isGone = false
                 searchField.showKeyboard()
                 noSearchResultFound.isGone = true
@@ -380,12 +393,12 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
             }
             categorySuggestionRV.isGone = true
             categoryDivider.isGone = true
-            searchResultRV.isGone = !hasResults
+//            searchResultRV.isGone = !hasResults
+            searchResultRV.isGone = true
             searchProgressIndicator.isGone = true
-            searchResultViewPagerTabLayout.apply {
-                isGone = false
-                getTabAt(0)?.select()
-            }
+            searchResultViewPagerTabLayout.setMotionLayoutVisibility(View.VISIBLE)
+            searchFragmentViewPager.isGone = false
+            searchResultViewPagerTabLayout.getTabAt(0)?.select()
         }
     }
 
@@ -398,7 +411,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                     topToBottom = recentSearchesTitle.id
                 }
             }
-            searchResultViewPagerTabLayout.isGone = true
+            searchResultViewPagerTabLayout.setMotionLayoutVisibility(View.GONE)
+            searchFragmentViewPager.isGone = true
             searchResultRV.isGone = true
             categorySuggestionRV.isGone = true
             categoryDivider.isGone = true
@@ -410,39 +424,16 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
 
     private fun setUpViewPager() {
         with(binding) {
-            searchResultViewPagerTabLayout.apply {
-                addTab(
-                    this.newTab().setText("Products")
-                )
-                addTab(
-                    this.newTab().setText("Collections")
-                )
-                addTab(
-                    this.newTab().setText("Stores")
-                )
-                addTab(
-                    this.newTab().setText("Tags")
-                )
-                addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                    override fun onTabSelected(tab: TabLayout.Tab?) {
-                        when (tab?.position) {
-                            0 -> {
-                                Log.d("MANOtab", "selected")
-                            }
-                            else -> binding.recentSearchResultsRV.isGone = true
-                        }
-                    }
+            searchFragmentViewPager.adapter = SearchTabLayoutAdapter(this@SearchFragment)
 
-                    override fun onTabUnselected(tab: TabLayout.Tab?) {
-                    }
+            val tabArray = arrayOf("Products", "Collections", "Stores", "Tags")
 
-                    override fun onTabReselected(tab: TabLayout.Tab?) {
-                        when (tab?.position) {
-                            0 -> binding.searchResultRV.isGone = false
-                        }
-                    }
-                })
-            }
+            TabLayoutMediator(
+                searchResultViewPagerTabLayout,
+                searchFragmentViewPager
+            ) { tab, position ->
+                tab.text = tabArray[position]
+            }.attach()
         }
     }
 

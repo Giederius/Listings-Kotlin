@@ -13,6 +13,7 @@
         <item name="tabSelectedTextColor">@color/darkTextColor</item>
         <item name="tabTextColor">@color/grayedOutTextColor</item>
         <item name="tabIndicatorFullWidth">false</item>
+        <item name="android:paddingBottom">16dp</item>
     </style>
 
     <style name="homeTabStyle" parent="TextAppearance.Design.Tab">
@@ -103,6 +104,28 @@
         <item name="android:button">@drawable/ic_checkbox_selector</item>
         <item name="android:textAppearance">@style/H4</item>
         <item name="android:paddingLeft">16dp</item>
+    </style>
+
+    <style name="ListingsSnackbarStyle" parent="@style/Widget.MaterialComponents.Snackbar">
+        <item name="background">@drawable/bg_rounded_rect_sm_borderless</item>
+        <item name="android:backgroundTint">@color/normalTextColor</item>
+        <item name="marginHorizontal">16dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+    </style>
+
+    <style name="ListingsSnackbarButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeColor">@color/snackbarBtnColor</item>
+        <item name="android:textColor">@color/normalTextColor</item>
+    </style>
+
+    <style name="ListingsSnackbarText" parent="@style/Widget.MaterialComponents.Snackbar.TextView">
+        <item name="android:textAppearance">@style/H5.Toast</item>
+    </style>
+
+    <style name="ListingsChip" parent="ShapeAppearanceOverlay.Material3.Chip">
+        <item name="chipBackgroundColor">@color/warmPurple</item>
+        <item name="chipCornerRadius">4dp</item>
+        <item name="chipIcon">@drawable/item_chip_icon</item>
     </style>
 
 </resources>

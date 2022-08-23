@@ -29,6 +29,10 @@
         <item name="android:progressBarStyle">@style/BaseProgressIndicator</item>
         <item name="android:checkboxStyle">@style/AppStyleCheckBox</item>
         <!--        <item name="materialAlertDialogTheme">@style/MyDialogTheme</item>-->
+        <item name="snackbarStyle">@style/ListingsSnackbarStyle</item>
+        <item name="snackbarButtonStyle">@style/ListingsSnackbarButton</item>
+        <item name="snackbarTextViewStyle">@style/ListingsSnackbarText</item>
+        <item name="chipStyle">@style/ListingsChip</item>
     </style>
 
     <!--    // todo change progress-->

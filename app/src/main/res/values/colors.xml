@@ -19,6 +19,7 @@
     <color name="highlightRed">#DF0707</color>
 
     <color name="accentPurple">#614FE0</color>
+    <color name="snackbarBtnColor">#9A8EEB</color>
     <color name="warmPurple">#D2CEF6</color>
     <color name="warmYellow">#FFF1DC</color>
     <color name="warmGreen">#D7FAF4</color>

@@ -13,9 +13,6 @@ data class SearchState(
     val recentSearchResults: List<String>? = null,
     val suggestionsProduct: List<String>? = null,
     val suggestionsCategory: List<Triple<String, String, String>>? = null,
-//    val isResultPage: Boolean = false,
-//    val isSuggestionPage: Boolean = false,
-//    val isSearchPage: Boolean = true,
     val isLoading: Boolean = false,
     val searchQuery: String? = null,
     val productResults: List<Product> = emptyList(),
@@ -202,13 +199,12 @@ data class SearchState(
                     "${suggestionsCategory?.size} ${suggestionsProduct?.size} $searchQuery"
                 )
                 if (searchUIState == SearchType.Results) {
-
-                        copy(
-                            request = Request.GenerateSuggestions(
-                                searchQuery ?: "",
-                                products ?: emptyList()
-                            )
+                    copy(
+                        request = Request.GenerateSuggestions(
+                            searchQuery ?: "",
+                            products ?: emptyList()
                         )
+                    )
 
                 } else {
                     copy()

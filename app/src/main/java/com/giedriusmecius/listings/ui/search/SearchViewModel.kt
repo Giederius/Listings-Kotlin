@@ -1,9 +1,11 @@
 package com.giedriusmecius.listings.ui.search
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.giedriusmecius.listings.data.remote.model.category.Category
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.data.remote.repository.ProductRepository
+import com.giedriusmecius.listings.ui.common.groupie.ProductItem
 import com.giedriusmecius.listings.utils.UserPreferences
 import com.giedriusmecius.listings.utils.state.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,6 +19,24 @@ class SearchViewModel @Inject constructor(
     private val productRepository: ProductRepository
 ) :
     BaseViewModel<SearchState, SearchState.Event>(SearchState()) {
+
+    private var mutableSearchResults = MutableLiveData<List<ProductItem>>()
+    val searchResults: MutableLiveData<List<ProductItem>>
+        get() = mutableSearchResults
+
+    private var mutableSearchCollections = MutableLiveData<List<Category>>()
+    val searchCollections: MutableLiveData<List<Category>>
+        get() = mutableSearchCollections
+
+//    private var mutableSearchStores = MutableLiveData<List<Category>>()
+//    val searchStores: MutableLiveData<List<Category>>
+//        get() = mutableSearchStores
+
+    // use from suggestions??
+    private var mutableSearchTags = MutableLiveData<List<String>>()
+    val searchTags: MutableLiveData<List<String>>
+        get() = mutableSearchTags
+
     override fun handleState(newState: SearchState) {
         when (val req = newState.request) {
             SearchState.Request.FetchData -> {
@@ -128,6 +148,9 @@ class SearchViewModel @Inject constructor(
                 val filteredProducts = foundProductList.filter { it.category == cat.first }
                 Category(cat.first, filteredProducts)
             }
+
+            mutableSearchCollections.value = productsInCategories
+            searchTags.value = foundProductTitleList
 
             if (isResults) {
                 transition(

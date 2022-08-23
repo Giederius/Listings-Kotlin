@@ -95,6 +95,18 @@
         <item name="android:textColor">@color/grayedOutTextColor</item>
     </style>
 
+    <style name="H5.Toast" parent="Raleway">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textFontWeight">500</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="H5.Tag" parent="Raleway">
+        <item name="android:textSize">14sp</item>
+        <item name="fontFamily">@font/raleway_medium</item>
+        <item name="android:textColor">@color/accentPurple</item>
+    </style>
+
     <style name="BoldRegularText" parent="Raleway">
         <item name="android:textSize">16sp</item>
         <item name="android:textFontWeight">700</item>
