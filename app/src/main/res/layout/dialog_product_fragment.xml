@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    app:layout_behavior="@string/bottom_sheet_behavior">
+
+    <ImageView
+        android:id="@+id/close"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/normalTextColor" />
+
+    <ImageView
+        android:id="@+id/bookmarkIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="34dp"
+        android:src="@drawable/ic_bookmark"
+        app:layout_constraintBottom_toBottomOf="@id/moreBtn"
+        app:layout_constraintEnd_toStartOf="@id/moreBtn"
+        app:layout_constraintTop_toTopOf="@id/moreBtn" />
+
+    <ImageView
+        android:id="@+id/moreBtn"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_more_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/normalTextColor" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/productRV"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginTop="18dp"
+        android:clipToPadding="false"
+        android:paddingStart="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/bookmarkIcon" />
+
+    <View
+        android:id="@+id/smallDivider"
+        android:layout_width="56dp"
+        android:layout_height="4dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bg_rounded_rect_sm_borderless"
+        android:backgroundTint="@color/disabledGrey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/productRV" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/storeIcon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="24dp"
+        android:src="@drawable/sample_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/smallDivider"
+        app:shapeAppearanceOverlay="@style/circularShapeBorder" />
+
+    <TextView
+        android:id="@+id/productTitle"
+        style="@style/H4"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:text="This"
+        app:layout_constraintBottom_toBottomOf="@id/storeIcon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/storeIcon" />
+
+    <TextView
+        android:id="@+id/productPrice"
+        style="@style/H4.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
+        android:text="$31"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/productTitle" />
+
+    <com.giedriusmecius.listings.ui.views.ListingsButton
+        android:id="@+id/colorBtn"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        app:isColorBtn="true"
+        android:layout_marginEnd="4dp"
+        app:layout_constraintEnd_toStartOf="@id/sizeBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/productPrice" />
+
+    <com.giedriusmecius.listings.ui.views.ListingsButton
+        android:id="@+id/sizeBtn"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        android:text="@string/common.size"
+        app:isText="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/colorBtn"
+        app:layout_constraintTop_toBottomOf="@id/productPrice" />
+
+    <com.giedriusmecius.listings.ui.views.ListingsButton
+        android:id="@+id/addtoCartBtn"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/accentPurple"
+        android:text="@string/common.atc"
+        app:isText="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sizeBtn" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

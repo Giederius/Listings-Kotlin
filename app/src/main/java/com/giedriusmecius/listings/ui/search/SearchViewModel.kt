@@ -1,7 +1,9 @@
 package com.giedriusmecius.listings.ui.search
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.giedriusmecius.listings.data.local.FilterData
 import com.giedriusmecius.listings.data.remote.model.category.Category
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.data.remote.repository.ProductRepository
@@ -37,6 +39,10 @@ class SearchViewModel @Inject constructor(
     val searchTags: MutableLiveData<List<String>>
         get() = mutableSearchTags
 
+    private var mutableResultFilterData = MutableLiveData<FilterData>()
+    val resultFilterData: MutableLiveData<FilterData>
+        get() = mutableResultFilterData
+
     override fun handleState(newState: SearchState) {
         when (val req = newState.request) {
             SearchState.Request.FetchData -> {
@@ -68,10 +74,14 @@ class SearchViewModel @Inject constructor(
                 handleSearch(req.query, req.products, false)
             }
             is SearchState.Request.ApplyFilteredOptions -> {
+                resultFilterData.value = req.filterData
                 val priceRange: Pair<Float, Float> =
-                    Pair(req.filterOptions.priceRange[0], req.filterOptions.priceRange[1])
-                val categories: List<String> = req.filterOptions.userSelectedCategories
-                val filteredByPrice: MutableList<Product> = mutableListOf()
+                    Pair(
+                        req.filterData.userOptions.priceRange[0],
+                        req.filterData.userOptions.priceRange[1]
+                    )
+                val categories: List<String> = req.filterData.userOptions.userSelectedCategories
+                var filteredByPrice: MutableList<Product> = mutableListOf()
                 val filteredByCategory: MutableList<Category> = mutableListOf()
 
                 req.resultsProducts.forEach { prod ->
@@ -89,12 +99,26 @@ class SearchViewModel @Inject constructor(
                         filteredByCategory.add(Category(cat, filteredProducts))
                     }
                 }
+                if (req.isSortingActive) {
+                    filteredByPrice = handleSorting(req.sortBy, filteredByPrice).toMutableList()
+                }
                 transition(
                     SearchState.Event.ReceivedProductsWithFilter(
                         filteredByCategory,
                         filteredByPrice
                     )
                 )
+            }
+            is SearchState.Request.SortProductsBy -> {
+                Log.d("MANOVM", "${req.filterData}")
+                resultFilterData.postValue(req.filterData)
+                val products = handleSorting(req.filterData.sortData, req.products)
+                transition(SearchState.Event.ReceivedSortedProducts(products))
+            }
+            is SearchState.Request.FetchProduct -> {
+                viewModelScope.launch {
+                    getProduct(req.productID)
+                }
             }
             else -> {}
         }
@@ -169,6 +193,33 @@ class SearchViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private suspend fun getProduct(productId: Int) {
+        val product = productRepository.getProduct(productId)
+        val response = product.getOrNull()
+        if (response != null) {
+            transition(SearchState.Event.ReceivedProduct(response))
+        }
+    }
+
+    private fun handleSorting(sortBy: String, products: List<Product>): List<Product> {
+        var sortedProducts: List<Product> = emptyList()
+        when (sortBy) {
+            "az" -> {
+                sortedProducts = products.sortedBy { it.title }
+            }
+            "za" -> {
+                sortedProducts = products.sortedByDescending { it.title }
+            }
+            "priceLow" -> {
+                sortedProducts = products.sortedBy { it.price }
+            }
+            "priceHigh" -> {
+                sortedProducts = products.sortedByDescending { it.price }
+            }
+        }
+        return sortedProducts
     }
 
 //    private suspend fun getProductsForTesting() {

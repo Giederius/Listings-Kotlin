@@ -163,7 +163,8 @@ class ProfileDrawersFragment :
                     ProfileDrawerListItem(
                         it.title,
                         it.products.size,
-                        it.products[0].image
+                        it.products[0].image,
+                        { }
                     )
                 })
             } else {

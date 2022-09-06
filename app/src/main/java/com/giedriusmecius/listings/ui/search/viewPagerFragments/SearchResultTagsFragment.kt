@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.databinding.FragmentSearchResultTagsBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
+import com.giedriusmecius.listings.ui.search.SearchState
 import com.giedriusmecius.listings.ui.search.SearchViewModel
 import com.google.android.material.chip.Chip
 import com.xwray.groupie.GroupieAdapter
@@ -26,7 +27,6 @@ class SearchResultTagsFragment :
         val list = listOf("this", "that", "and")
         vm.searchTags.observe(viewLifecycleOwner) {
             displayTags(it)
-
         }
 
     }
@@ -36,13 +36,17 @@ class SearchResultTagsFragment :
             searchResultTags.removeAllViewsInLayout()
 
             val newContext = ContextThemeWrapper(context, R.style.ListingsChip)
-            it?.forEach {
+            it?.forEach { string ->
                 val chip = Chip(newContext, null, R.style.ListingsChip)
                 chip.apply {
-                    chipBackgroundColor = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.warmPurple))
+                    chipBackgroundColor =
+                        ColorStateList.valueOf(ContextCompat.getColor(context, R.color.warmPurple))
                     chipIcon = ContextCompat.getDrawable(context, R.drawable.item_chip_icon)
                     setTextAppearance(R.style.H5_Tag)
-                    text = it
+                    text = string
+                    setOnClickListener {
+                        vm.transition(SearchState.Event.PressedToSearch(string))
+                    }
                 }
                 searchResultTags.addView(chip)
             }

@@ -5,6 +5,7 @@
         <attr name="android:text" format="string" />
         <attr name="android:paddingHorizontal" format="integer" />
         <attr name="isText" format="boolean" />
+        <attr name="isColorBtn" format="boolean" />
         <attr name="android:drawable" />
         <attr name="android:layout_height" />
         <attr name="android:layout_width" />
@@ -24,6 +25,7 @@
     </declare-styleable>
 
     <declare-styleable name="ListingsIcon">
-        <attr name="android:src"/>
+        <attr name="android:src" />
+        <attr name="hasBorder" format="boolean"/>
     </declare-styleable>
 </resources>

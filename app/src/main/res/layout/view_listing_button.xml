@@ -10,21 +10,6 @@
         android:background="@drawable/listings_button_selector"
         android:gravity="center_horizontal">
 
-        <TextView
-            android:id="@+id/buttonTitle"
-            style="@style/H4.Bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:includeFontPadding="false"
-            android:text="Gasdfsfsdfsfdfdf"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="gone" />
-
         <ImageView
             android:id="@+id/buttonImage"
             android:layout_width="20dp"
@@ -34,10 +19,25 @@
             android:src="@drawable/item_dot_selected"
             android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/buttonTitle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:tint="@android:color/holo_orange_dark" />
+
+        <TextView
+            android:id="@+id/buttonTitle"
+            style="@style/H4.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:includeFontPadding="false"
+            android:text="This"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/buttonImage"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </merge>

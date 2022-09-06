@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    app:layout_behavior="@string/bottom_sheet_behavior">
+
+    <androidx.constraintlayout.motion.widget.MotionLayout
+        android:id="@+id/motionLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutDescription="@xml/dialog_collection_fragment_scene"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/backBtn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/normalTextColor" />
+
+        <ImageView
+            android:id="@+id/searchBtn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="12dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_search"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/collectionTitle"
+            style="@style/H2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:text="Dresses"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/backBtn" />
+
+        <TextView
+            android:id="@+id/collectionSize"
+            style="@style/H4.Grey"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="250 products"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/collectionTitle" />
+
+        <com.giedriusmecius.listings.ui.views.ListingsIcon
+            android:id="@+id/sortBtn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_sort"
+            app:hasBorder="true"
+            app:layout_constraintEnd_toStartOf="@id/filterBtn"
+            app:layout_constraintStart_toStartOf="@id/collectionSize"
+            app:layout_constraintTop_toBottomOf="@id/collectionSize" />
+
+        <com.giedriusmecius.listings.ui.views.ListingsIcon
+            android:id="@+id/filterBtn"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="24dp"
+            android:src="@drawable/ic_filter"
+            app:hasBorder="true"
+            app:layout_constraintEnd_toEndOf="@id/collectionSize"
+            app:layout_constraintStart_toEndOf="@id/sortBtn"
+            app:layout_constraintTop_toBottomOf="@id/collectionSize" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            style="@style/homeTabLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="16dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sortBtn"
+            app:tabTextAppearance="@style/homeTabStyle" />
+
+    </androidx.constraintlayout.motion.widget.MotionLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingTop="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/motionLayout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/collectionProductRV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

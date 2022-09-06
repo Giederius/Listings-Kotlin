@@ -20,11 +20,13 @@ class ListingsButton @JvmOverloads constructor(
     private var icon: Drawable? = null
     private var padding: Int = 0
     private var isText: Boolean
+    private var isColorBtn: Boolean
 
     init {
 
         context.theme.obtainStyledAttributes(attrs, R.styleable.ListingsButton, 0, 0).use {
             isText = it.getBoolean(R.styleable.ListingsButton_isText, false)
+            isColorBtn = it.getBoolean(R.styleable.ListingsButton_isText, false)
             text = it.getString(R.styleable.ListingsButton_android_text).toString()
             icon = it.getDrawable(R.styleable.ListingsButton_android_drawable)
             padding = it.getInt(R.styleable.ListingsButton_android_paddingHorizontal, 0)
@@ -32,20 +34,24 @@ class ListingsButton @JvmOverloads constructor(
 
         isClickable = true
         with(binding) {
-            when (isText) {
-                true -> {
+            when {
+                isText -> {
                     buttonImage.isGone = isText
                     buttonTitle.isGone = !isText
                     setText(text)
                     buttonContainer.setPadding(0, padding, padding, 0)
                 }
-                else -> {
+                !isText -> {
                     buttonImage.isGone = isText
                     buttonTitle.isGone = !isText
                     if (icon != null) {
                         buttonImage.setImageDrawable(icon)
                         setIconTint(R.color.darkTextColor)
                     }
+                }
+                isColorBtn -> {
+                    buttonImage.isGone = false
+                    buttonTitle.isGone = false
                 }
             }
         }
@@ -66,6 +72,33 @@ class ListingsButton @JvmOverloads constructor(
         }
     }
 
+    fun setColorBtn(color: String, name: String) {
+        binding.apply {
+            ColorStateList.valueOf(Color.parseColor(color)).let {
+                buttonImage.imageTintList = it
+            }
+            buttonTitle.apply {
+                isGone = false
+                text = name
+            }
+        }
+    }
+
+    fun isEnabled(isEnabled: Boolean) {
+        binding.apply {
+            buttonContainer.isEnabled = isEnabled
+            buttonTitle.setTextColor(R.color.disabledButtonText)
+            isClickable = false
+        }
+    }
+
+    fun setupCTAButton() {
+        binding.apply {
+            buttonContainer.background =
+                ContextCompat.getDrawable(context, R.drawable.listings_button_cta_selector)
+            buttonTitle.setTextColor(ContextCompat.getColor(context, R.color.white))
+        }
+    }
 }
 
 fun ListingsButton.setupButton(text: String, iconColor: Int) {

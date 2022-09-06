@@ -8,4 +8,5 @@ import javax.inject.Singleton
 interface ProductRepository {
     suspend fun getProducts(): Result<List<Product>>
     suspend fun getAllProducts(): Result<List<Category>>
+    suspend fun getProduct(id: Int): Result<Product>
 }

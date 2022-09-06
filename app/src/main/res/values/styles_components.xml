@@ -29,11 +29,30 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="circularShapeBorder">
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+        <item name="strokeWidth">4dp</item>
+        <item name="strokeColor">@color/disabledGrey</item>
+    </style>
+
     <style name="roundedCornerShape">
         <item name="android:adjustViewBounds">true</item>
         <item name="android:scaleType">centerCrop</item>
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">12dp</item>
+    </style>
+
+    <style name="productFirstImage">
+        <item name="android:adjustViewBounds">true</item>
+        <item name="cornerSizeBottomLeft">8%</item>
+        <item name="cornerSizeTopLeft">8%</item>
+    </style>
+
+    <style name="productFirstNormal">
+        <item name="android:adjustViewBounds">true</item>
     </style>
 
     <style name="BasePopUpMenu" parent="@style/Widget.AppCompat.PopupMenu">

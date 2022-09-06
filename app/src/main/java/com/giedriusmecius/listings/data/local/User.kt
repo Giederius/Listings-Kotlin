@@ -1,7 +1,5 @@
 package com.giedriusmecius.listings.data.local
 
-import com.giedriusmecius.listings.data.remote.model.category.Category
-import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.squareup.moshi.JsonClass
 import java.io.Serializable
 
@@ -66,6 +64,15 @@ data class FilterOptions(
     val userSelectedCategories: List<String> = listOf(),
     val allCategories: List<String> = listOf()
 //    val color: List<String>,
+) : Serializable
+
+@JsonClass(generateAdapter = true)
+data class FilterData(
+    var sortData: String = "az",
+    var isSortingActive: Boolean = false,
+    var mainOptions: FilterOptions = FilterOptions(),
+    var userOptions: FilterOptions = FilterOptions(),
+    var isFilterActive: Boolean = false
 ) : Serializable
 
 enum class CardType {

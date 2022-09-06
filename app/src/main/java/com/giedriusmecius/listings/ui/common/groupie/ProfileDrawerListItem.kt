@@ -6,7 +6,12 @@ import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.databinding.ItemProfileDrawerListBinding
 import com.xwray.groupie.viewbinding.BindableItem
 
-class ProfileDrawerListItem(val title: String, val count: Int, val img: String) :
+class ProfileDrawerListItem(
+    val title: String,
+    val count: Int,
+    val img: String,
+    val onClick: () -> Unit
+) :
     BindableItem<ItemProfileDrawerListBinding>() {
 
     override fun getLayout(): Int = R.layout.item_profile_drawer_list
@@ -19,6 +24,9 @@ class ProfileDrawerListItem(val title: String, val count: Int, val img: String) 
             listLayoutTitle.text = title
             listLayoutDescription.text = "$count products"
             listItemImage.load(img)
+            root.setOnClickListener {
+                onClick()
+            }
         }
     }
 

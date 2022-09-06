@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="24dp"
-    android:isScrollContainer="false"
+    android:isScrollContainer="true"
     android:nestedScrollingEnabled="false">
 
     <com.google.android.material.chip.ChipGroup

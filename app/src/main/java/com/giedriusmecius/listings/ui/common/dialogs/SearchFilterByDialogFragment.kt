@@ -8,6 +8,7 @@ import android.widget.CheckBox
 import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import com.giedriusmecius.listings.R
+import com.giedriusmecius.listings.data.local.FilterData
 import com.giedriusmecius.listings.data.local.FilterOptions
 import com.giedriusmecius.listings.databinding.DialogSearchFilterBinding
 import com.giedriusmecius.listings.ui.common.base.BaseDialogFragment
@@ -19,8 +20,9 @@ class SearchFilterByDialogFragment :
     BaseDialogFragment<DialogSearchFilterBinding>(DialogSearchFilterBinding::inflate) {
 
     private val args by navArgs<SearchFilterByDialogFragmentArgs>()
-    private var newFilter: FilterOptions = FilterOptions(listOf(), listOf())
+    private var userFilter: FilterOptions = FilterOptions(listOf(), listOf())
     private var mainFilter: FilterOptions = FilterOptions(listOf(), listOf())
+    private var filterData: FilterData = FilterData()
     private var userCheckedCategories = mutableListOf<String>()
     private var userSelectedPriceRange = listOf<Float>()
     private var createdCheckboxes = mutableListOf<View>()
@@ -29,18 +31,18 @@ class SearchFilterByDialogFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        newFilter = args.filterOptions
-        mainFilter = args.mainFilterOptions
-        userCheckedCategories = args.filterOptions.userSelectedCategories.toMutableList()
+        userFilter = args.filterData.userOptions
+        mainFilter = args.filterData.mainOptions
+        userCheckedCategories = userFilter.userSelectedCategories.toMutableList()
         userSelectedPriceRange =
-            listOf(args.filterOptions.priceRange[0], args.filterOptions.priceRange[1])
+            listOf(userFilter.priceRange[0], userFilter.priceRange[1])
 
         with(binding) {
-            searchFilterLowPrice.text = args.filterOptions.priceRange[0].toCurrency()
-            searchFilterHighPrice.text = args.filterOptions.priceRange[1].toCurrency()
+            searchFilterLowPrice.text = userFilter.priceRange[0].toCurrency()
+            searchFilterHighPrice.text = userFilter.priceRange[1].toCurrency()
 
             searchFilterPriceSlider.apply {
-                setValues(args.filterOptions.priceRange[0], args.filterOptions.priceRange[1])
+                setValues(userFilter.priceRange[0], userFilter.priceRange[1])
                 setCustomThumbDrawable(R.drawable.slider_thumb_active)
 
                 addOnSliderTouchListener(object : RangeSlider.OnSliderTouchListener {
@@ -56,7 +58,7 @@ class SearchFilterByDialogFragment :
                     }
                 })
             }
-            for (i in args.filterOptions.allCategories) {
+            for (i in userFilter.allCategories) {
                 val checkBox = CheckBox(context)
 
                 checkBox.apply {
@@ -65,7 +67,7 @@ class SearchFilterByDialogFragment :
                         ViewGroup.LayoutParams.WRAP_CONTENT
                     )
                     text =
-                        args.filterOptions.allCategories[args.filterOptions.allCategories.indexOf(i)]
+                        userFilter.allCategories[userFilter.allCategories.indexOf(i)]
                     id = View.generateViewId()
                     isChecked = userCheckedCategories.contains(this.text)
                     setOnCheckedChangeListener { buttonView, isChecked ->
@@ -91,7 +93,7 @@ class SearchFilterByDialogFragment :
 
     override fun onCancel(dialog: DialogInterface) {
         super.onCancel(dialog)
-        setResult(newFilter to isSaved)
+        setResult(filterData to isSaved)
     }
 
     private fun clearFilter() {
@@ -107,18 +109,22 @@ class SearchFilterByDialogFragment :
             userSelectedPriceRange = mainFilter.priceRange
             searchFilterPriceSlider.setValues(mainFilter.priceRange[0], mainFilter.priceRange[1])
             isSaved = true
-            newFilter = mainFilter
+            userFilter = mainFilter
         }
     }
 
     private fun saveFilter() {
-        newFilter =
-            newFilter.copy(priceRange = userSelectedPriceRange, userSelectedCategories = userCheckedCategories)
+        filterData = filterData.copy(
+            userOptions = userFilter.copy(
+                priceRange = userSelectedPriceRange,
+                userSelectedCategories = userCheckedCategories
+            )
+        )
         Toast.makeText(context, "Your filter settings have been saved.", Toast.LENGTH_SHORT).show()
         isSaved = true
     }
 
-    private fun setResult(value: Pair<FilterOptions, Boolean>) {
+    private fun setResult(value: Pair<FilterData, Boolean>) {
         setNavigationResult(RESULT_KEY, value)
     }
 

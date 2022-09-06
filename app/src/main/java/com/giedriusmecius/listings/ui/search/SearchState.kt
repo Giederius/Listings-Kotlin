@@ -1,7 +1,7 @@
 package com.giedriusmecius.listings.ui.search
 
 import android.util.Log
-import com.giedriusmecius.listings.data.local.FilterOptions
+import com.giedriusmecius.listings.data.local.FilterData
 import com.giedriusmecius.listings.data.remote.model.category.Category
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.utils.extensions.copyTo
@@ -17,14 +17,10 @@ data class SearchState(
     val searchQuery: String? = null,
     val productResults: List<Product> = emptyList(),
     val categoryResults: List<Category> = emptyList(),
-    val sortProductsBy: String = "az",
-    val isSortingActive: Boolean = false,
     val searchUIState: SearchType = SearchType.Search,
-    val mainSearchFilter: FilterOptions = FilterOptions(),
-    val userSearchFilter: FilterOptions = FilterOptions(),
     val filteredCategory: List<Category> = emptyList(),
     val filteredProducts: List<Product> = emptyList(),
-    val isFilteringActive: Boolean = false
+    var filterData: FilterData = FilterData(),
 ) :
     State<SearchState, SearchState.Event> {
     sealed class Event {
@@ -56,11 +52,15 @@ data class SearchState(
         object DisabledSorting : Event()
         data class ChangedSearchUI(val type: SearchType) : Event()
 
-        data class HandleFilterChange(val filterOptions: FilterOptions) : Event()
+        data class HandleFilterChange(val filterData: FilterData) : Event()
         data class ReceivedProductsWithFilter(
             val filteredCategory: List<Category>,
             val filteredProducts: List<Product>
         ) : Event()
+
+        data class TappedOnProduct(val productID: Int) : Event()
+        data class ReceivedProduct(val product: Product) : Event()
+        data class ReceivedSortedProducts(val products: List<Product>) : Event()
     }
 
     sealed class Command {
@@ -74,12 +74,7 @@ data class SearchState(
         data class UpdateRecentSearchQueries(val list: List<String>) : Command()
         data class DisplaySearchResults(val results: List<Product>) : Command()
         data class OpenSortDialog(val sortBy: String) : Command()
-        data class OpenFilterDialog(
-            val filterOptions: FilterOptions,
-            val mainFilterOptions: FilterOptions
-        ) : Command()
-
-        data class SortProductsBy(val sortBy: String, val products: List<Product>) : Command()
+        data class OpenFilterDialog(val filterData: FilterData) : Command()
 
         object SetupSearchUI : Command()
         data class SetupSuggestionsUI(
@@ -89,6 +84,8 @@ data class SearchState(
         ) : Command()
 
         object SetupResultsUI : Command()
+
+        data class OpenProduct(val product: Product) : Command()
     }
 
     sealed class Request {
@@ -108,9 +105,16 @@ data class SearchState(
         ) : Request()
 
         data class ApplyFilteredOptions(
-            val filterOptions: FilterOptions,
-            val resultsProducts: List<Product>
+            val filterData: FilterData,
+            val resultsProducts: List<Product>,
+            val isSortingActive: Boolean,
+            val sortBy: String,
         ) : Request()
+
+        data class SortProductsBy(val filterData: FilterData, val products: List<Product>) :
+            Request()
+
+        data class FetchProduct(val productID: Int) : Request()
     }
 
     override fun reduce(event: Event): SearchState {
@@ -138,7 +142,7 @@ data class SearchState(
                     event.query,
                     recentSearchResults ?: emptyList(),
                     products ?: emptyList(),
-                    sortBy = sortProductsBy
+                    sortBy = filterData.sortData
                 ),
                 searchQuery = event.query,
                 isLoading = true
@@ -161,13 +165,15 @@ data class SearchState(
                         productResults = event.resultsProducts,
                         searchUIState = SearchType.Results,
                         isLoading = false,
-                        mainSearchFilter = mainSearchFilter.copyTo(
-                            event.resultsProducts,
-                            event.resultsCategories
-                        ),
-                        userSearchFilter = mainSearchFilter.copyTo(
-                            event.resultsProducts,
-                            event.resultsCategories
+                        filterData = filterData.copy(
+                            mainOptions = filterData.mainOptions.copyTo(
+                                event.resultsProducts,
+                                event.resultsCategories
+                            ),
+                            userOptions = filterData.mainOptions.copyTo(
+                                event.resultsProducts,
+                                event.resultsCategories
+                            )
                         ),
                     )
                 } else {
@@ -194,10 +200,6 @@ data class SearchState(
                 )
             }
             is Event.TappedSearchField -> {
-                Log.d(
-                    "MANOtapped",
-                    "${suggestionsCategory?.size} ${suggestionsProduct?.size} $searchQuery"
-                )
                 if (searchUIState == SearchType.Results) {
                     copy(
                         request = Request.GenerateSuggestions(
@@ -210,19 +212,21 @@ data class SearchState(
                     copy()
                 }
             }
-            Event.TappedSort -> copy(command = Command.OpenSortDialog(sortProductsBy))
-            Event.DisabledSorting -> copy(isSortingActive = false)
+            Event.TappedSort -> copy(command = Command.OpenSortDialog(filterData.sortData))
+            Event.DisabledSorting -> copy(filterData = filterData.copy(isSortingActive = false))
             Event.TappedFilter -> copy(
-                command = Command.OpenFilterDialog(
-                    userSearchFilter,
-                    mainSearchFilter
+                command = Command.OpenFilterDialog(filterData)
+            )
+            is Event.ChangedSortBy -> {
+                var newData = filterData.copy(
+                    sortData = event.sortBy,
+                    isSortingActive = event.sortBy != "az"
                 )
-            )
-            is Event.ChangedSortBy -> copy(
-                sortProductsBy = event.sortBy,
-                isSortingActive = event.sortBy != "az",
-                command = Command.SortProductsBy(event.sortBy, productResults)
-            )
+                copy(
+                    filterData = newData,
+                    request = Request.SortProductsBy(newData, productResults)
+                )
+            }
             is Event.ChangedSearchUI -> {
                 val newCommand: Command = when (event.type) {
                     SearchType.Search -> {
@@ -250,28 +254,30 @@ data class SearchState(
                 copy(command = newCommand, searchUIState = event.type)
             }
             is Event.HandleFilterChange -> {
+                var newData = filterData.copy(
+                    isFilterActive = event.filterData.userOptions != filterData.mainOptions,
+                    userOptions = event.filterData.userOptions
+                )
                 copy(
-                    isFilteringActive = event.filterOptions != mainSearchFilter,
-                    userSearchFilter = event.filterOptions,
+                    filterData = newData,
                     request = Request.ApplyFilteredOptions(
-                        event.filterOptions,
+                        newData,
                         productResults,
+                        newData.isSortingActive,
+                        newData.sortData
                     )
                 )
             }
             is Event.ReceivedProductsWithFilter -> {
-                val newCommand = if (isSortingActive) {
-                    Command.SortProductsBy(sortProductsBy, event.filteredProducts)
-                } else {
-                    Command.DisplaySearchResults(event.filteredProducts)
-                }
                 copy(
                     filteredCategory = event.filteredCategory,
                     filteredProducts = event.filteredProducts,
-                    command = newCommand
+                    command = Command.DisplaySearchResults(event.filteredProducts)
                 )
             }
-
+            is Event.TappedOnProduct -> copy(request = Request.FetchProduct(event.productID))
+            is Event.ReceivedProduct -> copy(command = Command.OpenProduct(event.product))
+            is Event.ReceivedSortedProducts -> copy(command = Command.DisplaySearchResults(event.products))
             else -> {
                 copy()
             }

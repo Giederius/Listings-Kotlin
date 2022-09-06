@@ -32,4 +32,14 @@ class ProductRepositoryImpl(
             Result.failure(e)
         }
     }
+
+    override suspend fun getProduct(id: Int): Result<Product> {
+        return try {
+            val product = api.getProduct(id)
+
+            Result.success(product)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

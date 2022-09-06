@@ -83,9 +83,8 @@
         tools:layout="@layout/fragment_product">
         <argument
             android:name="productID"
-            android:defaultValue="@null"
-            app:argType="string"
-            app:nullable="true" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
 
     <fragment
@@ -99,12 +98,56 @@
         <action
             android:id="@+id/searchFragment_to_filterDialog"
             app:destination="@id/SearchFilterDialogFragment" />
-
     </fragment>
+
+    <fragment
+        android:id="@+id/collectionFragment"
+        android:name="com.giedriusmecius.listings.ui.collection.CollectionFragment"
+        android:label="CollectionFragment"
+        tools:layout="@layout/fragment_collection"></fragment>
 
     <action
         android:id="@+id/globalProductFragmentAction"
         app:destination="@id/productFragment" />
+
+    <action
+        android:id="@+id/globalProductDialogFragmentAction"
+        app:destination="@id/dialogProductFragment" />
+
+    <action
+        android:id="@+id/globalCollectionDialogFragmentAction"
+        app:destination="@id/dialogCollectionFragment" />
+
+    <action
+        android:id="@+id/global_to_sortDialog"
+        app:destination="@id/SearchSortDialogFragment" />
+    <action
+        android:id="@+id/global_to_filterDialog"
+        app:destination="@id/SearchFilterDialogFragment" />
+
+    <action
+        android:id="@+id/globalSizeDialog"
+        app:destination="@id/SizeDialogFragment" />
+
+    <dialog
+        android:id="@+id/dialogProductFragment"
+        android:name="com.giedriusmecius.listings.ui.product.ProductBottomSheetDialog"
+        tools:layout="@layout/dialog_product_fragment">
+        <argument
+            android:name="product"
+            android:defaultValue="@null"
+            app:argType="com.giedriusmecius.listings.data.remote.model.product.Product"
+            app:nullable="true" />
+    </dialog>
+
+    <dialog
+        android:id="@+id/dialogCollectionFragment"
+        android:name="com.giedriusmecius.listings.ui.collection.CollectionBottomSheetDialog"
+        tools:layout="@layout/dialog_collection_fragment">
+        <argument
+            android:name="userFilter"
+            app:argType="com.giedriusmecius.listings.data.local.FilterData" />
+    </dialog>
 
     <dialog
         android:id="@+id/profileFollowingDialogFragment"
@@ -194,10 +237,7 @@
         android:name="com.giedriusmecius.listings.ui.common.dialogs.SearchFilterByDialogFragment"
         tools:layout="@layout/dialog_search_filter">
         <argument
-            android:name="filterOptions"
-            app:argType="com.giedriusmecius.listings.data.local.FilterOptions" />
-        <argument
-            android:name="mainFilterOptions"
-            app:argType="com.giedriusmecius.listings.data.local.FilterOptions" />
+            android:name="filterData"
+            app:argType="com.giedriusmecius.listings.data.local.FilterData" />
     </dialog>
 </navigation>

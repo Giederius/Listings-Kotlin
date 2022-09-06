@@ -2,9 +2,12 @@ package com.giedriusmecius.listings.ui.common.base
 
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.NavDirections
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.giedriusmecius.listings.R
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -48,6 +51,16 @@ abstract class BaseDialogFragment<VB : ViewBinding>(private val inflate: Inflate
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun navigate(directions: NavDirections) {
+        try {
+            findNavController().navigate(directions)
+        } catch (e: IllegalArgumentException) {
+            Log.d("errorArgument", e.localizedMessage)
+        } catch (e: IllegalStateException) {
+            Log.d("errorState", e.localizedMessage)
+        }
     }
 
     open fun observeState() {}

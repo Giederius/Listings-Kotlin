@@ -1,5 +1,6 @@
 package com.giedriusmecius.listings.ui.search
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -7,7 +8,6 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.giedriusmecius.listings.MainActivity
 import com.giedriusmecius.listings.R
-import com.giedriusmecius.listings.data.local.FilterOptions
+import com.giedriusmecius.listings.data.local.FilterData
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.databinding.FragmentSearchBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
@@ -28,7 +28,6 @@ import com.giedriusmecius.listings.ui.common.dialogs.SearchSortByDialogFragment
 import com.giedriusmecius.listings.ui.common.groupie.ProductItem
 import com.giedriusmecius.listings.ui.common.groupie.RecentSearchItem
 import com.giedriusmecius.listings.ui.common.groupie.SuggestionCategoryItem
-import com.giedriusmecius.listings.ui.search.viewPagerFragments.SearchResultProductsFragment
 import com.giedriusmecius.listings.utils.extensions.getNavigationResult
 import com.giedriusmecius.listings.utils.extensions.hideKeyboard
 import com.giedriusmecius.listings.utils.extensions.setMotionLayoutVisibility
@@ -72,14 +71,18 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
 
             binding.apply {
                 searchProgressIndicator.isGone = !newState.isLoading
-                resultSortBtn.toggleState(newState.isSortingActive)
-                resultFilterBtn.toggleState(newState.isFilteringActive)
-                bottomFABSortBtn.toggleState(newState.isSortingActive)
-                bottomFABFilterBtn.toggleState(newState.isFilteringActive)
+                resultSortBtn.toggleState(newState.filterData.isSortingActive)
+                resultFilterBtn.toggleState(newState.filterData.isFilterActive)
+                bottomFABSortBtn.toggleState(newState.filterData.isSortingActive)
+                bottomFABFilterBtn.toggleState(newState.filterData.isFilterActive)
             }
 
             if (oldState?.searchUIState != newState.searchUIState) {
                 Log.d("MANO", "${newState.searchUIState}")
+            }
+
+            if (oldState?.searchQuery != newState.searchQuery) {
+                binding.searchField.setText(newState.searchQuery)
             }
 
             when (val cmd = newState.command) {
@@ -96,12 +99,11 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                     handleSuggestions(cmd.categorySuggestion, cmd.simpleSuggestion, cmd.query)
                 }
                 is SearchState.Command.DisplaySearchResults -> {
+                    setupUIForSearchResults()
                     if (cmd.results.isNotEmpty()) {
-                        setupUIForSearchResults(true)
                         setupSearchResults(cmd.results)
                     } else {
                         binding.noSearchResultFound.isGone = false
-                        setupUIForSearchResults(false)
                         setupSearchResults(emptyList())
                     }
                 }
@@ -112,13 +114,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                 is SearchState.Command.OpenFilterDialog -> {
                     navigate(
                         SearchFragmentDirections.searchFragmentToFilterDialog(
-                            cmd.filterOptions,
-                            cmd.mainFilterOptions
+                            cmd.filterData
                         )
                     )
-                }
-                is SearchState.Command.SortProductsBy -> {
-                    handleSorting(cmd.sortBy, cmd.products)
                 }
                 SearchState.Command.SetupSearchUI -> {
                     setupUIForSearch()
@@ -127,6 +125,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                     setupUIForSuggestions()
                     handleSuggestions(cmd.categorySuggestion, cmd.simpleSuggestion, cmd.query)
                 }
+                is SearchState.Command.OpenProduct -> {
+                    navigate(SearchFragmentDirections.globalProductDialogFragmentAction(cmd.product))
+                }
                 else -> {
 
                 }
@@ -134,27 +135,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
         }
     }
 
-    private fun handleSorting(sortBy: String, products: List<Product>) {
-        var sortedProducts: List<Product> = emptyList()
-        when (sortBy) {
-            "az" -> {
-                sortedProducts = products.sortedBy { it.title }
-            }
-            "za" -> {
-                sortedProducts = products.sortedByDescending { it.title }
-            }
-            "priceLow" -> {
-                sortedProducts = products.sortedBy { it.price }
-            }
-            "priceHigh" -> {
-                sortedProducts = products.sortedByDescending { it.price }
-            }
-        }
-        setupSearchResults(sortedProducts)
-    }
-
     private fun setupSearchResults(results: List<Product>) {
         groupieResults.clear()
+
         val products: MutableList<ProductItem> = mutableListOf()
         results.map {
             ProductItem(
@@ -163,7 +146,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                 price = it.price,
                 discountedPrice = it.price,
                 onClick = {
-                    Snackbar.make(binding.root, "Snack", Snackbar.LENGTH_SHORT).show()
+                    vm.transition(SearchState.Event.TappedOnProduct(it.id))
                 }).also {
                 products.add(it)
             }
@@ -182,7 +165,6 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                     lifecycleScope.launch(Dispatchers.Main) {
                         binding.apply {
                             searchField.setText(it)
-                            searchProgressIndicator.isGone = false
                             categoryDivider.isGone = true
                             categorySuggestionRV.isGone = true
                         }
@@ -286,10 +268,11 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupSearchField() {
         binding.apply {
             searchField.apply {
-                setOnTouchListener { v, event ->
+                setOnTouchListener { _, event ->
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
                             vm.transition(SearchState.Event.TappedSearchField)
@@ -299,8 +282,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                             }
                             true
                         }
+                        else -> false
                     }
-                    false
                 }
                 showKeyboard()
                 addTextChangedListener(object : TextWatcher {
@@ -327,6 +310,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
 
                     override fun afterTextChanged(s: Editable?) {
                         lifecycleScope.launch {
+                            Log.d("MANOafterTextChanged", "text changed: $s")
                             if (s.toString() == "") {
                                 binding.apply {
                                     setupUIForSearch()
@@ -335,7 +319,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                                     vm.transition(SearchState.Event.ChangedSearchUI(SearchType.Search))
                                 }
                             } else {
-                                delay(800)
+                                delay(500)
+                                Log.d("MANOafterTextChanged", "1")
                                 vm.transition(SearchState.Event.TypedInSearch(s.toString()))
                             }
                         }
@@ -344,14 +329,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
 
                 this.setOnKeyListener { v, keyCode, event ->
                     if (keyCode == KeyEvent.KEYCODE_ENTER && event?.action == KeyEvent.ACTION_DOWN) {
+                        Log.d("MANOpressedreturn", "2 ${this.text}")
                         if (this.text.toString() != "") {
                             vm.transition(SearchState.Event.PressedToSearch(this.text.toString()))
-                            binding.apply {
-                                searchProgressIndicator.isGone = false
-//                                categorySuggestionRV.isGone = true
-//                                categoryDivider.isGone = true
-//                                recentSearchResultsRV.isGone = true
-                            }
                         }
                         true
                     }
@@ -363,29 +343,31 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
 
     private fun setupUIForSuggestions() {
         Log.d("MANOsuggestions", "setup")
-        lifecycleScope.launch(Dispatchers.Main) {
-            binding.apply {
-                searchTopBar.apply {
-                    transitionToStart()
-                }
-                recentSearchesTitle.isGone = true
-                searchResultViewPagerTabLayout.setMotionLayoutVisibility(View.GONE)
-                searchFragmentViewPager.isGone = true
-                searchResultRV.isGone = true
-                categorySuggestionRV.isGone = false
-                recentSearchResultsRV.isGone = false
-                categoryDivider.isGone = false
-                searchField.showKeyboard()
-                noSearchResultFound.isGone = true
+//        lifecycleScope.launch(Dispatchers.Main) {
+        binding.apply {
+            searchTopBar.apply {
+                transitionToStart()
             }
+            recentSearchesTitle.isGone = true
+            searchResultViewPagerTabLayout.setMotionLayoutVisibility(View.GONE)
+            searchFragmentViewPager.isGone = true
+            searchResultRV.isGone = true
+            categorySuggestionRV.isGone = false
+            recentSearchResultsRV.isGone = false
+            categoryDivider.isGone = false
+            searchField.apply {
+                setSelection(this.text.length)
+                showKeyboard()
+            }
+            noSearchResultFound.isGone = true
+//            }
         }
     }
 
-    private fun setupUIForSearchResults(hasResults: Boolean) {
+    private fun setupUIForSearchResults() {
         with(binding) {
             recentSearchesTitle.isGone = true
             recentSearchResultsRV.isGone = true
-            searchProgressIndicator.isGone = false
             searchField.hideKeyboard()
             searchTopBar.apply {
                 setTransition(R.id.fromSearchToResult)
@@ -393,9 +375,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
             }
             categorySuggestionRV.isGone = true
             categoryDivider.isGone = true
-//            searchResultRV.isGone = !hasResults
             searchResultRV.isGone = true
-            searchProgressIndicator.isGone = true
             searchResultViewPagerTabLayout.setMotionLayoutVisibility(View.VISIBLE)
             searchFragmentViewPager.isGone = false
             searchResultViewPagerTabLayout.getTabAt(0)?.select()
@@ -439,6 +419,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
 
     private fun listenForSortDialogResult() {
         getNavigationResult<String>(R.id.searchFragment, SearchSortByDialogFragment.RESULT_KEY) {
+            Log.d("MANO", "$it")
             if (it.isNotEmpty()) {
                 vm.transition(SearchState.Event.ChangedSortBy(it))
             }
@@ -446,7 +427,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
     }
 
     private fun listenForFilterDialogResult() {
-        getNavigationResult<Pair<FilterOptions, Boolean>>(
+        getNavigationResult<Pair<FilterData, Boolean>>(
             R.id.searchFragment,
             SearchFilterByDialogFragment.RESULT_KEY
         ) {
@@ -469,8 +450,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
             groupieCat.clear()
             categorySuggestion.map {
                 SuggestionCategoryItem(it.second, it.first, it.third) {
-                    Toast.makeText(context, "Not implemented", Toast.LENGTH_SHORT)
-                        .show()
+                    Snackbar.make(binding.root, "not implemented", Snackbar.LENGTH_SHORT).show()
                 }.also {
                     categoryList.add(it)
                 }
@@ -494,7 +474,6 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(FragmentSearchBinding
                     lifecycleScope.launch(Dispatchers.Main) {
                         binding.apply {
                             searchField.setText(title)
-                            searchProgressIndicator.isGone = false
                             categorySuggestionRV.isGone = true
                             categoryDivider.isGone = true
                             recentSearchResultsRV.isGone = true

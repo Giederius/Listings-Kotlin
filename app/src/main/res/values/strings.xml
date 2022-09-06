@@ -9,6 +9,7 @@
     <string name="common.edit">Edit</string>
     <string name="common.save">Save</string>
     <string name="common.addCard">Add card</string>
+    <string name="common.atc">Add to cart</string>
     <string name="common.card.mastercard">Mastercard</string>
     <string name="common.card.visa">Visa</string>
     <string name="common.card.cvv">CVV</string>
@@ -32,6 +33,8 @@
     <string name="common.saveFilter">Save filter</string>
     <string name="common.clearFilter">Clear filter</string>
     <string name="common.noResultsFound">No search results found.</string>
+    <string name="common.oneProduct">1 product</string>
+    <string name="common.pluralProducts">%1$s products</string>
 
     // Profile fragment
     <string name="profile.fullName">%1$s %2$s</string>
