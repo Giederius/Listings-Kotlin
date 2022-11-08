@@ -3,6 +3,7 @@ package com.giedriusmecius.listings.utils
 import android.content.SharedPreferences
 import com.giedriusmecius.listings.data.local.User
 import com.giedriusmecius.listings.data.remote.model.category.Category
+import com.giedriusmecius.listings.data.remote.model.product.InCartProduct
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import javax.inject.Singleton
@@ -41,9 +42,21 @@ class UserPreferences(private val sharedPreferences: SharedPreferences) {
             ?: emptyList()
     }
 
+    fun saveCartProducts(products: List<InCartProduct>) {
+        val json = Gson().toJson(products)
+        sharedPreferences.edit().putString(IN_CART_PRODUCTS, json).apply()
+    }
+
+    fun getCartProducts(): List<InCartProduct> {
+        val products = sharedPreferences.getString(IN_CART_PRODUCTS, "")
+        return Gson().fromJson(products, object : TypeToken<List<InCartProduct>>() {}.type)
+            ?: emptyList()
+    }
+
     companion object {
         const val USER = "user"
         const val QUERIES = "queries"
         const val PRODUCTS = "products"
+        const val IN_CART_PRODUCTS = "inCartProducts"
     }
 }

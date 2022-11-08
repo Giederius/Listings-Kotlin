@@ -23,6 +23,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.ui.common.composeStyles.H5
+import com.giedriusmecius.listings.ui.common.composeStyles.H5Black
 import com.giedriusmecius.listings.ui.common.composeStyles.H5Grey
 
 @Composable
@@ -64,7 +65,7 @@ fun storeItemFullWidth(storeTitle: String, storeDesc: String) {
                 .height(40.dp)
                 .width(40.dp)
         )
-        Text(text = storeTitle, style = H5, modifier = Modifier.constrainAs(name) {
+        Text(text = storeTitle, style = H5Black, modifier = Modifier.constrainAs(name) {
             top.linkTo(bgImage.bottom)
             start.linkTo(bgImage.start)
         })

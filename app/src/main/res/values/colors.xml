@@ -28,6 +28,8 @@
     <color name="warmGreen">#D7FAF4</color>
     <color name="warmRed">#FEEFEF</color>
     <color name="accentGreen">#97F2E2</color>
+    <color name="greyBackground">#DBDBDB</color>
+    <color name="greyTextColor2">#575758</color> // wtf?
 
     <integer-array name="paymentTypeColors">
         <item>@color/warmPurple</item>

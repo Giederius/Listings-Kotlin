@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Listings</string>
+    <string name="mapboxToken">pk.eyJ1IjoiZ2llZHJpdXNtZWNpdXMiLCJhIjoiY2w5Y2JuaGdoMTJobTNvcXQ4dWFsYTB0aiJ9.qBw7RpSjZJTfMG3XfEpJnA</string>
     <string name="home_featured">Featured</string>
     <string name="home_latest">Latest</string>
     <string name="home_watchList">Watchlist</string>
