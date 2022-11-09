@@ -56,6 +56,7 @@ import com.giedriusmecius.listings.ui.common.composeStyles.H3SEMIBOLD
 import com.giedriusmecius.listings.ui.common.composeStyles.H5
 import com.giedriusmecius.listings.ui.common.composeStyles.H5Black
 import com.giedriusmecius.listings.ui.common.composeStyles.H5White
+import com.giedriusmecius.listings.utils.extensions.calculateTotalPrice
 import com.giedriusmecius.listings.utils.extensions.toCurrency
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import dagger.hilt.android.AndroidEntryPoint
@@ -81,7 +82,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
         vm.subscribeWithAutoDispose(this) { _, newState ->
             when (val cmd = newState.command) {
                 is CartState.Command.StartCheckout -> {
-                    navigate(CartFragmentDirections.cartFragmentToCheckoutFragment())
+                    navigate(CartFragmentDirections.cartFragmentToCheckoutFragment(cmd.price))
                 }
             }
         }
@@ -201,19 +202,11 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
                         end.linkTo(parent.end)
                     },
                 enabled = true,
-                onClick = { vm.machine.transition(CartState.Event.TappedCheckout) }
+                onClick = { vm.machine.transition(CartState.Event.TappedCheckout(totalPrice)) }
             ) {
                 Text("Continue to checkout", style = H5White)
             }
         }
-    }
-
-    private fun calculateTotalPrice(data: List<Product>?): Float {
-        var price = 0F
-        data?.forEach {
-            price += it.price
-        }
-        return price
     }
 
     @Composable

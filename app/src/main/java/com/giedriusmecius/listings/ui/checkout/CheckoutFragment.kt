@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -42,20 +43,25 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.giedriusmecius.listings.MainActivity
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.databinding.FragmentCheckoutBinding
 import com.giedriusmecius.listings.ui.checkout.checkoutScreens.AddressScreen
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.composeStyles.H2
+import com.giedriusmecius.listings.ui.common.composeStyles.H5
+import com.giedriusmecius.listings.ui.common.composeStyles.H5Black
 import com.giedriusmecius.listings.ui.common.composeStyles.ListingsPurple
 import com.giedriusmecius.listings.ui.common.composeStyles.WarmPurple
+import com.giedriusmecius.listings.utils.extensions.toCurrency
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutBinding::inflate) {
     private val vm by viewModels<CheckoutViewModel>()
+    private val navArgs by navArgs<CheckoutFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -101,7 +107,7 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            val (topBar, container, btn) = createRefs()
+            val (topBar, container, price, btn) = createRefs()
             TopBarWithAnimation(Modifier
                 .padding(horizontal = 24.dp)
                 .constrainAs(topBar) {
@@ -148,6 +154,22 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
                         Text(text = "3", style = H2, modifier = Modifier.align(Alignment.Center))
                     }
                 }
+            }
+
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .fillMaxWidth()
+                    .constrainAs(price) {
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        bottom.linkTo(btn.top)
+                    }
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(text = "Subtotal(VAT included)", style = H5)
+                Text(text = navArgs.price.toCurrency(), style = H5Black)
             }
 
             Button(onClick = { checkoutProgress++ }, modifier = Modifier

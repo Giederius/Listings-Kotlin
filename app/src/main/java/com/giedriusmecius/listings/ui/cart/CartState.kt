@@ -15,11 +15,11 @@ data class CartState(
 
         //        data class ReceivedProducts(val list: List<Product>) : Event()
         data class DeletedProduct(val item: Product) : Event()
-        object TappedCheckout : Event()
+        data class TappedCheckout(val price: Float) : Event()
     }
 
     sealed class Command {
-        data class StartCheckout(val cartItems: List<Product>) : Command()
+        data class StartCheckout(val cartItems: List<Product>, val price: Float) : Command()
     }
 
     sealed class Request {
@@ -31,7 +31,7 @@ data class CartState(
         return when (event) {
             Event.ViewCreated -> copy(request = Request.FetchData)
             is Event.DeletedProduct -> copy(request = Request.DeleteProductFromCart(event.item))
-            is Event.TappedCheckout -> copy(command = Command.StartCheckout(cartItems))
+            is Event.TappedCheckout -> copy(command = Command.StartCheckout(cartItems, event.price))
             else -> copy()
         }
     }

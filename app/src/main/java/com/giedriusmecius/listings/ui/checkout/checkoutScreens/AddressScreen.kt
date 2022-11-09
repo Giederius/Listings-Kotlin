@@ -2,11 +2,17 @@ package com.giedriusmecius.listings.ui.checkout.checkoutScreens
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.indication
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,22 +26,29 @@ import androidx.compose.material.IconToggleButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.local.UserAddress
+import com.giedriusmecius.listings.ui.common.composeStyles.DividerPurple
 import com.giedriusmecius.listings.ui.common.composeStyles.GreyTextColor
 import com.giedriusmecius.listings.ui.common.composeStyles.H3
 import com.giedriusmecius.listings.ui.common.composeStyles.H3BOLD
 import com.giedriusmecius.listings.ui.common.composeStyles.H5
+import com.giedriusmecius.listings.ui.common.composeStyles.LightPurple
+import com.giedriusmecius.listings.ui.common.composeStyles.ListingsClickPurple
 import com.giedriusmecius.listings.ui.common.composeStyles.ListingsPurple
-import com.giedriusmecius.listings.ui.common.composeStyles.WarmPurple
+import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
 @Composable
 fun AddressScreen(modifier: Modifier, addresses: List<UserAddress>) {
@@ -47,49 +60,64 @@ fun AddressScreen(modifier: Modifier, addresses: List<UserAddress>) {
             .fillMaxSize()
             .scrollable(addressScrollState, Orientation.Vertical)
     ) {
-        val (desc, lazyAddress, addAddressBtn) = createRefs()
-        Text(
-            text = "Select or add a shipping address",
-            style = H5,
-            modifier = Modifier
-                .padding(top = 16.dp, bottom = 24.dp)
-                .constrainAs(desc) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-        )
-
-        LazyColumn(state = listState, modifier = Modifier.constrainAs(lazyAddress) {
-
-        }) {
+        val (lazyAddress) = createRefs()
+        LazyColumn(
+            state = listState,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier.constrainAs(lazyAddress) {
+                top.linkTo(parent.top)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(parent.bottom)
+            }.padding(bottom = 100.dp)
+        ) {
             items(addresses) {
-                if (it != addresses.last()) {
-                    AddressItem(
-                        address = it,
-                        estimateDeliveryDate = "15th next week",
-                        shippingPrice = 5.0,
-                        isSelected = it == selectedAddress.value,
-                        onSelect = { selectedAddress.value = it },
-                        onEditClick = { Log.d("MANO", "onEDITCLICK") }
-                    )
-                } else {
-                    AddressItem(
-                        address = it,
-                        estimateDeliveryDate = "15th next week",
-                        shippingPrice = 5.0,
-                        isSelected = it == selectedAddress.value,
-                        onSelect = { selectedAddress.value = it },
-                        onEditClick = { Log.d("MANO", "onEDITCLICK") }
-                    )
-                    Button(
-                        modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
-                            .fillMaxWidth(),
-                        onClick = { Log.d("GIEDRIUS", "add address") }) {
-                        Text("Add Address", style = H3BOLD, color = Color.White)
+                when(it) {
+                    addresses.first() -> {
+                        Text(
+                            text = "Select or add a shipping address",
+                            style = H5,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 16.dp ,bottom = 24.dp)
+                        )
+                        AddressItem(
+                            address = it,
+                            estimateDeliveryDate = "15th next week",
+                            shippingPrice = 5.0,
+                            isSelected = it == selectedAddress.value,
+                            onSelect = { selectedAddress.value = it },
+                            onEditClick = { Log.d("MANO", "onEDITCLICK") }
+                        )
+                    }
+                    addresses.last() -> {
+                        AddressItem(
+                            address = it,
+                            estimateDeliveryDate = "15th next week",
+                            shippingPrice = 5.0,
+                            isSelected = it == selectedAddress.value,
+                            onSelect = { selectedAddress.value = it },
+                            onEditClick = { Log.d("MANO", "onEDITCLICK") }
+                        )
+                        Button(
+                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
+                                .fillMaxWidth(),
+                            onClick = { Log.d("GIEDRIUS", "add address") }) {
+                            Text("Add Address", style = H3BOLD, color = Color.White)
+                        }
+                    }
+                    else -> {
+                        AddressItem(
+                            address = it,
+                            estimateDeliveryDate = "15th next week",
+                            shippingPrice = 5.0,
+                            isSelected = it == selectedAddress.value,
+                            onSelect = { selectedAddress.value = it },
+                            onEditClick = { Log.d("MANO", "onEDITCLICK") }
+                        )
                     }
                 }
-
             }
         }
     }
@@ -104,7 +132,10 @@ fun AddressItem(
     onSelect: () -> Unit,
     onEditClick: () -> Unit
 ) {
-    val bgColor = if (isSelected) WarmPurple else Color.White
+    val bgColor = if (isSelected) LightPurple else Color.White
+    val interactionSource = remember { MutableInteractionSource() }
+    val pressed by interactionSource.collectIsPressedAsState()
+    val btnColor = if (pressed) ListingsClickPurple else LightPurple
 
     ConstraintLayout(
         modifier = Modifier
@@ -120,14 +151,14 @@ fun AddressItem(
                 .padding(16.dp)
                 .fillMaxWidth()
                 .constrainAs(container) {
-                top.linkTo(parent.top)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
         ) {
             val (label, address1, address2, radioBtn, estimate, price) = createRefs()
             Text(text = address.addressLabel, style = H3BOLD, modifier = Modifier
-                .padding(top = 32.dp)
+                .padding(top = 16.dp)
                 .constrainAs(label) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
@@ -196,24 +227,27 @@ fun AddressItem(
         }
         if (isSelected) {
             Divider(
-                color = ListingsPurple, thickness = 1.dp, modifier = Modifier
+                color = DividerPurple, thickness = 1.dp, modifier = Modifier
                     .constrainAs(divider) {
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         top.linkTo(container.bottom)
                     }
-                    .padding(top = 32.dp, bottom = 8.dp)
+                    .padding(top = 16.dp)
             )
 
             Box(
                 modifier = Modifier
+                    .height(48.dp)
                     .constrainAs(button) {
+                        width = Dimension.fillToConstraints
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                         top.linkTo(divider.bottom)
                     }
+                    .indication(interactionSource, indication = null)
                     .background(
-                        color = Color.Transparent,
+                        color = btnColor,
                         shape = RoundedCornerShape(
                             topStart = 0.dp,
                             topEnd = 0.dp,
@@ -221,6 +255,10 @@ fun AddressItem(
                             bottomEnd = 12.dp
                         )
                     )
+                    .clickable(interactionSource = interactionSource, null, true, onClick = {
+                        onEditClick()
+                    }),
+                Alignment.Center
             ) {
                 Text(text = "Edit")
             }

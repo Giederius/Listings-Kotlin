@@ -1,12 +1,8 @@
 package com.giedriusmecius.listings.ui.common.composeItems
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.indication
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -15,15 +11,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -38,7 +29,6 @@ import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.ui.common.composeStyles.H3
 import com.giedriusmecius.listings.ui.common.composeStyles.H5
 import com.giedriusmecius.listings.ui.common.composeStyles.H5Black
-import com.giedriusmecius.listings.ui.common.composeStyles.Neutral10
 import com.giedriusmecius.listings.utils.extensions.toCurrency
 
 @Composable
@@ -136,12 +126,12 @@ fun cartItem(
                         end.linkTo(parent.end)
                         top.linkTo(details.bottom)
                     }) {
-                outlinedButton(
+                ListingsButton(
                     text = "Edit", modifier = Modifier
                         .weight(1f)
                         .padding(start = 24.dp, end = 4.dp)
                 ) { onEdit() }
-                outlinedButton(
+                ListingsButton(
                     text = "Save for later", modifier = Modifier
                         .weight(1f)
                         .padding(start = 4.dp, end = 24.dp)
@@ -157,30 +147,4 @@ fun cartItem(
 @Preview
 fun cartItemPreview() {
 //    cartItem()
-}
-
-@Composable
-fun outlinedButton(text: String, modifier: Modifier, onClick: () -> Unit) {
-    val interactionSource = remember { MutableInteractionSource() }
-    val pressed by interactionSource.collectIsPressedAsState()
-
-    val newText = if (pressed) "this shit" else "pressed"
-
-    Box(modifier = modifier.clip(RoundedCornerShape(12.dp))) {
-        OutlinedButton(
-            onClick = { onClick() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .indication(
-                    interactionSource = interactionSource,
-                    indication = rememberRipple(color = Color.Red)
-                ),
-            interactionSource = interactionSource,
-            border = BorderStroke(1.dp, Neutral10),
-            shape = RoundedCornerShape(12.dp),
-            enabled = true
-        ) {
-            Text(text = newText, style = H5Black, modifier = Modifier.padding(vertical = 11.dp))
-        }
-    }
 }
