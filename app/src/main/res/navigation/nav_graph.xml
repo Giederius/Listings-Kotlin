@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/cartFragment">
+    app:startDestination="@id/testRangeFragment">
 
     <fragment
         android:id="@+id/splashFragment"
@@ -104,7 +104,7 @@
         android:id="@+id/collectionFragment"
         android:name="com.giedriusmecius.listings.ui.collection.CollectionFragment"
         android:label="CollectionFragment"
-        tools:layout="@layout/fragment_collection"></fragment>
+        tools:layout="@layout/fragment_collection" />
 
     <fragment
         android:id="@+id/cartFragment"
@@ -121,9 +121,16 @@
         android:name="com.giedriusmecius.listings.ui.checkout.CheckoutFragment"
         android:label="CheckoutFragment"
         tools:layout="@layout/fragment_checkout">
-        <argument android:name="price"
-            app:argType="float"/>
+        <argument
+            android:name="price"
+            app:argType="float" />
     </fragment>
+
+    <fragment
+        android:id="@+id/testRangeFragment"
+        android:name="com.giedriusmecius.listings.ui.testRange.TestRangeFragment"
+        android:label="TestRangeFragment"
+        tools:layout="@layout/fragment_test_range" />
 
     <action
         android:id="@+id/globalCartFragmentAction"

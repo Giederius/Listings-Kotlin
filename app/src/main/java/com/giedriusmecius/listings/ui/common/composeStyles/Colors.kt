@@ -4,6 +4,14 @@ import androidx.compose.ui.graphics.Color
 
 
 val DarkTextColor = Color(0xFF1a1a1c)
+val DarkButtonTextColor = Color(0xFF3E3E40)
+
+val ListingsButtonOutlineColor = Color(0xFFE7E7E8)
+val ListingsButtonOutlineClickedColor = Color(0xFFCFCFCF)
+val DisabledContentColor = Color(0xFFB7B7B8)
+val DisabledBackgroundColor = Color(0xFFE7E7E8)
+
+
 val NormalTextColor = Color(0xFF272728)
 val GreyedOutTextColor = Color(0xFF6e6e70)
 val GreyBackgroundColor = Color(0xFFDBDBDB)

@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.indication
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
@@ -11,8 +12,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -46,67 +51,67 @@ fun ListingsButton(
         BorderStroke(0.dp, Color.Transparent)
     }
 
-    ConstraintLayout(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(48.dp)
-            .clickable(interactionSource = interactionSource, indication = null) {
-                onClick()
-            }
-            .background(shape = RoundedCornerShape(12.dp), color = bgColor).border(newBorder),
-    ) {
-        val title = createRef()
-        Text(text = text,
-            textAlign = TextAlign.Center,
-            style = H5Black,
-            modifier = Modifier.padding(vertical = 11.dp).constrainAs(
-                title
-            ) {
-                width = Dimension.fillToConstraints
-                top.linkTo(parent.top)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                bottom.linkTo(parent.bottom)
-            })
-    }
-
-//    Box(
-//        modifier = modifier.clip(RoundedCornerShape(12.dp))
+//    ConstraintLayout(
+//        modifier = modifier
+//            .fillMaxWidth()
+//            .height(48.dp)
+//            .clickable(interactionSource = interactionSource, indication = null) {
+//                onClick()
+//            }
+//            .background(shape = RoundedCornerShape(12.dp), color = bgColor).border(newBorder),
 //    ) {
-//        Button(
-//            shape = RoundedCornerShape(12.dp),
-//            colors = ButtonDefaults.buttonColors(backgroundColor = bgColor),
-//            onClick = { onClick() },
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .indication(
-//                    interactionSource = interactionSource,
+//        val title = createRef()
+//        Text(text = text,
+//            textAlign = TextAlign.Center,
+//            style = H5Black,
+//            modifier = Modifier.padding(vertical = 11.dp).constrainAs(
+//                title
+//            ) {
+//                width = Dimension.fillToConstraints
+//                top.linkTo(parent.top)
+//                start.linkTo(parent.start)
+//                end.linkTo(parent.end)
+//                bottom.linkTo(parent.bottom)
+//            })
+//    }
+
+    Box(
+        modifier = modifier.clip(RoundedCornerShape(12.dp))
+    ) {
+        Button(
+            shape = RoundedCornerShape(12.dp),
+            colors = ButtonDefaults.buttonColors(backgroundColor = bgColor),
+            onClick = { onClick() },
+            modifier = Modifier
+                .fillMaxWidth()
+                .indication(
+                    interactionSource = interactionSource,
+                    indication = null
+                ),
+            interactionSource = interactionSource,
+            enabled = isEnabled
+        ) {
+            Text(text = text, style = H5Black, modifier = Modifier.padding(vertical = 11.dp))
+        }
+        OutlinedButton(
+            onClick = { onClick() },
+            colors = ButtonDefaults.buttonColors(backgroundColor = bgColor),
+            modifier = Modifier
+                .fillMaxWidth()
+                .indication(
+                    interactionSource = interactionSource,
+                    null
 //                    indication = rememberRipple(color = bgOnClickColor)
-//                ),
+                ),
 //            interactionSource = interactionSource,
-//            enabled = isEnabled
-//        ) {
-//            Text(text = text, style = H5Black, modifier = Modifier.padding(vertical = 11.dp))
-//        }
-//        OutlinedButton(
-//            onClick = { onClick() },
-//            colors = ButtonDefaults.buttonColors(backgroundColor = bgColor),
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .indication(
-//                    interactionSource = interactionSource,
-//                    null
-////                    indication = rememberRipple(color = bgOnClickColor)
-//                ),
-////            interactionSource = interactionSource,
-//            border = newBorder,
-//            shape = RoundedCornerShape(12.dp),
-//            enabled = isEnabled
-//        ) {
-//            Text(text = text, style = H5Black, modifier = Modifier.padding(vertical = 11.dp))
-//        }
+            border = newBorder,
+            shape = RoundedCornerShape(12.dp),
+            enabled = isEnabled
+        ) {
+            Text(text = text, style = H5Black, modifier = Modifier.padding(vertical = 11.dp))
+        }
     }
-//}
+}
 
 @Preview
 @Composable
