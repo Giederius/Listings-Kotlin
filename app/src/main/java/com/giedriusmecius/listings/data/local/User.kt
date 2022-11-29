@@ -36,7 +36,9 @@ data class UserAddress(
     val state: String,
     val country: String,
     val email: String
-) : Serializable
+) : Serializable {
+    val secondAddressLine = "Zip Code $zipCode"
+}
 
 @JsonClass(generateAdapter = true)
 data class PaymentMethodResponse(

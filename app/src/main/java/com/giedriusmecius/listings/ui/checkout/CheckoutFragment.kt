@@ -1,35 +1,38 @@
 package com.giedriusmecius.listings.ui.checkout
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Button
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -46,15 +49,21 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.giedriusmecius.listings.MainActivity
 import com.giedriusmecius.listings.R
+import com.giedriusmecius.listings.data.local.CardType
+import com.giedriusmecius.listings.data.local.PaymentMethod
+import com.giedriusmecius.listings.data.local.User
+import com.giedriusmecius.listings.data.local.UserAddress
 import com.giedriusmecius.listings.databinding.FragmentCheckoutBinding
 import com.giedriusmecius.listings.ui.checkout.checkoutScreens.AddressScreen
+import com.giedriusmecius.listings.ui.checkout.checkoutScreens.DetailsScreen
+import com.giedriusmecius.listings.ui.checkout.checkoutScreens.PaymentScreen
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
-import com.giedriusmecius.listings.ui.common.composeStyles.H2
+import com.giedriusmecius.listings.ui.common.composeStyles.DisabledBackgroundColor
 import com.giedriusmecius.listings.ui.common.composeStyles.H5
 import com.giedriusmecius.listings.ui.common.composeStyles.H5Black
 import com.giedriusmecius.listings.ui.common.composeStyles.ListingsPurple
 import com.giedriusmecius.listings.ui.common.composeStyles.WarmPurple
-import com.giedriusmecius.listings.ui.views.ButtonTestingGroundsScreen
+import com.giedriusmecius.listings.ui.views.ListingsButtonComposable
 import com.giedriusmecius.listings.utils.extensions.toCurrency
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import dagger.hilt.android.AndroidEntryPoint
@@ -98,26 +107,48 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
 
         BackHandler(enabled = checkoutProgress != 0) {
             if (checkoutProgress != 0) {
-               checkoutProgress--
+                checkoutProgress--
             }
         }
 
         val addressList by vm.userAddresses.observeAsState(initial = emptyList())
+        val paymentMethodList by vm.paymentMethods.observeAsState(initial = emptyList())
+        val cartItems by vm.cartItems.observeAsState(initial = emptyList())
+        val currentUser by vm.currentUser.observeAsState(initial = User())
+        var selectedPaymentMethod by mutableStateOf(PaymentMethod(0L, "", CardType.VISA, "", 0))
+        var selectedAddress by mutableStateOf(
+            UserAddress(
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+            )
+        )
 
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-            val (topBar, container, price, btn) = createRefs()
-            TopBarWithAnimation(Modifier
-                .padding(horizontal = 24.dp)
-                .constrainAs(topBar) {
-                top.linkTo(parent.top)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                height = Dimension.wrapContent
-                width = Dimension.matchParent
-            }, checkoutProgress) {
+            val (topBar, container, bottomBar) = createRefs()
+            TopBarWithAnimation(
+                Modifier
+                    .padding(horizontal = 24.dp)
+                    .constrainAs(topBar) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        height = Dimension.wrapContent
+                        width = Dimension.matchParent
+                    }, checkoutProgress
+            ) {
                 if (checkoutProgress == 0) {
                     navigateUp()
                 } else {
@@ -126,16 +157,15 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
             }
 
             Box(modifier = Modifier
-                .padding(horizontal = 8.dp)
                 .fillMaxSize()
                 .constrainAs(container) {
-                top.linkTo(topBar.bottom)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                bottom.linkTo(parent.bottom)
-                height = Dimension.fillToConstraints
-                width = Dimension.matchParent
-            }) {
+                    top.linkTo(topBar.bottom)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                    height = Dimension.fillToConstraints
+                    width = Dimension.matchParent
+                }) {
                 when (checkoutProgress) {
                     0 -> {
                         // address screen
@@ -143,51 +173,43 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
                         if (addressList.isEmpty()) {
                             CircularProgressIndicator(Modifier)
                         } else {
-                            AddressScreen(Modifier, addressList)
+                            AddressScreen(Modifier, addressList) {
+                                selectedAddress = it
+                                Log.d("MANO", "$it")
+                            }
                         }
                     }
                     1 -> {
                         // payment screen
-                        Text(text = "2", style = H2, modifier = Modifier.align(Alignment.Center))
+                        PaymentScreen(Modifier, paymentMethodList, selectedPaymentMethod) {
+                            selectedPaymentMethod = it
+                        }
+//                        Text(text = "2", style = H2, modifier = Modifier.align(Alignment.Center))
                     }
                     2 -> {
                         // confirmation screen
-                        Text(text = "3", style = H2, modifier = Modifier.align(Alignment.Center))
+                        DetailsScreen(Modifier, cartItems, selectedPaymentMethod, addressList[0])
+//                        Text(text = "3", style = H1, modifier = Modifier.align(Alignment.Center))
                     }
                 }
             }
 
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = 24.dp)
-                    .fillMaxWidth()
-                    .constrainAs(price) {
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(btn.top)
-                    }
-                    .padding(bottom = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text(text = "Subtotal(VAT included)", style = H5)
-                Text(text = navArgs.price.toCurrency(), style = H5Black)
-            }
-
-            Button(onClick = { checkoutProgress++ }, modifier = Modifier
-                .padding(horizontal = 24.dp)
-                .constrainAs(btn) {
+            BottomCheckoutBar(Modifier.wrapContentHeight().constrainAs(bottomBar) {
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
                 bottom.linkTo(parent.bottom)
-                width = Dimension.fillToConstraints
-            }) {
-                Text(text = "Click me")
-            }
+                height = Dimension.fillToConstraints
+                width = Dimension.wrapContent
+            }, checkoutProgress, selectedPaymentMethod, selectedAddress) { checkoutProgress++ }
         }
     }
 
     @Composable
-    private fun TopBarWithAnimation(modifier: Modifier, checkoutProgress: Int, onBackPressed: () -> Unit) {
+    private fun TopBarWithAnimation(
+        modifier: Modifier,
+        checkoutProgress: Int,
+        onBackPressed: () -> Unit
+    ) {
         ConstraintLayout(modifier = modifier) {
             val (backBtn, progressBar) = createRefs()
             Icon(
@@ -207,7 +229,54 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
                 bottom.linkTo(parent.bottom)
+                width = Dimension.wrapContent
             }, 2, checkoutProgress)
+        }
+    }
+
+    @Composable
+    private fun BottomCheckoutBar(
+        modifier: Modifier,
+        checkoutProgress: Int,
+        selectedPayment: PaymentMethod,
+        selectedAddress: UserAddress,
+        onClick: () -> Unit
+    ) {
+        var isGone = checkoutProgress == 2
+
+        var enabledBtn = when {
+            checkoutProgress != 1 && selectedPayment.number == 0L -> true
+            checkoutProgress == 1 && selectedPayment.number != 0L -> true
+            checkoutProgress != 0 && selectedAddress.addressLabel == "" -> true
+            checkoutProgress == 0 && selectedAddress.addressLabel != "" -> true
+            else -> false
+        }
+
+        AnimatedVisibility(
+            modifier = modifier,
+            visible = checkoutProgress != 2,
+            enter = slideInVertically { fullHeight -> fullHeight },
+            exit = slideOutVertically { fullHeight -> fullHeight }) {
+            Column(modifier.background(Color.White)) {
+                Divider(color = DisabledBackgroundColor, thickness = 1.dp)
+                Row(
+                    modifier = modifier
+                        .padding(horizontal = 24.dp)
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp, top = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(text = "Subtotal(VAT included)", style = H5)
+                    Text(text = navArgs.price.toCurrency(), style = H5Black)
+                }
+
+                ListingsButtonComposable(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                        .padding(bottom = 16.dp), null, "Continue", null, enabledBtn
+                ) { onClick() }
+            }
         }
     }
 
@@ -286,7 +355,6 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
             }
         }
     }
-
 
 
     @Composable

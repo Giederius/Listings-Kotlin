@@ -8,11 +8,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.giedriusmecius.listings.R
 
-val H2 = TextStyle(
+val H1 = TextStyle(
     color = NormalTextColor,
     fontSize = 32.sp,
     fontFamily = Raleway,
     fontWeight = FontWeight.Black
+)
+val H2 = TextStyle(
+    color = NormalTextColor,
+    fontSize = 20.sp,
+    fontFamily = FontFamily(Font(R.font.raleway_regular)),
+    fontWeight = FontWeight.Medium
 )
 val H3 = TextStyle(
     color = NormalTextColor,

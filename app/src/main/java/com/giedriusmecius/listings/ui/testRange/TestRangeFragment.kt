@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Scaffold
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.ComposeView
@@ -24,9 +23,11 @@ class TestRangeFragment :
     ): View? {
         return inflater.inflate(R.layout.fragment_test_range, container, false).apply {
             findViewById<ComposeView>(R.id.testRangeComposeView).setContent {
+//                ListingsTheme {
                 Scaffold() {
                     ButtonTestingGroundsScreen(Modifier)
                 }
+//                }
             }
         }
     }

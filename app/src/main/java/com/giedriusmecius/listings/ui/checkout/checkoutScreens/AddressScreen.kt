@@ -19,7 +19,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconToggleButton
@@ -29,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,21 +42,30 @@ import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.local.UserAddress
 import com.giedriusmecius.listings.ui.common.composeStyles.DividerPurple
 import com.giedriusmecius.listings.ui.common.composeStyles.GreyTextColor
+import com.giedriusmecius.listings.ui.common.composeStyles.H2
 import com.giedriusmecius.listings.ui.common.composeStyles.H3
 import com.giedriusmecius.listings.ui.common.composeStyles.H3BOLD
-import com.giedriusmecius.listings.ui.common.composeStyles.H5
 import com.giedriusmecius.listings.ui.common.composeStyles.LightPurple
 import com.giedriusmecius.listings.ui.common.composeStyles.ListingsClickPurple
 import com.giedriusmecius.listings.ui.common.composeStyles.ListingsPurple
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+import com.giedriusmecius.listings.ui.views.ListingsOutlinedButton
 
 @Composable
-fun AddressScreen(modifier: Modifier, addresses: List<UserAddress>) {
+fun AddressScreen(
+    modifier: Modifier,
+    addresses: List<UserAddress>,
+    onAddressChange: (UserAddress) -> Unit
+) {
     val addressScrollState = rememberScrollState()
-    val selectedAddress = remember { mutableStateOf(addresses.first()) }
+    var selectedAddress by remember { mutableStateOf(addresses.first()) }
     val listState = rememberLazyListState()
+
+    // pasicheckint kaip tokioj vietoj reiketu elgtis. nes cia gal kokio effect reikia?
+    onAddressChange(selectedAddress)
+
     ConstraintLayout(
         modifier = modifier
+            .padding(horizontal = 8.dp)
             .fillMaxSize()
             .scrollable(addressScrollState, Orientation.Vertical)
     ) {
@@ -72,22 +81,25 @@ fun AddressScreen(modifier: Modifier, addresses: List<UserAddress>) {
             }.padding(bottom = 100.dp)
         ) {
             items(addresses) {
-                when(it) {
+                when (it) {
                     addresses.first() -> {
                         Text(
                             text = "Select or add a shipping address",
-                            style = H5,
+                            style = H2,
                             textAlign = TextAlign.Center,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 16.dp ,bottom = 24.dp)
+                                .padding(top = 16.dp, bottom = 24.dp)
                         )
                         AddressItem(
                             address = it,
                             estimateDeliveryDate = "15th next week",
                             shippingPrice = 5.0,
-                            isSelected = it == selectedAddress.value,
-                            onSelect = { selectedAddress.value = it },
+                            isSelected = it == selectedAddress,
+                            onSelect = {
+                                selectedAddress = it
+                                onAddressChange(it)
+                            },
                             onEditClick = { Log.d("MANO", "onEDITCLICK") }
                         )
                     }
@@ -96,24 +108,28 @@ fun AddressScreen(modifier: Modifier, addresses: List<UserAddress>) {
                             address = it,
                             estimateDeliveryDate = "15th next week",
                             shippingPrice = 5.0,
-                            isSelected = it == selectedAddress.value,
-                            onSelect = { selectedAddress.value = it },
+                            isSelected = it == selectedAddress,
+                            onSelect = {
+                                selectedAddress = it
+                                onAddressChange(it)
+                            },
                             onEditClick = { Log.d("MANO", "onEDITCLICK") }
                         )
-                        Button(
+                        ListingsOutlinedButton(
                             modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
-                                .fillMaxWidth(),
-                            onClick = { Log.d("GIEDRIUS", "add address") }) {
-                            Text("Add Address", style = H3BOLD, color = Color.White)
-                        }
+                                .fillMaxWidth(), null, "Add Address", null, true
+                        ) { Log.d("GIEDRIUS", "add address") }
                     }
                     else -> {
                         AddressItem(
                             address = it,
                             estimateDeliveryDate = "15th next week",
                             shippingPrice = 5.0,
-                            isSelected = it == selectedAddress.value,
-                            onSelect = { selectedAddress.value = it },
+                            isSelected = it == selectedAddress,
+                            onSelect = {
+                                selectedAddress = it
+                                onAddressChange(it)
+                            },
                             onEditClick = { Log.d("MANO", "onEDITCLICK") }
                         )
                     }
@@ -317,6 +333,6 @@ fun PreviewAddressItem() {
 @Composable
 fun AddressScreenPreview() {
     Scaffold() {
-        AddressScreen(modifier = Modifier, emptyList())
+        AddressScreen(modifier = Modifier, emptyList()) {}
     }
 }

@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.ripple.rememberRipple
@@ -51,11 +50,11 @@ import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.databinding.FragmentCartBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.composeItems.LazyCart
-import com.giedriusmecius.listings.ui.common.composeStyles.H2
+import com.giedriusmecius.listings.ui.common.composeStyles.H1
 import com.giedriusmecius.listings.ui.common.composeStyles.H3SEMIBOLD
 import com.giedriusmecius.listings.ui.common.composeStyles.H5
 import com.giedriusmecius.listings.ui.common.composeStyles.H5Black
-import com.giedriusmecius.listings.ui.common.composeStyles.H5White
+import com.giedriusmecius.listings.ui.views.ListingsButtonComposable
 import com.giedriusmecius.listings.utils.extensions.calculateTotalPrice
 import com.giedriusmecius.listings.utils.extensions.toCurrency
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
@@ -178,15 +177,14 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
                         end.linkTo(parent.end)
                         bottom.linkTo(checkoutBtn.top)
                     }
-                    .padding(bottom = 16.dp),
+                    .padding(bottom = 16.dp, top = 8.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(text = "Subtotal(VAT included)", style = H5)
                 Text(text = totalPrice.toCurrency(), style = H5Black)
             }
 
-            Button(
-                interactionSource = interactionSource,
+            ListingsButtonComposable(
                 modifier = Modifier
                     .height(48.dp)
                     .fillMaxWidth()
@@ -201,11 +199,10 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     },
-                enabled = true,
+                letter = "Continue to checkout",
+                isEnabled = true,
                 onClick = { vm.machine.transition(CartState.Event.TappedCheckout(totalPrice)) }
-            ) {
-                Text("Continue to checkout", style = H5White)
-            }
+            )
         }
     }
 
@@ -259,7 +256,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
             Text(
                 text = "Shopping cart",
                 style = if (collapsed == ToolbarStates.Expanded) {
-                    H2
+                    H1
                 } else {
                     H3SEMIBOLD
                 },

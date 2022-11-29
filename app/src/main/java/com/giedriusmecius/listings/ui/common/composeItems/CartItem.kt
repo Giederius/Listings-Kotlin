@@ -29,6 +29,8 @@ import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.ui.common.composeStyles.H3
 import com.giedriusmecius.listings.ui.common.composeStyles.H5
 import com.giedriusmecius.listings.ui.common.composeStyles.H5Black
+import com.giedriusmecius.listings.ui.views.ListingsButtonComposable
+import com.giedriusmecius.listings.ui.views.ListingsOutlinedButton
 import com.giedriusmecius.listings.utils.extensions.toCurrency
 
 @Composable
@@ -126,15 +128,15 @@ fun cartItem(
                         end.linkTo(parent.end)
                         top.linkTo(details.bottom)
                     }) {
-                ListingsButton(
-                    text = "Edit", modifier = Modifier
+                ListingsOutlinedButton(
+                    modifier = Modifier
                         .weight(1f)
-                        .padding(start = 24.dp, end = 4.dp)
+                        .padding(start = 24.dp, end = 4.dp), null,"Edit",null,true
                 ) { onEdit() }
-                ListingsButton(
-                    text = "Save for later", modifier = Modifier
+                ListingsButtonComposable(
+                    modifier = Modifier
                         .weight(1f)
-                        .padding(start = 4.dp, end = 24.dp)
+                        .padding(start = 4.dp, end = 24.dp), null, "Save for later", null, true
                 ) {
                     onSave()
                 }
