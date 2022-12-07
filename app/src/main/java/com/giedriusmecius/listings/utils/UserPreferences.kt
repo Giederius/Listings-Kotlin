@@ -1,6 +1,7 @@
 package com.giedriusmecius.listings.utils
 
 import android.content.SharedPreferences
+import android.util.Log
 import com.giedriusmecius.listings.data.local.User
 import com.giedriusmecius.listings.data.remote.model.category.Category
 import com.giedriusmecius.listings.data.remote.model.product.InCartProduct
@@ -19,6 +20,15 @@ class UserPreferences(private val sharedPreferences: SharedPreferences) {
     fun getUser(): User {
         val user = sharedPreferences.getString(USER, "")
         return Gson().fromJson(user, User::class.java) ?: User()
+    }
+
+    fun saveToken(token: String) {
+        Log.d("MANOTOKEN", token)
+        sharedPreferences.edit().putString(TOKEN, token).apply()
+    }
+
+    fun getToken() : String? {
+        return  sharedPreferences.getString(TOKEN, null)
     }
 
     fun saveRecentSearches(queries: List<String>) {
@@ -58,5 +68,6 @@ class UserPreferences(private val sharedPreferences: SharedPreferences) {
         const val QUERIES = "queries"
         const val PRODUCTS = "products"
         const val IN_CART_PRODUCTS = "inCartProducts"
+        const val TOKEN = "token"
     }
 }

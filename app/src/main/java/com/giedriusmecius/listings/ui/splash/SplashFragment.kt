@@ -7,9 +7,10 @@ import androidx.fragment.app.viewModels
 import com.giedriusmecius.listings.databinding.FragmentSplashBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
+import com.google.firebase.auth.FirebaseAuth
 
 class SplashFragment : BaseFragment<FragmentSplashBinding>(FragmentSplashBinding::inflate) {
-
+    private lateinit var auth: FirebaseAuth
     private val vm by viewModels<SplashViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

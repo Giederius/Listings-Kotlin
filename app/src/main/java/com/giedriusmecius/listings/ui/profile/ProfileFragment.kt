@@ -1,6 +1,7 @@
 package com.giedriusmecius.listings.ui.profile
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
@@ -22,6 +23,10 @@ import com.giedriusmecius.listings.ui.common.groupie.PaymentMethodCardItem
 import com.giedriusmecius.listings.ui.common.groupie.ProfileAddressItem
 import com.giedriusmecius.listings.utils.extensions.getNavigationResult
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuth.AuthStateListener
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.xwray.groupie.GroupieAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,6 +36,19 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
     private val vm by viewModels<ProfileViewModel>()
     private val paymentMethodAdapter = GroupieAdapter()
     private val addressAdapter = GroupieAdapter()
+    private lateinit var auth: FirebaseAuth
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        auth = Firebase.auth
+
+        auth.addAuthStateListener {
+            if(auth.currentUser == null) {
+                Log.d("MANO", "user logged out ${auth.currentUser}")
+                navigate(ProfileFragmentDirections.profileFragmentToLoginFragment())
+            }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,6 +74,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(FragmentProfileBind
             addressesRecyclerView.apply {
                 layoutManager = LinearLayoutManager(context)
                 adapter = addressAdapter
+            }
+            settingsButton.setOnClickListener {
+                auth.signOut()
             }
         }
     }
