@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -63,7 +64,11 @@ import com.giedriusmecius.listings.ui.common.composeStyles.H5
 import com.giedriusmecius.listings.ui.common.composeStyles.H5Black
 import com.giedriusmecius.listings.ui.common.composeStyles.ListingsPurple
 import com.giedriusmecius.listings.ui.common.composeStyles.WarmPurple
+import com.giedriusmecius.listings.ui.profile.ProfileAddAddressDialogFragment
+import com.giedriusmecius.listings.ui.profile.ProfileAddCardDialogFragment
+import com.giedriusmecius.listings.ui.profile.ProfileState
 import com.giedriusmecius.listings.ui.views.ListingsButtonComposable
+import com.giedriusmecius.listings.utils.extensions.getNavigationResult
 import com.giedriusmecius.listings.utils.extensions.toCurrency
 import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import dagger.hilt.android.AndroidEntryPoint
@@ -72,6 +77,23 @@ import dagger.hilt.android.AndroidEntryPoint
 class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutBinding::inflate) {
     private val vm by viewModels<CheckoutViewModel>()
     private val navArgs by navArgs<CheckoutFragmentArgs>()
+
+    var selectedAddress =
+        UserAddress(
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+        )
+    var emptyPaymentMethod = PaymentMethod(0L, "", CardType.VISA, "", 0)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -91,6 +113,8 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
         super.onViewCreated(view, savedInstanceState)
         (activity as MainActivity).hideBottomNavBar()
         vm.machine.transition(CheckoutState.Event.ViewCreated)
+        listenForAddressDialog()
+        listenForCardAdd()
     }
 
     override fun onDestroy() {
@@ -99,7 +123,19 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
     }
 
     @Composable
-    private fun CheckoutMainScreen() {
+    private fun CheckoutMainScreen(
+//        addressList: List<UserAddress>,
+//        paymentMethodList: List<PaymentMethod>,
+//        cartItems: List<Product>,
+//        selectedAddress: UserAddress
+    ) {
+        val addressList by vm.userAddresses.observeAsState(initial = emptyList())
+        val paymentMethodList by vm.paymentMethods.observeAsState(initial = emptyList())
+        val cartItems by vm.cartItems.observeAsState(initial = emptyList())
+        val currentUser by vm.currentUser.observeAsState(initial = User())
+        val selectedUserAddress by vm.selectedAddress.observeAsState(initial = selectedAddress)
+        var selectedPaymentMethod by mutableStateOf(PaymentMethod(0L, "", CardType.VISA, "", 0))
+//        var selectedUserAddress by remember { mutableStateOf(selectedAddress) }
 
         var checkoutProgress by rememberSaveable {
             mutableStateOf(0)
@@ -110,28 +146,6 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
                 checkoutProgress--
             }
         }
-
-        val addressList by vm.userAddresses.observeAsState(initial = emptyList())
-        val paymentMethodList by vm.paymentMethods.observeAsState(initial = emptyList())
-        val cartItems by vm.cartItems.observeAsState(initial = emptyList())
-        val currentUser by vm.currentUser.observeAsState(initial = User())
-        var selectedPaymentMethod by mutableStateOf(PaymentMethod(0L, "", CardType.VISA, "", 0))
-        var selectedAddress by mutableStateOf(
-            UserAddress(
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-                "",
-            )
-        )
 
         ConstraintLayout(
             modifier = Modifier
@@ -173,17 +187,34 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
                         if (addressList.isEmpty()) {
                             CircularProgressIndicator(Modifier)
                         } else {
-                            AddressScreen(Modifier, addressList) {
-                                selectedAddress = it
-                                Log.d("MANO", "$it")
-                            }
+                            Log.d("MANOpreAddressScreen", "${selectedUserAddress.addressLabel} ${selectedAddress.addressLabel}")
+                            AddressScreen(
+                                modifier = Modifier,
+                                addresses = addressList,
+                                selectedAddress = if (selectedUserAddress.addressLabel.isNotEmpty()) selectedUserAddress else addressList.first(),
+                                onAddressChange = {
+//                                    selectedAddress = it
+                                    Log.d("MANOonAddressChange", "${it.addressLabel}")
+                                    vm.machine.transition(CheckoutState.Event.TappedChangeAddress(it))
+                                },
+                                onEditClick = {
+                                    vm.machine.transition(CheckoutState.Event.TappedAddressEdit(it))
+                                },
+                                onAddNewAddress = {
+                                    vm.machine.transition(
+                                        CheckoutState.Event.TappedAddNewAddress(it)
+                                    )
+                                }
+                            )
                         }
                     }
                     1 -> {
                         // payment screen
-                        PaymentScreen(Modifier, paymentMethodList, selectedPaymentMethod) {
+                        PaymentScreen(Modifier, paymentMethodList, selectedPaymentMethod, {
                             selectedPaymentMethod = it
-                        }
+                        }, {
+                            vm.transition(CheckoutState.Event.TappedAddPaymentMethod)
+                        })
 //                        Text(text = "2", style = H2, modifier = Modifier.align(Alignment.Center))
                     }
                     2 -> {
@@ -346,7 +377,7 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
                 }
             )
             if (!isLast) {
-                // kazkodel uzima vieta bet nepasinaikina lopas pilnai.
+                // kazkodel uzima vieta bet nepasinaikina lopas pilnai. nes 15dp currwntmod
                 Divider(
                     modifier = lineMod,
                     color = lineColors,
@@ -356,18 +387,60 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
         }
     }
 
-
     @Composable
     @Preview
     fun previewContainer() {
         CheckoutMainScreen()
     }
 
-
     override fun observeState() {
         vm.subscribeWithAutoDispose(viewLifecycleOwner) { _, newState ->
             when (val cmd = newState.command) {
+                is CheckoutState.Command.OpenAddressDialog -> {
+                    navigate(
+                        CheckoutFragmentDirections.checkoutFragmentToAddressDialog(
+                            cmd.address,
+                            cmd.isEdit
+                        )
+                    )
+                }
+                is CheckoutState.Command.HandleAddressChange -> {
+                    Log.d("MANOaddes", "atejo ${selectedAddress.addressLabel}")
+                    selectedAddress = cmd.selectedAddress
+                }
+                is CheckoutState.Command.OpenAddPaymentMethod -> {
+                    navigate(CheckoutFragmentDirections.checkoutFragmentToCardDialog())
+                }
                 else -> {}
+            }
+        }
+    }
+
+    private fun listenForAddressDialog() {
+        getNavigationResult<Triple<Boolean, UserAddress, UserAddress>>(
+            R.id.checkoutFragment,
+            ProfileAddAddressDialogFragment.RESULT_KEY
+        ) {
+            if (it.first) {
+                vm.machine.transition(CheckoutState.Event.ReceivedAddressEdit(it.second, it.third))
+                selectedAddress = it.second
+            } else {
+                vm.machine.transition(CheckoutState.Event.ReceivedNewUserAddress(it.second))
+            }
+        }
+    }
+
+    private fun listenForCardAdd() {
+        getNavigationResult<Triple<Boolean, PaymentMethod, PaymentMethod>>(
+            // isEdit, newCard, oldCard
+            R.id.checkoutFragment,
+            ProfileAddCardDialogFragment.RESULT_KEY
+        ) {
+            if (it.first) {
+                // not implemented in design?
+//                vm.transition(ProfileState.Event.EditedPaymentMethod(it.second, it.third))
+            } else {
+                vm.transition(CheckoutState.Event.AddedPaymentMethod(it.second))
             }
         }
     }

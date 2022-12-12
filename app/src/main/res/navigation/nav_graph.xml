@@ -124,6 +124,11 @@
         <argument
             android:name="price"
             app:argType="float" />
+        <action
+            android:id="@+id/checkoutFragmentToAddressDialog"
+            app:destination="@id/profileAddAddressDialogFragment" />
+        <action android:id="@+id/checkoutFragmentToCardDialog"
+            app:destination="@id/profileAddCardDialogFragment"/>
     </fragment>
 
     <fragment

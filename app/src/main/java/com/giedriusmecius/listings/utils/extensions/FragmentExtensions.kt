@@ -1,6 +1,5 @@
 package com.giedriusmecius.listings.utils.extensions
 
-import android.util.Log
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle

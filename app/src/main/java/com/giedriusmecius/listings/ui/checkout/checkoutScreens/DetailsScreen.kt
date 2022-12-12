@@ -6,6 +6,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -124,14 +126,13 @@ fun CartDetails(cartItems: List<Product>, modifier: Modifier) {
 fun ScrollIndicator(listState: LazyListState, size: Int) {
     var selectItemIndex = 1
 
-    if (listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset <= LocalConfiguration.current.screenWidthDp * 80 / 100) {
-        selectItemIndex = 0
-    } else if (selectItemIndex != 1) {
-        selectItemIndex = listState.firstVisibleItemIndex
-    } else if (selectItemIndex == 1 && listState.firstVisibleItemScrollOffset <= LocalConfiguration.current.screenWidthDp * 80 / 100) {
-        selectItemIndex = listState.firstVisibleItemIndex
-    } else {
-        selectItemIndex = listState.firstVisibleItemIndex + 1
+    when {
+        listState.firstVisibleItemIndex == 0 && listState.firstVisibleItemScrollOffset <= LocalConfiguration.current.screenWidthDp * 80 / 100 -> selectItemIndex =
+            0
+        selectItemIndex != 1 -> selectItemIndex = listState.firstVisibleItemIndex
+        selectItemIndex == 1 && listState.firstVisibleItemScrollOffset <= LocalConfiguration.current.screenWidthDp * 80 / 100 -> selectItemIndex =
+            listState.firstVisibleItemIndex
+        else -> selectItemIndex = listState.firstVisibleItemIndex + 1
     }
 
     LazyRow(Modifier.padding(vertical = 8.dp)) {

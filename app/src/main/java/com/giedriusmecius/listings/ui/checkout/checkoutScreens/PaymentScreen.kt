@@ -1,5 +1,6 @@
 package com.giedriusmecius.listings.ui.checkout.checkoutScreens
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -46,7 +47,8 @@ fun PaymentScreen(
     modifier: Modifier,
     paymentMethodList: List<PaymentMethod>,
     selectedCard: PaymentMethod,
-    onPaymentMethodChange: (PaymentMethod) -> Unit
+    onPaymentMethodChange: (PaymentMethod) -> Unit,
+    onAddPaymentMethod: () -> Unit
 ) {
 
     val listState = rememberLazyListState()
@@ -109,7 +111,7 @@ fun PaymentScreen(
                     height = Dimension.wrapContent
                 }, null, "Add card", null, true
         ) {
-
+            onAddPaymentMethod()
         }
 
         AddCouponCodeContainer(modifier
@@ -146,8 +148,8 @@ fun PaymentMethodCard(
     isFirst: Boolean,
     onClick: () -> Unit
 ) {
-
-    var ccType: Pair<Int, String> = Pair(0, "")
+    var cardNumber = "****${method.number.toString().takeLast(4)}"
+    var ccType: Pair<Int, String>
     when (method.type) {
         CardType.VISA -> {
             ccType = Pair(R.drawable.icon_visa, "Visa")
@@ -155,7 +157,9 @@ fun PaymentMethodCard(
         CardType.MASTERCARD -> {
             ccType = Pair(R.drawable.icon_mastercard, "Visa")
         }
-        else -> {}
+        else -> {
+            ccType = Pair(R.drawable.icon_card, "Card")
+        }
     }
 
     val itemPadding = if (isFirst) 24.dp else 0.dp
@@ -184,18 +188,21 @@ fun PaymentMethodCard(
             modifier = Modifier.fillMaxSize().padding(12.dp)
         ) {
             val (icon, cardType, cardNumb) = createRefs()
-            Image(
-                painter = painterResource(ccType.first),
-                modifier = Modifier
-                    .size(width = 48.dp, height = 32.dp)
-                    .constrainAs(icon) {
-                        top.linkTo(parent.top)
-                        start.linkTo(parent.start)
-                        width = Dimension.wrapContent
-                        height = Dimension.wrapContent
-                    },
-                contentDescription = null
-            )
+            Log.d("MANOPay", "$ccType")
+            if (ccType.first != null && ccType.second != null) {
+                Image(
+                    painter = painterResource(ccType.first),
+                    modifier = Modifier
+                        .size(width = 48.dp, height = 32.dp)
+                        .constrainAs(icon) {
+                            top.linkTo(parent.top)
+                            start.linkTo(parent.start)
+                            width = Dimension.wrapContent
+                            height = Dimension.wrapContent
+                        },
+                    contentDescription = null
+                )
+            }
 
             Text(
                 text = ccType.second,
@@ -207,7 +214,7 @@ fun PaymentMethodCard(
                     height = Dimension.fillToConstraints
                 }.padding(bottom = 4.dp)
             )
-            Text(text = "****5431", style = H3BOLD, modifier = Modifier.constrainAs(cardNumb) {
+            Text(text = cardNumber, style = H3BOLD, modifier = Modifier.constrainAs(cardNumb) {
                 start.linkTo(parent.start)
                 bottom.linkTo(parent.bottom)
                 width = Dimension.wrapContent

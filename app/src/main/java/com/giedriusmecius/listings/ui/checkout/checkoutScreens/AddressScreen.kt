@@ -54,14 +54,39 @@ import com.giedriusmecius.listings.ui.views.ListingsOutlinedButton
 fun AddressScreen(
     modifier: Modifier,
     addresses: List<UserAddress>,
-    onAddressChange: (UserAddress) -> Unit
+    selectedAddress: UserAddress,
+    onAddressChange: (UserAddress) -> Unit,
+    onEditClick: (UserAddress) -> Unit,
+    onAddNewAddress: (UserAddress) -> Unit
 ) {
     val addressScrollState = rememberScrollState()
-    var selectedAddress by remember { mutableStateOf(addresses.first()) }
+    var selectedAddr by remember {
+        if (selectedAddress.addressLabel.isNotEmpty()) {
+            mutableStateOf(selectedAddress)
+        } else {
+            mutableStateOf(addresses.first())
+        }
+    }
+
     val listState = rememberLazyListState()
+    val emptyAddress = UserAddress(
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+    )
 
     // pasicheckint kaip tokioj vietoj reiketu elgtis. nes cia gal kokio effect reikia?
-    onAddressChange(selectedAddress)
+    onAddressChange(selectedAddr)
+    Log.d("MANOaddressScreen", "${selectedAddr.addressLabel} ${addresses.first().addressLabel}")
 
     ConstraintLayout(
         modifier = modifier
@@ -95,12 +120,14 @@ fun AddressScreen(
                             address = it,
                             estimateDeliveryDate = "15th next week",
                             shippingPrice = 5.0,
-                            isSelected = it == selectedAddress,
+                            isSelected = it == selectedAddr,
                             onSelect = {
-                                selectedAddress = it
+                                selectedAddr = it
                                 onAddressChange(it)
                             },
-                            onEditClick = { Log.d("MANO", "onEDITCLICK") }
+                            onEditClick = {
+                                onEditClick(it)
+                            }
                         )
                     }
                     addresses.last() -> {
@@ -108,29 +135,29 @@ fun AddressScreen(
                             address = it,
                             estimateDeliveryDate = "15th next week",
                             shippingPrice = 5.0,
-                            isSelected = it == selectedAddress,
+                            isSelected = it == selectedAddr,
                             onSelect = {
-                                selectedAddress = it
+                                selectedAddr = it
                                 onAddressChange(it)
                             },
-                            onEditClick = { Log.d("MANO", "onEDITCLICK") }
+                            onEditClick = { onEditClick(it) }
                         )
                         ListingsOutlinedButton(
                             modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp)
                                 .fillMaxWidth(), null, "Add Address", null, true
-                        ) { Log.d("GIEDRIUS", "add address") }
+                        ) { onAddNewAddress(emptyAddress) }
                     }
                     else -> {
                         AddressItem(
                             address = it,
                             estimateDeliveryDate = "15th next week",
                             shippingPrice = 5.0,
-                            isSelected = it == selectedAddress,
+                            isSelected = it == selectedAddr,
                             onSelect = {
-                                selectedAddress = it
+                                selectedAddr = it
                                 onAddressChange(it)
                             },
-                            onEditClick = { Log.d("MANO", "onEDITCLICK") }
+                            onEditClick = { onEditClick(it) }
                         )
                     }
                 }
@@ -329,10 +356,15 @@ fun PreviewAddressItem() {
     }
 }
 
-@Preview
-@Composable
-fun AddressScreenPreview() {
-    Scaffold() {
-        AddressScreen(modifier = Modifier, emptyList()) {}
-    }
-}
+//@Preview
+//@Composable
+//fun AddressScreenPreview() {
+//    Scaffold() {
+//        AddressScreen(
+//            modifier = Modifier,
+//            emptyList(),
+//            onAddressChange = {},
+//            onEditClick = {},
+//            onAddNewAddress = {})
+//    }
+//}

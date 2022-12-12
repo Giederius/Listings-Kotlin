@@ -1,5 +1,6 @@
 package com.giedriusmecius.listings.ui.checkout
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.giedriusmecius.listings.data.local.PaymentMethod
 import com.giedriusmecius.listings.data.local.User
@@ -32,14 +33,59 @@ class CheckoutViewModel @Inject constructor(
     val cartItems: MutableLiveData<List<Product>>
         get() = fetchedCartItems
 
+    private val selectedUserAddress = MutableLiveData<UserAddress>()
+    val selectedAddress: MutableLiveData<UserAddress>
+        get() = selectedUserAddress
+
+//    private val selectedPaymentMethod = MutableLiveData<PaymentMethod>()
+//    val selectedPayment: MutableLiveData<PaymentMethod>
+//        get() = selectedPaymentMethod
+
     override fun handleState(newState: CheckoutState) {
         return when (val req = newState.request) {
             is CheckoutState.Request.FetchData -> {
                 fetchedUser.value = userPreferences.getUser()
                 fetchedAddresses.value = fetchedUser.value!!.addresses
                 fetchedPaymentMethods.value =
-                    userPreferences.getUser().paymentMethods.toList() + userPreferences.getUser().paymentMethods.toList() + userPreferences.getUser().paymentMethods.toList()
+                    userPreferences.getUser().paymentMethods.toList()
                 fetchedCartItems.value = userPreferences.getAllProducts()[0].products
+            }
+            is CheckoutState.Request.HandleAddressEdit -> {
+                val list = mutableListOf<UserAddress>()
+                fetchedAddresses.value?.map {
+                    if (it == req.oldAddress) {
+                        list.add(req.newAddress)
+                    } else {
+                        list.add(it)
+                    }
+                }
+                fetchedAddresses.value = list
+
+                val user = userPreferences.getUser()
+                val updatedUser = user.copy(addresses = list.map { it })
+                userPreferences.saveUser(updatedUser)
+
+                selectedUserAddress.value = req.newAddress
+            }
+            is CheckoutState.Request.HandleNewAddress -> {
+                val list = fetchedAddresses.value?.toMutableList()
+                list?.add(req.newAddress)
+                fetchedAddresses.value = list
+                val user = userPreferences.getUser()
+
+                val updatedUser = user.copy(addresses = list!!.map { it })
+                userPreferences.saveUser(updatedUser)
+
+                selectedUserAddress.value = req.newAddress
+            }
+            is CheckoutState.Request.HandleNewPaymentMethod -> {
+                val list = fetchedPaymentMethods.value?.toMutableList()
+                list?.add(req.paymentMethod)
+                fetchedPaymentMethods.value = list
+                val user = userPreferences.getUser()
+
+                val updatedUser = user.copy(paymentMethods = list!!.map { it })
+                userPreferences.saveUser(updatedUser)
             }
             else -> {}
         }
