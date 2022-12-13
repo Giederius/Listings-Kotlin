@@ -46,11 +46,12 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.fragment.app.viewModels
 import com.giedriusmecius.listings.MainActivity
 import com.giedriusmecius.listings.R
-import com.giedriusmecius.listings.data.remote.model.product.Product
+import com.giedriusmecius.listings.data.remote.model.product.InCartProduct
 import com.giedriusmecius.listings.databinding.FragmentCartBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.composeItems.LazyCart
 import com.giedriusmecius.listings.ui.common.composeStyles.H1
+import com.giedriusmecius.listings.ui.common.composeStyles.H2
 import com.giedriusmecius.listings.ui.common.composeStyles.H3SEMIBOLD
 import com.giedriusmecius.listings.ui.common.composeStyles.H5
 import com.giedriusmecius.listings.ui.common.composeStyles.H5Black
@@ -119,7 +120,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
                 )
                 .padding(bottom = 32.dp)
         ) {
-            val (topBar, cartItems, price, checkoutBtn) = createRefs()
+            val (topBar, cartItems, price, checkoutBtn, emptyCart) = createRefs()
             topBar(
                 scrollOffset,
                 Modifier.constrainAs(topBar) {
@@ -129,17 +130,25 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
                     bottom.linkTo(cartItems.top)
                 })
 
-            LazyCart(
-                data = data,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .constrainAs(cartItems) {
-                        top.linkTo(topBar.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(price.top)
-                        height = Dimension.fillToConstraints
-                    },
+            if (data.isEmpty()) {
+                Text("Your cart is empty", style = H2, modifier = Modifier.constrainAs(emptyCart) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                })
+            } else {
+                LazyCart(
+                    data = data,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .constrainAs(cartItems) {
+                            top.linkTo(topBar.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(price.top)
+                            height = Dimension.fillToConstraints
+                        },
 //                    .drawWithContent {
 //                        val gradient =
 //                            Brush.verticalGradient(
@@ -163,46 +172,50 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
 //                                drawRect(gradient, blendMode = BlendMode.Screen)
 //                            }
 //                    },
-                listState = scrollState,
-                onDelete = ::removeFromCart,
-                onEdit = { Log.d("MANO", "edt") },
-                onSave = { Log.d("MANO", "save") })
-
-            Row(
-                modifier = Modifier
-                    .padding(horizontal = 24.dp)
-                    .fillMaxWidth()
-                    .constrainAs(price) {
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        bottom.linkTo(checkoutBtn.top)
-                    }
-                    .padding(bottom = 16.dp, top = 8.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text(text = "Subtotal(VAT included)", style = H5)
-                Text(text = totalPrice.toCurrency(), style = H5Black)
-            }
-
-            ListingsButtonComposable(
-                modifier = Modifier
-                    .height(48.dp)
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .indication(
-                        interactionSource = interactionSource,
-                        indication = rememberRipple(color = Color.Red)
-                    )
-                    .clip(RoundedCornerShape(12.dp))
-                    .constrainAs(checkoutBtn) {
-                        bottom.linkTo(parent.bottom)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
+                    listState = scrollState,
+                    onDelete = ::removeFromCart,
+                    onEdit = {
+                        Log.d("MANO", "${it.id} ${it.title}")
+                        navigate(CartFragmentDirections.cartFragmentToProductFragment(it.id))
                     },
-                letter = "Continue to checkout",
-                isEnabled = true,
-                onClick = { vm.machine.transition(CartState.Event.TappedCheckout(totalPrice)) }
-            )
+                    onSave = { Log.d("MANO", "save") })
+
+                Row(
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp)
+                        .fillMaxWidth()
+                        .constrainAs(price) {
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            bottom.linkTo(checkoutBtn.top)
+                        }
+                        .padding(bottom = 16.dp, top = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    Text(text = "Subtotal(VAT included)", style = H5)
+                    Text(text = totalPrice.toCurrency(), style = H5Black)
+                }
+
+                ListingsButtonComposable(
+                    modifier = Modifier
+                        .height(48.dp)
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                        .indication(
+                            interactionSource = interactionSource,
+                            indication = rememberRipple(color = Color.Red)
+                        )
+                        .clip(RoundedCornerShape(12.dp))
+                        .constrainAs(checkoutBtn) {
+                            bottom.linkTo(parent.bottom)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        },
+                    letter = "Continue to checkout",
+                    isEnabled = true,
+                    onClick = { vm.machine.transition(CartState.Event.TappedCheckout(totalPrice)) }
+                )
+            }
         }
     }
 
@@ -298,7 +311,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
         (activity as MainActivity).showBottomNavBar()
     }
 
-    private fun removeFromCart(item: Product) {
+    private fun removeFromCart(item: InCartProduct) {
         vm.machine.transition(CartState.Event.DeletedProduct(item))
     }
 

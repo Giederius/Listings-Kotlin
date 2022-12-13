@@ -5,42 +5,73 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.ExperimentalMotionApi
+import androidx.constraintlayout.compose.layoutId
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import coil.compose.rememberAsyncImagePainter
+import com.giedriusmecius.listings.MainActivity
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.databinding.FragmentProductBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
+import com.giedriusmecius.listings.ui.common.composeStyles.H5
+import com.giedriusmecius.listings.ui.common.composeStyles.H5Black
+import com.giedriusmecius.listings.ui.common.composeStyles.H5White
+import com.giedriusmecius.listings.ui.common.composeStyles.ListingsPurple
 import com.giedriusmecius.listings.ui.common.composeStyles.Neutral10
+import com.giedriusmecius.listings.ui.views.ListingsButtonComposable
+import com.giedriusmecius.listings.ui.views.ListingsOutlinedButton
+import com.giedriusmecius.listings.utils.extensions.toCurrency
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBinding::inflate) {
     private val vm by viewModels<ProductViewModel>()
+    private val args by navArgs<ProductFragmentArgs>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,6 +85,12 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        vm.transition(ProductState.Event.ViewCreated(args.productID))
+        (activity as MainActivity).hideBottomNavBar()
+    }
+
 //    override fun observeState() {
 //        vm.subscribeWithAutoDispose(this) { _, newState ->
 //            when (val cmd = newState.command) {
@@ -62,53 +99,158 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
 //        }
 //    }
 
+    @OptIn(ExperimentalAnimationApi::class)
     @Composable
     fun MainContainer() {
-        Column(modifier = Modifier.background(Color.White)) {
-            val data by vm.products.observeAsState(initial = emptyList())
-            ProductTopBar()
-            ProductMainDetails(data?.first())
-            Divider()
-        }
-    }
+        val product by vm.product.observeAsState()
 
-    @Composable
-    fun Divider() {
-        Image(
-            painter = painterResource(id = R.drawable.bg_rounded_rect_sm_border),
-            contentDescription = null,
-            modifier = Modifier.size(width = 56.dp, height = 4.dp).padding(top = 24.dp),
-            alignment = Alignment.Center,
-            colorFilter = ColorFilter.tint(Neutral10)
-        )
-    }
+        Column(
+            modifier = Modifier.background(Color.White),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
 
-    @Preview
-    @Composable
-    fun DividerPreview(){
-        Divider()
-    }
-
-    @Composable
-    fun ProductMainDetails(data: Product? = null) {
-        val imgList = listOf(data?.image, data?.image, data?.image)
-        val listState: LazyListState = rememberLazyListState()
-        LazyRow(state = listState) {
-            items(items = imgList) { img ->
-                ProductImage(isFirst = img == imgList.first(), img = img ?: "") {
-                    Log.d(
-                        "MANO",
-                        "clicked img"
-                    )
+            // cia gal butu visai cool pasidaryti kaip yra galvijuos, su papildomais state(loading, success, error), kad UI butu galima geriau tvarkyt?
+            AnimatedContent(targetState = product) {
+                when (product) {
+                    null -> {
+                        CircularProgressIndicator(Modifier)
+                    }
+                    else -> {
+                        ProductFragmentScreen(product!!, Modifier.fillMaxSize())
+                    }
                 }
             }
         }
     }
 
     @Composable
-    fun ProductTopBar() {
+    fun ProductFragmentScreen(product: Product, modifier: Modifier) {
+        ConstraintLayout(modifier = modifier.fillMaxSize()) {
+            val (topbar, bottomBar, productDetails) = createRefs()
+
+            ProductTopBar(modifier = Modifier.constrainAs(topbar) {
+                top.linkTo(parent.top)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                width = Dimension.fillToConstraints
+                height = Dimension.wrapContent
+            })
+            TopProductScreen(product, Modifier.constrainAs(productDetails) {
+                top.linkTo(topbar.bottom)
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(bottomBar.top)
+                width = Dimension.fillToConstraints
+                height = Dimension.fillToConstraints
+            })
+            ProductBottomBar(
+                modifier = Modifier
+                    .padding(bottom = 16.dp)
+                    .constrainAs(bottomBar) {
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                        height = Dimension.wrapContent
+                    }
+            )
+        }
+    }
+
+    @Composable
+    fun TopProductScreen(product: Product, modifier: Modifier) {
+        Column(
+            modifier = modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceEvenly,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            ProductMainDetails(product)
+
+        }
+    }
+
+    @OptIn(ExperimentalMotionApi::class)
+    @Composable
+    fun ProductMainDetails(product: Product? = null) {
+        val imgList = listOf(product?.image, product?.image, product?.image)
+        val listState: LazyListState = rememberLazyListState()
+        val scrollState = rememberScrollState()
+        val progress = (scrollState.value.toFloat() / 100).takeIf { it <= 1 } ?: 1F
+        val context = LocalContext.current
+        val motionSceneContent = remember {
+            context.resources
+                .openRawResource(R.raw.product_motion_scene)
+                .readBytes()
+                .decodeToString()
+        }
+
+//        MotionLayout(motionScene = MotionScene(motionSceneContent), progress = progress) {
+        Column() {
+            LazyRow(state = listState, modifier = Modifier.layoutId("imgLazyRow")) {
+                items(items = imgList) { img ->
+                    ProductImage(isFirst = img == imgList.first(), img = img ?: "") {
+                        Log.d(
+                            "MANO",
+                            "clicked img"
+                        )
+                    }
+                }
+            }
+            Divider(
+                modifier = Modifier.width(56.dp).height(4.dp).layoutId("divider"),
+                color = Neutral10
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).layoutId("titleIMG"),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = product?.title ?: "", style = H5)
+                Image(
+                    painter = rememberAsyncImagePainter(""),
+                    modifier = Modifier.clip(CircleShape).size(48.dp),
+                    contentDescription = null
+                )
+            }
+            Text(
+                text = product?.price?.toCurrency() ?: "",
+                style = H5Black,
+                modifier = Modifier.padding(start = 24.dp).layoutId("price")
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp)
+                    .padding(bottom = 36.dp).layoutId("buttonRow"),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                ListingsOutlinedButton(
+                    modifier = Modifier.height(48.dp).padding(end = 3.5.dp).weight(1F),
+                    null,
+                    text = "Color",
+                    color = Color.Blue,
+                    false,
+                ) {
+
+                }
+                ListingsOutlinedButton(
+                    modifier = Modifier.height(48.dp).padding(start = 3.5.dp).weight(1F),
+                    null,
+                    text = "Size",
+                    null,
+                    true,
+                ) {
+
+                }
+            }
+        }
+//        }
+
+    }
+
+    @Composable
+    fun ProductTopBar(modifier: Modifier) {
         ConstraintLayout(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
@@ -123,6 +265,8 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
                         start.linkTo(parent.start)
                         top.linkTo(parent.top)
                         bottom.linkTo(parent.bottom)
+                    }.clickable {
+                        navigateUp()
                     })
             Icon(
                 painterResource(id = R.drawable.ic_bookmark),
@@ -149,6 +293,55 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
         }
     }
 
+    @OptIn(ExperimentalAnimationApi::class)
+    @Composable
+    fun ProductBottomBar(modifier: Modifier) {
+        var isCartActive by remember { mutableStateOf(false) }
+
+        Log.d("MANO", "$isCartActive")
+        AnimatedContent(targetState = isCartActive, modifier = modifier.padding(horizontal = 24.dp)) {
+            when (isCartActive) {
+                true -> {
+                    Row(
+                        modifier = modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        ListingsOutlinedButton(
+                            modifier = Modifier.height(48.dp).padding(end = 3.5.dp).weight(1F),
+                            null,
+                            text = "Remove",
+                            color = null,
+                            true,
+                        ) {
+
+                        }
+                        ListingsButtonComposable(
+                            modifier = Modifier.height(48.dp).padding(start = 3.5.dp).weight(1F),
+                            null,
+                            letter = "Add to cart",
+                            null,
+                            true,
+                        ) {
+
+                        }
+                    }
+                }
+                false -> {
+                    ListingsButtonComposable(
+                        modifier.fillMaxWidth(),
+                        null,
+                        "Add to card",
+                        null,
+                        true
+                    ) {
+                        isCartActive = true
+                    }
+                }
+            }
+
+        }
+    }
+
     @Composable
     fun ProductImage(isFirst: Boolean, img: String, onClick: () -> Unit) {
         if (isFirst) {
@@ -170,6 +363,15 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
                     .size(width = 375.dp, height = 396.dp)
                     .clickable { onClick() }
             )
+        }
+    }
+
+    @Composable
+    fun AddedToCartIndicator() {
+        Row(modifier = Modifier.background(color = ListingsPurple).height(64.dp).fillMaxWidth()) {
+            Image(painter = painterResource(R.drawable.ic_shopping_cart), contentDescription = null)
+            Text(text = "Shopping cart", style = H5White)
+            Image(painter = painterResource(R.drawable.icon_arrow_right), contentDescription = null)
         }
     }
 

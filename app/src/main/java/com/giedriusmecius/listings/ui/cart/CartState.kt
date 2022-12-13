@@ -1,5 +1,6 @@
 package com.giedriusmecius.listings.ui.cart
 
+import com.giedriusmecius.listings.data.remote.model.product.InCartProduct
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.utils.state.State
 
@@ -7,24 +8,24 @@ import com.giedriusmecius.listings.utils.state.State
 data class CartState(
     val command: Command? = null,
     val request: Request? = null,
-    val cartItems: List<Product> = emptyList()
+    val cartItems: List<InCartProduct> = emptyList()
 ) :
     State<CartState, CartState.Event> {
     sealed class Event {
         object ViewCreated : Event()
 
         //        data class ReceivedProducts(val list: List<Product>) : Event()
-        data class DeletedProduct(val item: Product) : Event()
+        data class DeletedProduct(val item: InCartProduct) : Event()
         data class TappedCheckout(val price: Float) : Event()
     }
 
     sealed class Command {
-        data class StartCheckout(val cartItems: List<Product>, val price: Float) : Command()
+        data class StartCheckout(val cartItems: List<InCartProduct>, val price: Float) : Command()
     }
 
     sealed class Request {
         object FetchData : Request()
-        data class DeleteProductFromCart(val item: Product) : Request()
+        data class DeleteProductFromCart(val item: InCartProduct) : Request()
     }
 
     override fun reduce(event: Event): CartState {

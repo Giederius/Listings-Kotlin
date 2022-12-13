@@ -41,6 +41,7 @@ import androidx.constraintlayout.compose.Dimension
 import coil.compose.rememberAsyncImagePainter
 import com.giedriusmecius.listings.data.local.PaymentMethod
 import com.giedriusmecius.listings.data.local.UserAddress
+import com.giedriusmecius.listings.data.remote.model.product.InCartProduct
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.ui.common.composeStyles.DisabledBackgroundColor
 import com.giedriusmecius.listings.ui.common.composeStyles.H2
@@ -59,7 +60,7 @@ import com.giedriusmecius.listings.utils.extensions.toCurrency
 @Composable
 fun DetailsScreen(
     modifier: Modifier,
-    cartItems: List<Product>,
+    cartItems: List<InCartProduct>,
     paymentMethod: PaymentMethod,
     address: UserAddress
 ) {
@@ -102,7 +103,7 @@ fun DetailsScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CartDetails(cartItems: List<Product>, modifier: Modifier) {
+fun CartDetails(cartItems: List<InCartProduct>, modifier: Modifier) {
     val listState = rememberLazyListState()
     val snapBehavior = rememberSnapFlingBehavior(listState)
 
@@ -149,7 +150,7 @@ fun ScrollIndicator(listState: LazyListState, size: Int) {
 }
 
 @Composable
-fun CartDetailsItem(item: Product) {
+fun CartDetailsItem(item: InCartProduct) {
 
     val screenWidth = LocalConfiguration.current.screenWidthDp * 80 / 100
     Column(
@@ -181,7 +182,7 @@ fun CartDetailsItem(item: Product) {
 }
 
 @Composable
-fun ItemPriceList(cartItems: List<Product>, modifier: Modifier) {
+fun ItemPriceList(cartItems: List<InCartProduct>, modifier: Modifier) {
     val totalPrice =
         calculateTotalPrice(cartItems) // cia jauciu perskaiciuos kiekviena karta ant perpiesimo
     val taxes = totalPrice * 0.21

@@ -4,6 +4,7 @@ import android.animation.ArgbEvaluator
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -22,6 +23,11 @@ fun getColorAtProgress(progress: Float, start: Color, end: Color, evaluator: Arg
 fun DashedDivider(modifier: Modifier, color: Color, thickness: Int) {
     val pathEffect = PathEffect.dashPathEffect(floatArrayOf(40f, 20f), 2f)
     Canvas(modifier.fillMaxWidth().height(thickness.dp)) {
-        drawLine(color = DisabledBackgroundColor, start = Offset(0f,0f), end = Offset(size.width, 0f), pathEffect = pathEffect)
+        drawLine(
+            color = DisabledBackgroundColor,
+            start = Offset(0f, 0f),
+            end = Offset(size.width, 0f),
+            pathEffect = pathEffect
+        )
     }
 }

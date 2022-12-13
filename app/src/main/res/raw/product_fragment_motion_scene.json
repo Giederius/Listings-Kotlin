@@ -1,0 +1,12 @@
+{
+  "ConstraintSets": {
+    "start": {
+      "imgLazyRow": {
+        "start": ["parent","start"],
+        "top": ["parent","top"],
+        "end" : ["parent","end"],
+        "height": [],
+      }
+    }
+  }
+}

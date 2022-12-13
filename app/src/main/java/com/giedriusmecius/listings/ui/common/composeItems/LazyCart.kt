@@ -8,17 +8,18 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.giedriusmecius.listings.data.remote.model.product.InCartProduct
 import com.giedriusmecius.listings.data.remote.model.product.Product
 
 @Composable
 fun LazyCart(
-    data: List<Product>,
+    data: List<InCartProduct>,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
-    onDelete: (Product) -> Unit,
-    onEdit: (Product) -> Unit,
-    onSave: (Product) -> Unit,
+    onDelete: (InCartProduct) -> Unit,
+    onEdit: (InCartProduct) -> Unit,
+    onSave: (InCartProduct) -> Unit,
 ) {
     LazyColumn(
         state = listState,

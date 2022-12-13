@@ -21,7 +21,7 @@ data class ProductState(val request: Request? = null, var command: Command? = nu
 
     override fun reduce(event: Event): ProductState {
         return when (event) {
-            is Event.ViewCreated -> copy(request = Request.FetchData)
+            is Event.ViewCreated -> copy(request = Request.FetchProduct(event.productId))
             is Event.ReceivedProduct -> copy(command = Command.DisplayProduct(event.product))
         }
     }

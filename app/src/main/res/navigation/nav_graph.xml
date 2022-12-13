@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/cartFragment">
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/splashFragment"
@@ -114,6 +114,9 @@
         <action
             android:id="@+id/cartFragment_to_checkoutFragment"
             app:destination="@id/checkoutFragment" />
+        <action
+            android:id="@+id/cartFragmentToProductFragment"
+            app:destination="@id/productFragment" />
     </fragment>
 
     <fragment
@@ -127,8 +130,9 @@
         <action
             android:id="@+id/checkoutFragmentToAddressDialog"
             app:destination="@id/profileAddAddressDialogFragment" />
-        <action android:id="@+id/checkoutFragmentToCardDialog"
-            app:destination="@id/profileAddCardDialogFragment"/>
+        <action
+            android:id="@+id/checkoutFragmentToCardDialog"
+            app:destination="@id/profileAddCardDialogFragment" />
     </fragment>
 
     <fragment

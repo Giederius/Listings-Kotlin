@@ -7,7 +7,7 @@ import java.io.Serializable
 data class InCartProduct(
     val id: Int,
     val title: String,
-    val img: String,
+    val image: String,
     val price: Float,
     val discountedPrice: Float,
     val quantity: Int,

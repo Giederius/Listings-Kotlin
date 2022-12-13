@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.giedriusmecius.listings.data.remote.model.product.InCartProduct
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.data.remote.repository.ProductRepository
 import com.giedriusmecius.listings.utils.UserPreferences
@@ -18,15 +19,15 @@ class CartViewModel @Inject constructor(
     private val productRepository: ProductRepository
 ) : BaseViewModel<CartState, CartState.Event>(CartState()) {
 
-    private val fetchedProducts = MutableLiveData<List<Product>>()
-    val products: MutableLiveData<List<Product>>
+    private val fetchedProducts = MutableLiveData<List<InCartProduct>>()
+    val products: MutableLiveData<List<InCartProduct>>
         get() = fetchedProducts
 
     override fun handleState(newState: CartState) {
         when (val req = newState.request) {
             is CartState.Request.FetchData -> {
-                val productList = userPreferences.getAllProducts()
-                fetchedProducts.value = productList[0].products
+                val productList = userPreferences.getCartProducts()
+                fetchedProducts.value = productList
             }
             is CartState.Request.DeleteProductFromCart -> {
                 val products = fetchedProducts.value?.toMutableList()

@@ -1,6 +1,7 @@
 package com.giedriusmecius.listings.utils.extensions
 
 import android.content.res.Resources
+import com.giedriusmecius.listings.data.remote.model.product.InCartProduct
 import com.giedriusmecius.listings.data.remote.model.product.Product
 
 val Int.dp: Int
@@ -8,7 +9,7 @@ val Int.dp: Int
 val Int.px: Float
     get() = (this * Resources.getSystem().displayMetrics.density)
 
-fun calculateTotalPrice(data: List<Product>?): Float {
+fun calculateTotalPrice(data: List<InCartProduct>?): Float {
     var price = 0F
     data?.forEach {
         price += it.price

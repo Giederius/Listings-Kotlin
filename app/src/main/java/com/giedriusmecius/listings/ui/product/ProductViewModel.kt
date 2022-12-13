@@ -1,11 +1,9 @@
 package com.giedriusmecius.listings.ui.product
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.data.remote.repository.ProductRepository
-import com.giedriusmecius.listings.ui.cart.CartState
 import com.giedriusmecius.listings.utils.UserPreferences
 import com.giedriusmecius.listings.utils.state.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +20,10 @@ class ProductViewModel @Inject constructor(
     private val fetchedProducts = MutableLiveData<List<Product>>()
     val products: MutableLiveData<List<Product>>
         get() = fetchedProducts
+
+    private val fetchedProduct = MutableLiveData<Product>()
+    val product: MutableLiveData<Product>
+        get() = fetchedProduct
 
     override fun handleState(newState: ProductState) {
         when (val req = newState.request) {
@@ -41,6 +43,7 @@ class ProductViewModel @Inject constructor(
         val product = productRepository.getProduct(productId)
         val response = product.getOrNull()
         if (response != null) {
+            fetchedProduct.value = response
             transition(ProductState.Event.ReceivedProduct(response))
         }
     }
