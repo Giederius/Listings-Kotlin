@@ -6,9 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Canvas
@@ -35,7 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -68,7 +65,6 @@ import com.giedriusmecius.listings.ui.common.composeStyles.ListingsPurple
 import com.giedriusmecius.listings.ui.common.composeStyles.WarmPurple
 import com.giedriusmecius.listings.ui.profile.ProfileAddAddressDialogFragment
 import com.giedriusmecius.listings.ui.profile.ProfileAddCardDialogFragment
-import com.giedriusmecius.listings.ui.profile.ProfileState
 import com.giedriusmecius.listings.ui.views.ListingsButtonComposable
 import com.giedriusmecius.listings.utils.extensions.getNavigationResult
 import com.giedriusmecius.listings.utils.extensions.toCurrency
@@ -188,7 +184,10 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
                         if (addressList.isEmpty()) {
                             CircularProgressIndicator(Modifier)
                         } else {
-                            Log.d("MANOpreAddressScreen", "${selectedUserAddress.addressLabel} ${selectedAddress.addressLabel}")
+                            Log.d(
+                                "MANOpreAddressScreen",
+                                "${selectedUserAddress.addressLabel} ${selectedAddress.addressLabel}"
+                            )
                             AddressScreen(
                                 modifier = Modifier,
                                 addresses = addressList,
@@ -317,11 +316,17 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
         Row(
             modifier = modifier.width(240.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround
         ) {
             for (step in 0..numberOfSteps) {
+                var lastWidth = 15.dp / numberOfSteps
+                val mod: Modifier = if (step != numberOfSteps) {
+                    val width = (240.dp / numberOfSteps) - lastWidth
+                    Modifier.width(width)
+                } else {
+                    Modifier.width(15.dp)
+                }
                 Step(
-                    modifier = Modifier.weight(1F),
+                    modifier = mod,
                     stepState = when {
                         step < currentStep -> {
                             StepState.Previous
@@ -375,6 +380,9 @@ class CheckoutFragment : BaseFragment<FragmentCheckoutBinding>(FragmentCheckoutB
                 modifier = currentMod,
                 onDraw = {
                     drawCircle(color = color)
+//                    if (!isLast) {
+//                        drawLine(color = color, start = Offset.Zero, end = Offset.Zero, strokeWidth = 3F)
+//                    }
                 }
             )
             if (!isLast) {

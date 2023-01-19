@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -36,7 +35,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,6 +58,7 @@ import com.giedriusmecius.listings.databinding.FragmentProductBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.composeStyles.H5
 import com.giedriusmecius.listings.ui.common.composeStyles.H5Black
+import com.giedriusmecius.listings.ui.common.composeStyles.H5Grey
 import com.giedriusmecius.listings.ui.common.composeStyles.H5White
 import com.giedriusmecius.listings.ui.common.composeStyles.ListingsPurple
 import com.giedriusmecius.listings.ui.common.composeStyles.Neutral10
@@ -103,6 +102,7 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
     @Composable
     fun MainContainer() {
         val product by vm.product.observeAsState()
+        val inCartItems by vm.inCart.observeAsState()
 
         Column(
             modifier = Modifier.background(Color.White),
@@ -117,17 +117,19 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
                         CircularProgressIndicator(Modifier)
                     }
                     else -> {
-                        ProductFragmentScreen(product!!, Modifier.fillMaxSize())
+                        ProductFragmentScreen(product!!, inCartItems!!, Modifier.fillMaxSize())
                     }
                 }
             }
         }
     }
 
+    @OptIn(ExperimentalAnimationApi::class)
     @Composable
-    fun ProductFragmentScreen(product: Product, modifier: Modifier) {
+    fun ProductFragmentScreen(product: Product, inCartItems: Int, modifier: Modifier) {
+        val isCartActive by remember { mutableStateOf(inCartItems >= 1) }
         ConstraintLayout(modifier = modifier.fillMaxSize()) {
-            val (topbar, bottomBar, productDetails) = createRefs()
+            val (topbar, bottomBar, atcIndicator, productDetails) = createRefs()
 
             ProductTopBar(modifier = Modifier.constrainAs(topbar) {
                 top.linkTo(parent.top)
@@ -144,6 +146,17 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
                 width = Dimension.fillToConstraints
                 height = Dimension.fillToConstraints
             })
+//            AnimatedContent(targetState = isCartActive, modifier = Modifier.constrainAs(atcIndicator) {
+//                bottom.linkTo(bottomBar.top)
+//                start.linkTo(parent.start)
+//                end.linkTo(parent.end)
+//            }) {
+//                AddedToCartIndicator(inCartItems, modifier = Modifier.constrainAs(atcIndicator) {
+//                    bottom.linkTo(bottomBar.top)
+//                    start.linkTo(parent.start)
+//                    end.linkTo(parent.end)
+//                })
+//            }
             ProductBottomBar(
                 modifier = Modifier
                     .padding(bottom = 16.dp)
@@ -153,8 +166,10 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
                         end.linkTo(parent.end)
                         width = Dimension.fillToConstraints
                         height = Dimension.wrapContent
-                    }
-            )
+                    }, isCartActive
+            ) {
+                vm.transition(ProductState.Event.AddedToCart)
+            }
         }
     }
 
@@ -166,7 +181,6 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             ProductMainDetails(product)
-
         }
     }
 
@@ -186,7 +200,7 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
         }
 
 //        MotionLayout(motionScene = MotionScene(motionSceneContent), progress = progress) {
-        Column() {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             LazyRow(state = listState, modifier = Modifier.layoutId("imgLazyRow")) {
                 items(items = imgList) { img ->
                     ProductImage(isFirst = img == imgList.first(), img = img ?: "") {
@@ -216,7 +230,7 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
             Text(
                 text = product?.price?.toCurrency() ?: "",
                 style = H5Black,
-                modifier = Modifier.padding(start = 24.dp).layoutId("price")
+                modifier = Modifier.padding(start = 24.dp, bottom = 16.dp).layoutId("price")
             )
             Row(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp)
@@ -295,11 +309,12 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
 
     @OptIn(ExperimentalAnimationApi::class)
     @Composable
-    fun ProductBottomBar(modifier: Modifier) {
-        var isCartActive by remember { mutableStateOf(false) }
+    fun ProductBottomBar(modifier: Modifier, isCartActive: Boolean, onATC: () -> Unit) {
 
-        Log.d("MANO", "$isCartActive")
-        AnimatedContent(targetState = isCartActive, modifier = modifier.padding(horizontal = 24.dp)) {
+        AnimatedContent(
+            targetState = isCartActive,
+            modifier = modifier.padding(horizontal = 24.dp)
+        ) {
             when (isCartActive) {
                 true -> {
                     Row(
@@ -334,7 +349,7 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
                         null,
                         true
                     ) {
-                        isCartActive = true
+                        onATC()
                     }
                 }
             }
@@ -367,11 +382,61 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
     }
 
     @Composable
-    fun AddedToCartIndicator() {
-        Row(modifier = Modifier.background(color = ListingsPurple).height(64.dp).fillMaxWidth()) {
-            Image(painter = painterResource(R.drawable.ic_shopping_cart), contentDescription = null)
-            Text(text = "Shopping cart", style = H5White)
-            Image(painter = painterResource(R.drawable.icon_arrow_right), contentDescription = null)
+    fun AddedToCartIndicator(inCartItems: Int, modifier: Modifier) {
+//        Row(
+//            modifier = Modifier.background(color = ListingsPurple).height(64.dp).fillMaxWidth()
+//                .clickable {
+//                    navigate(ProductFragmentDirections.globalCartFragmentAction())
+//                }) {
+//            Image(painter = painterResource(R.drawable.ic_shopping_cart), contentDescription = null)
+//            Text(text = "Shopping cart", style = H5White)
+//            Image(painter = painterResource(R.drawable.icon_arrow_right), contentDescription = null)
+//        }
+
+        ConstraintLayout(
+            modifier = modifier.background(color = ListingsPurple).height(64.dp).fillMaxWidth()
+                .padding(horizontal = 24.dp)
+                .clickable {
+                    navigate(ProductFragmentDirections.globalCartFragmentAction())
+                }) {
+            val (cartIcon, text, btn, arrow) = createRefs()
+            Image(
+                painter = painterResource(R.drawable.ic_shopping_cart),
+                contentDescription = null,
+                modifier = Modifier.constrainAs(cartIcon) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                    bottom.linkTo(parent.bottom)
+                    end.linkTo(text.start)
+                }
+            )
+            Text(text = "Shopping cart", style = H5White, modifier = Modifier.constrainAs(text) {
+                start.linkTo(cartIcon.start)
+                top.linkTo(parent.top)
+                bottom.linkTo(parent.bottom)
+            })
+
+            Text(
+                text = resources.getQuantityString(R.plurals.inCartProductCount, inCartItems),
+                style = H5Grey,
+                color = ListingsPurple,
+                modifier = Modifier.background(
+                    color = Neutral10,
+                    shape = RoundedCornerShape(4.dp)
+                ).constrainAs(btn) {
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    end.linkTo(arrow.start)
+                }
+            )
+            Image(
+                painter = painterResource(R.drawable.icon_arrow_right),
+                contentDescription = null,
+                modifier = Modifier.constrainAs(arrow) {
+                    top.linkTo(parent.top)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                })
         }
     }
 

@@ -25,6 +25,10 @@ class ProductViewModel @Inject constructor(
     val product: MutableLiveData<Product>
         get() = fetchedProduct
 
+    private val inCartProducts = MutableLiveData<Int>()
+    val inCart: MutableLiveData<Int>
+        get() = inCartProducts
+
     override fun handleState(newState: ProductState) {
         when (val req = newState.request) {
             is ProductState.Request.FetchData -> {
@@ -32,9 +36,14 @@ class ProductViewModel @Inject constructor(
                 fetchedProducts.value = productList[0].products
             }
             is ProductState.Request.FetchProduct -> {
+                inCartProducts.value = userPreferences.getCartProducts().size ?: 0
                 viewModelScope.launch {
                     getProduct(req.productId)
                 }
+            }
+            is ProductState.Request.HandleATC -> {
+
+//                userPreferences.saveCartProducts(listOf(req.product))
             }
         }
     }

@@ -13,13 +13,13 @@ import com.giedriusmecius.listings.data.remote.model.product.Product
 
 @Composable
 fun LazyCart(
-    data: List<InCartProduct>,
+    data: List<Product>,
     modifier: Modifier = Modifier,
     listState: LazyListState = rememberLazyListState(),
     contentPadding: PaddingValues = PaddingValues(0.dp),
-    onDelete: (InCartProduct) -> Unit,
-    onEdit: (InCartProduct) -> Unit,
-    onSave: (InCartProduct) -> Unit,
+    onDelete: (Product) -> Unit,
+    onEdit: (Product) -> Unit,
+    onSave: (Product) -> Unit,
 ) {
     LazyColumn(
         state = listState,

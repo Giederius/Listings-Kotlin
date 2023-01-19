@@ -60,7 +60,7 @@ import com.giedriusmecius.listings.utils.extensions.toCurrency
 @Composable
 fun DetailsScreen(
     modifier: Modifier,
-    cartItems: List<InCartProduct>,
+    cartItems: List<Product>,
     paymentMethod: PaymentMethod,
     address: UserAddress
 ) {
@@ -103,7 +103,7 @@ fun DetailsScreen(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun CartDetails(cartItems: List<InCartProduct>, modifier: Modifier) {
+fun CartDetails(cartItems: List<Product>, modifier: Modifier) {
     val listState = rememberLazyListState()
     val snapBehavior = rememberSnapFlingBehavior(listState)
 
@@ -150,7 +150,7 @@ fun ScrollIndicator(listState: LazyListState, size: Int) {
 }
 
 @Composable
-fun CartDetailsItem(item: InCartProduct) {
+fun CartDetailsItem(item: Product) {
 
     val screenWidth = LocalConfiguration.current.screenWidthDp * 80 / 100
     Column(
@@ -182,7 +182,7 @@ fun CartDetailsItem(item: InCartProduct) {
 }
 
 @Composable
-fun ItemPriceList(cartItems: List<InCartProduct>, modifier: Modifier) {
+fun ItemPriceList(cartItems: List<Product>, modifier: Modifier) {
     val totalPrice =
         calculateTotalPrice(cartItems) // cia jauciu perskaiciuos kiekviena karta ant perpiesimo
     val taxes = totalPrice * 0.21

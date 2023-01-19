@@ -9,7 +9,7 @@ val Int.dp: Int
 val Int.px: Float
     get() = (this * Resources.getSystem().displayMetrics.density)
 
-fun calculateTotalPrice(data: List<InCartProduct>?): Float {
+fun calculateTotalPrice(data: List<Product>?): Float {
     var price = 0F
     data?.forEach {
         price += it.price

@@ -8,24 +8,24 @@ import com.giedriusmecius.listings.utils.state.State
 data class CartState(
     val command: Command? = null,
     val request: Request? = null,
-    val cartItems: List<InCartProduct> = emptyList()
+    val cartItems: List<Product> = emptyList()
 ) :
     State<CartState, CartState.Event> {
     sealed class Event {
         object ViewCreated : Event()
 
         //        data class ReceivedProducts(val list: List<Product>) : Event()
-        data class DeletedProduct(val item: InCartProduct) : Event()
+        data class DeletedProduct(val item: Product) : Event()
         data class TappedCheckout(val price: Float) : Event()
     }
 
     sealed class Command {
-        data class StartCheckout(val cartItems: List<InCartProduct>, val price: Float) : Command()
+        data class StartCheckout(val cartItems: List<Product>, val price: Float) : Command()
     }
 
     sealed class Request {
         object FetchData : Request()
-        data class DeleteProductFromCart(val item: InCartProduct) : Request()
+        data class DeleteProductFromCart(val item: Product) : Request()
     }
 
     override fun reduce(event: Event): CartState {

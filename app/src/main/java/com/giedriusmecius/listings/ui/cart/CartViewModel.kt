@@ -19,19 +19,20 @@ class CartViewModel @Inject constructor(
     private val productRepository: ProductRepository
 ) : BaseViewModel<CartState, CartState.Event>(CartState()) {
 
-    private val fetchedProducts = MutableLiveData<List<InCartProduct>>()
-    val products: MutableLiveData<List<InCartProduct>>
+    private val fetchedProducts = MutableLiveData<List<Product>>()
+    val products: MutableLiveData<List<Product>>
         get() = fetchedProducts
 
     override fun handleState(newState: CartState) {
         when (val req = newState.request) {
             is CartState.Request.FetchData -> {
-                val productList = userPreferences.getCartProducts()
+//                val productList = userPreferences.getCartProducts()
+                val productList = userPreferences.getAllProducts()[0].products
                 fetchedProducts.value = productList
             }
             is CartState.Request.DeleteProductFromCart -> {
                 val products = fetchedProducts.value?.toMutableList()
-                products?.remove(req.item)
+//                products?.remove(req.item)
                 fetchedProducts.value = products
                 Log.d("MANO", "REMOVED")
             }

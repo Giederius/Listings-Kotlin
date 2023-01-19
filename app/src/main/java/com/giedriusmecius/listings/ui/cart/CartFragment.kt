@@ -47,6 +47,7 @@ import androidx.fragment.app.viewModels
 import com.giedriusmecius.listings.MainActivity
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.remote.model.product.InCartProduct
+import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.databinding.FragmentCartBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.composeItems.LazyCart
@@ -300,9 +301,13 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
         mainContainer()
     }
 
+    override fun onStart() {
+        super.onStart()
+        (activity as MainActivity).hideBottomNavBar()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (activity as MainActivity).hideBottomNavBar()
         vm.transition(CartState.Event.ViewCreated)
     }
 
@@ -311,7 +316,7 @@ class CartFragment : BaseFragment<FragmentCartBinding>(FragmentCartBinding::infl
         (activity as MainActivity).showBottomNavBar()
     }
 
-    private fun removeFromCart(item: InCartProduct) {
+    private fun removeFromCart(item: Product) {
         vm.machine.transition(CartState.Event.DeletedProduct(item))
     }
 

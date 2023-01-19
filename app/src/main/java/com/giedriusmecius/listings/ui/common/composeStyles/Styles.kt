@@ -20,6 +20,12 @@ val H2 = TextStyle(
     fontFamily = FontFamily(Font(R.font.raleway_regular)),
     fontWeight = FontWeight.Medium
 )
+val H2BOLD = TextStyle(
+    color = NormalTextColor,
+    fontSize = 20.sp,
+    fontFamily = FontFamily(Font(R.font.raleway_bold)),
+    fontWeight = FontWeight.Bold
+)
 val H3 = TextStyle(
     color = NormalTextColor,
     fontSize = 18.sp,

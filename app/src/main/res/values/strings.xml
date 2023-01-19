@@ -88,4 +88,9 @@
     <string name="search.recentSearches">Recent search</string>
     <string name="search.emptySearches">You have no recent searches.</string>
 
+    <plurals name="inCartProductCount">
+        <item quantity="one">%1$s product</item>
+        <item quantity="many">%1$s products</item>
+    </plurals>
+
 </resources>
