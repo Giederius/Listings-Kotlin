@@ -5,7 +5,11 @@ import com.giedriusmecius.listings.data.remote.model.product.Product
 class CheckoutMapper : CartItemMapper<Product, CartItem> {
     override fun mapProductToCartItem(R: Product): CartItem {
         return CartItem(
-            productID = R.id, productTitle = R.title, productImg = R.image, size = null,
+            productID = R.id,
+            productTitle = R.title,
+            productImg = R.image,
+            size = null,
+            color = null,
             quantity = 3,
             itemPrice = R.price,
             discountedPrice = null,

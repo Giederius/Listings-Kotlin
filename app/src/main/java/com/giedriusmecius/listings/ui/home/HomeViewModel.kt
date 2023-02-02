@@ -1,6 +1,8 @@
 package com.giedriusmecius.listings.ui.home
 
 import androidx.lifecycle.MutableLiveData
+import com.giedriusmecius.listings.data.checkoutManager.CheckoutManager
+import com.giedriusmecius.listings.data.checkoutManager.CheckoutMapper
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.utils.UserPreferences
 import com.giedriusmecius.listings.utils.state.BaseViewModel
@@ -9,11 +11,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val userPrefs: UserPreferences
+    private val userPrefs: UserPreferences,
+    private val checkoutManager: CheckoutManager,
+    private val checkMapper: CheckoutMapper
 ) : BaseViewModel<HomeState, HomeState.Event>(HomeState()) {
 
     val _fetchedFeatured = MutableLiveData<List<Product>>()
-    val fetchedFeaturedProducts : MutableLiveData<List<Product>>
+    val fetchedFeaturedProducts: MutableLiveData<List<Product>>
         get() = _fetchedFeatured
 
 

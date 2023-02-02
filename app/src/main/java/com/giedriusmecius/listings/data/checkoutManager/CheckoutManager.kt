@@ -10,9 +10,12 @@ class CheckoutManager {
         cartItems = mutableListOf()
     }
 
-    fun addToCart(item: CartItem) {
-        if (!lookForDuplicates(item)) {
+    fun addToCart(item: CartItem): Boolean {
+        return if (!lookForDuplicates(item)) {
             cartItems.add(item)
+            true
+        } else {
+            false
         }
     }
 

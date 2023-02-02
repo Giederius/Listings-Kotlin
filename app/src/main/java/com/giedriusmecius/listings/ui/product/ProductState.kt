@@ -13,10 +13,14 @@ data class ProductState(
         data class ViewCreated(val productId: Int) : Event()
         data class ReceivedProduct(val product: Product) : Event()
         object AddedToCart : Event()
+        object SuccessfullyAddedToCart : Event()
+        object ErrorAddingToCart : Event()
     }
 
     sealed class Command {
         data class DisplayProduct(val product: Product) : Command()
+        object ShowAddedToCartIndicator : Command()
+        object ShowErrorAddingToCartIndicator : Command()
     }
 
     sealed class Request {
@@ -33,6 +37,9 @@ data class ProductState(
                 product = event.product
             )
             Event.AddedToCart -> copy(request = product?.let { Request.HandleATC(it) })
+            Event.SuccessfullyAddedToCart -> copy(command = Command.ShowAddedToCartIndicator)
+            Event.ErrorAddingToCart -> copy(command = Command.ShowErrorAddingToCartIndicator)
+            else -> copy()
         }
     }
 

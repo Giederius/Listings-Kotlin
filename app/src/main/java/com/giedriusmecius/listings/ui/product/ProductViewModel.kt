@@ -1,7 +1,10 @@
 package com.giedriusmecius.listings.ui.product
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.giedriusmecius.listings.data.checkoutManager.CheckoutManager
+import com.giedriusmecius.listings.data.checkoutManager.CheckoutMapper
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.data.remote.repository.ProductRepository
 import com.giedriusmecius.listings.utils.UserPreferences
@@ -13,7 +16,9 @@ import javax.inject.Inject
 @HiltViewModel
 class ProductViewModel @Inject constructor(
     private val productRepository: ProductRepository,
-    private val userPreferences: UserPreferences
+    private val userPreferences: UserPreferences,
+    private val checkoutManager: CheckoutManager,
+    private val checkoutMapper: CheckoutMapper
 ) :
     BaseViewModel<ProductState, ProductState.Event>(ProductState()) {
 
@@ -42,7 +47,14 @@ class ProductViewModel @Inject constructor(
                 }
             }
             is ProductState.Request.HandleATC -> {
-
+                val item = checkoutMapper.mapProductToCartItem(req.product)
+                val response = checkoutManager.addToCart(item)
+                if (response) {
+                    transition(ProductState.Event.SuccessfullyAddedToCart)
+                    Log.d("MANO", "${checkoutManager.cartItems.size}")
+                } else {
+                    transition(ProductState.Event.ErrorAddingToCart)
+                }
 //                userPreferences.saveCartProducts(listOf(req.product))
             }
         }

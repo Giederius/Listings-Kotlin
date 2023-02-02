@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
@@ -65,6 +66,7 @@ import com.giedriusmecius.listings.ui.common.composeStyles.Neutral10
 import com.giedriusmecius.listings.ui.views.ListingsButtonComposable
 import com.giedriusmecius.listings.ui.views.ListingsOutlinedButton
 import com.giedriusmecius.listings.utils.extensions.toCurrency
+import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -90,13 +92,23 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
         (activity as MainActivity).hideBottomNavBar()
     }
 
-//    override fun observeState() {
-//        vm.subscribeWithAutoDispose(this) { _, newState ->
-//            when (val cmd = newState.command) {
-//
-//            }
-//        }
-//    }
+    override fun observeState() {
+        vm.subscribeWithAutoDispose(this) { _, newState ->
+            when (val cmd = newState.command) {
+                is ProductState.Command.ShowAddedToCartIndicator -> {
+                    Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show()
+                }
+                is ProductState.Command.ShowErrorAddingToCartIndicator -> {
+
+                }
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        (activity as MainActivity).showBottomNavBar()
+    }
 
     @OptIn(ExperimentalAnimationApi::class)
     @Composable

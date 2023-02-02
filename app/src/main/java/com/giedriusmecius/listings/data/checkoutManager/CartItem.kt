@@ -7,6 +7,7 @@ data class CartItem(
     val productTitle: String,
     val productImg: String,
     val size: Size?,
+    val color: Pair<String, String>?,
     val quantity: Int,
     val itemPrice: Float,
     val discountedPrice: Float? = null,
