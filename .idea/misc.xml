@@ -4,12 +4,6 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../Users/giedriusmeciusmp/Desktop/MP/PastBook-master/caches/transforms-3/add5d8df2bc9abff84be18e829bee762/transformed/appcompat-1.4.1/res/drawable/abc_btn_default_mtrl_shape.xml" value="0.229" />
-        <entry key="../../../layout/compose-model-1661162474292.xml" value="0.30925925925925923" />
-        <entry key="../../../layout/compose-model-1661163450177.xml" value="0.2079124579124579" />
-        <entry key="../../../layout/compose-model-1661163525502.xml" value="0.30925925925925923" />
-        <entry key="../../../layout/compose-model-1665731922490.xml" value="0.15541666666666668" />
-        <entry key="../../../layout/compose-model-1665734989930.xml" value="0.33" />
-        <entry key="../../../layout/compose-model-1666064006605.xml" value="0.15541666666666668" />
         <entry key="app/src/main/res/drawable/bg_dialog_rounded_top.xml" value="0.2565" />
         <entry key="app/src/main/res/drawable/bg_generic_selector.xml" value="0.249" />
         <entry key="app/src/main/res/drawable/bg_listings_button.xml" value="0.162" />
@@ -24,7 +18,6 @@
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.211" />
         <entry key="app/src/main/res/drawable/ic_settings.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/ic_sort.xml" value="0.211" />
-        <entry key="app/src/main/res/drawable/item_chip_icon.xml" value="0.167" />
         <entry key="app/src/main/res/drawable/item_dot.xml" value="0.1335" />
         <entry key="app/src/main/res/drawable/item_dot_selected.xml" value="0.196" />
         <entry key="app/src/main/res/drawable/item_dot_selector.xml" value="0.196" />
@@ -34,33 +27,28 @@
         <entry key="app/src/main/res/drawable/item_listings_button_pressed.xml" value="0.1965" />
         <entry key="app/src/main/res/drawable/item_payment_method_card.xml" value="0.1965" />
         <entry key="app/src/main/res/drawable/listings_button_pressed.xml" value="0.1965" />
-        <entry key="app/src/main/res/drawable/radio_button_selector.xml" value="0.177" />
         <entry key="app/src/main/res/font-v26/raleway.xml" value="0.30132788559754853" />
         <entry key="app/src/main/res/font/bodonimoda.xml" value="0.30132788559754853" />
         <entry key="app/src/main/res/font/raleway.xml" value="0.30132788559754853" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/dialog_collection_fragment.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/dialog_color_selection_fragment.xml" value="0.26875" />
         <entry key="app/src/main/res/layout/dialog_department_selection.xml" value="0.22552083333333334" />
         <entry key="app/src/main/res/layout/dialog_profile_add_address.xml" value="0.25" />
         <entry key="app/src/main/res/layout/dialog_profile_add_card.xml" value="0.2833333333333333" />
         <entry key="app/src/main/res/layout/dialog_profile_drawers_adjust.xml" value="0.22552083333333334" />
         <entry key="app/src/main/res/layout/dialog_profile_following_bottom_sheet.xml" value="0.335" />
-        <entry key="app/src/main/res/layout/dialog_search_sort.xml" value="0.3578125" />
         <entry key="app/src/main/res/layout/dialog_size.xml" value="0.3625" />
+        <entry key="app/src/main/res/layout/fragment_checkout.xml" value="0.3880445795339412" />
         <entry key="app/src/main/res/layout/fragment_demo.xml" value="0.14293670654296875" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.2913486005089059" />
-        <entry key="app/src/main/res/layout/fragment_map.xml" value="0.14565972222222223" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.28442028985507245" />
         <entry key="app/src/main/res/layout/fragment_market.xml" value="0.3625" />
         <entry key="app/src/main/res/layout/fragment_product.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.29023746701846964" />
         <entry key="app/src/main/res/layout/fragment_profile_drawers.xml" value="0.33425925925925926" />
         <entry key="app/src/main/res/layout/fragment_search.xml" value="0.22580645161290322" />
-        <entry key="app/src/main/res/layout/fragment_search_result_collections.xml" value="0.20677083333333332" />
-        <entry key="app/src/main/res/layout/fragment_search_result_stores.xml" value="0.20677083333333332" />
-        <entry key="app/src/main/res/layout/fragment_search_result_tags.xml" value="0.5090252707581228" />
-        <entry key="app/src/main/res/layout/fragment_search_results_products.xml" value="0.20677083333333332" />
         <entry key="app/src/main/res/layout/fragment_splash.xml" value="0.27783452502553624" />
+        <entry key="app/src/main/res/layout/fragment_test_range.xml" value="0.13824419778002017" />
         <entry key="app/src/main/res/layout/item_card_backside.xml" value="0.26875" />
         <entry key="app/src/main/res/layout/item_card_frontside.xml" value="0.26875" />
         <entry key="app/src/main/res/layout/item_color.xml" value="0.33" />

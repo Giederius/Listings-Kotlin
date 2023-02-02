@@ -17,5 +17,4 @@ class ProductMapper : MapperToProductList<List<Category>, List<Product>> {
     override fun mapToCategoryList(R: List<Product>): List<Category> {
         TODO("Not yet implemented")
     }
-
 }
