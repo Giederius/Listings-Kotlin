@@ -12,4 +12,6 @@ data class Product(
     val price: Float,
     val rating: Rating,
     val title: String
-) : Serializable
+) : Serializable {
+    fun emptyProduct(): Product = Product("", "", -1, "", 0F, Rating(0, 0.0), "")
+}

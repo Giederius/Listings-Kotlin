@@ -5,9 +5,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.with
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,7 +39,6 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -44,17 +49,21 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.ExperimentalMotionApi
 import androidx.constraintlayout.compose.layoutId
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.fragment.navArgs
 import coil.compose.rememberAsyncImagePainter
 import com.giedriusmecius.listings.MainActivity
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.remote.model.product.Product
+import com.giedriusmecius.listings.data.remote.model.product.Rating
 import com.giedriusmecius.listings.databinding.FragmentProductBinding
 import com.giedriusmecius.listings.ui.common.base.BaseFragment
 import com.giedriusmecius.listings.ui.common.composeStyles.H5
@@ -66,13 +75,13 @@ import com.giedriusmecius.listings.ui.common.composeStyles.Neutral10
 import com.giedriusmecius.listings.ui.views.ListingsButtonComposable
 import com.giedriusmecius.listings.ui.views.ListingsOutlinedButton
 import com.giedriusmecius.listings.utils.extensions.toCurrency
-import com.giedriusmecius.listings.utils.state.subscribeWithAutoDispose
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBinding::inflate) {
     private val vm by viewModels<ProductViewModel>()
     private val args by navArgs<ProductFragmentArgs>()
+    private lateinit var mProduct: Product
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,21 +97,22 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        vm.transition(ProductState.Event.ViewCreated(args.productID))
+//        vm.transition(ProductState.Event.ViewCreated(args.productID))
+        vm.init(args.productID)
         (activity as MainActivity).hideBottomNavBar()
     }
 
     override fun observeState() {
-        vm.subscribeWithAutoDispose(this) { _, newState ->
-            when (val cmd = newState.command) {
-                is ProductState.Command.ShowAddedToCartIndicator -> {
-                    Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show()
-                }
-                is ProductState.Command.ShowErrorAddingToCartIndicator -> {
-
-                }
-            }
-        }
+//        vm.subscribeWithAutoDispose(this) { _, newState ->
+//            when (val cmd = newState.command) {
+//                is ProductState.Command.ShowAddedToCartIndicator -> {
+//                    Toast.makeText(context, "Added to cart", Toast.LENGTH_SHORT).show()
+//                }
+//                is ProductState.Command.ShowErrorAddingToCartIndicator -> {
+//
+//                }
+//            }
+//        }
     }
 
     override fun onDestroy() {
@@ -110,26 +120,43 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
         (activity as MainActivity).showBottomNavBar()
     }
 
-    @OptIn(ExperimentalAnimationApi::class)
+    @OptIn(ExperimentalAnimationApi::class, ExperimentalLifecycleComposeApi::class)
     @Composable
     fun MainContainer() {
-        val product by vm.product.observeAsState()
-        val inCartItems by vm.inCart.observeAsState()
+//        vm.fetchProduct(args.productID)
 
+//        val product by vm.product.collectAsStateWithLifecycle(ViewState.loading())
+        val product by vm.product.collectAsStateWithLifecycle(
+            Product(
+                "",
+                "",
+                -1,
+                "",
+                0F,
+                Rating(0, 0.0),
+                ""
+            )
+        )
+//        val product1 by vm.product.collectAsState(ViewState.initial())
+        val inCartItems by vm.inCartProducts.collectAsStateWithLifecycle(0)
+        Log.d("MANO", "in Cart Items $inCartItems")
         Column(
             modifier = Modifier.background(Color.White),
             verticalArrangement = Arrangement.SpaceEvenly,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
+            val isLoaded by remember { mutableStateOf(product.title.isNotBlank()) }
             // cia gal butu visai cool pasidaryti kaip yra galvijuos, su papildomais state(loading, success, error), kad UI butu galima geriau tvarkyt?
-            AnimatedContent(targetState = product) {
-                when (product) {
-                    null -> {
-                        CircularProgressIndicator(Modifier)
-                    }
-                    else -> {
-                        ProductFragmentScreen(product!!, inCartItems!!, Modifier.fillMaxSize())
+            AnimatedVisibility(
+                visible = !isLoaded,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                if (isLoaded) {
+                    CircularProgressIndicator(Modifier)
+                } else {
+                    ProductFragmentScreen(product!!, inCartItems, Modifier.fillMaxSize()) {
+                        vm.aTC(product)
                     }
                 }
             }
@@ -138,8 +165,9 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
 
     @OptIn(ExperimentalAnimationApi::class)
     @Composable
-    fun ProductFragmentScreen(product: Product, inCartItems: Int, modifier: Modifier) {
+    fun ProductFragmentScreen(product: Product, inCartItems: Int, modifier: Modifier, onATC: () -> Unit) {
         val isCartActive by remember { mutableStateOf(inCartItems >= 1) }
+        Log.d("MANO", "is cart ACTIVE $isCartActive")
         ConstraintLayout(modifier = modifier.fillMaxSize()) {
             val (topbar, bottomBar, atcIndicator, productDetails) = createRefs()
 
@@ -158,17 +186,6 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
                 width = Dimension.fillToConstraints
                 height = Dimension.fillToConstraints
             })
-//            AnimatedContent(targetState = isCartActive, modifier = Modifier.constrainAs(atcIndicator) {
-//                bottom.linkTo(bottomBar.top)
-//                start.linkTo(parent.start)
-//                end.linkTo(parent.end)
-//            }) {
-//                AddedToCartIndicator(inCartItems, modifier = Modifier.constrainAs(atcIndicator) {
-//                    bottom.linkTo(bottomBar.top)
-//                    start.linkTo(parent.start)
-//                    end.linkTo(parent.end)
-//                })
-//            }
             ProductBottomBar(
                 modifier = Modifier
                     .padding(bottom = 16.dp)
@@ -180,7 +197,7 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
                         height = Dimension.wrapContent
                     }, isCartActive
             ) {
-                vm.transition(ProductState.Event.AddedToCart)
+                onATC()
             }
         }
     }
@@ -211,7 +228,6 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
                 .decodeToString()
         }
 
-//        MotionLayout(motionScene = MotionScene(motionSceneContent), progress = progress) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             LazyRow(state = listState, modifier = Modifier.layoutId("imgLazyRow")) {
                 items(items = imgList) { img ->
@@ -322,7 +338,7 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
     @OptIn(ExperimentalAnimationApi::class)
     @Composable
     fun ProductBottomBar(modifier: Modifier, isCartActive: Boolean, onATC: () -> Unit) {
-
+        Log.d("MANO2", "$isCartActive")
         AnimatedContent(
             targetState = isCartActive,
             modifier = modifier.padding(horizontal = 24.dp)
@@ -451,6 +467,38 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
                 })
         }
     }
+
+    @OptIn(ExperimentalAnimationApi::class)
+    private fun expandFading(time: Int) =
+        fadeIn(animationSpec = tween(time * 3)) with
+                fadeOut(animationSpec = tween(time))
+
+    @OptIn(ExperimentalAnimationApi::class)
+    private fun expandSizing(time: Int) =
+        SizeTransform { initialSize, targetSize ->
+            keyframes {
+                // Expand to target width first
+                IntSize(targetSize.width, initialSize.height) at time
+                // Then expand to target height
+                durationMillis = time * 3
+            }
+        }
+
+    @OptIn(ExperimentalAnimationApi::class)
+    private fun shrinkFading(time: Int) =
+        fadeIn(animationSpec = tween(time, time * 2)) with
+                fadeOut(animationSpec = tween(time * 3))
+
+    @OptIn(ExperimentalAnimationApi::class)
+    private fun shrinkSizing(time: Int) =
+        SizeTransform { initialSize, targetSize ->
+            keyframes {
+                // Shrink to target height first
+                IntSize(initialSize.width, targetSize.height) at time
+                // Then shrink to target width
+                durationMillis = time * 3
+            }
+        }
 
     @Preview
     @Composable

@@ -7,9 +7,15 @@ import com.giedriusmecius.listings.data.checkoutManager.CheckoutManager
 import com.giedriusmecius.listings.data.checkoutManager.CheckoutMapper
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.data.remote.repository.ProductRepository
+import com.giedriusmecius.listings.ui.base.ViewState
+import com.giedriusmecius.listings.utils.ResponseResult
 import com.giedriusmecius.listings.utils.UserPreferences
+import com.giedriusmecius.listings.utils.extensions.shareWhileObserved
 import com.giedriusmecius.listings.utils.state.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,18 +27,53 @@ class ProductViewModel @Inject constructor(
     private val checkoutMapper: CheckoutMapper
 ) :
     BaseViewModel<ProductState, ProductState.Event>(ProductState()) {
+    //    private val _docsAnimalFlow = MutableSharedFlow<ViewState<ResponseBody>>()
+    private val _inCartProducts = MutableSharedFlow<Int>()
+    private var _product = MutableSharedFlow<Product>()
 
     private val fetchedProducts = MutableLiveData<List<Product>>()
     val products: MutableLiveData<List<Product>>
         get() = fetchedProducts
 
-    private val fetchedProduct = MutableLiveData<Product>()
-    val product: MutableLiveData<Product>
-        get() = fetchedProduct
+//    private val fetchedProduct = MutableLiveData<Product>()
+//    val product: MutableLiveData<Product>
+//        get() = fetchedProduct
 
-    private val inCartProducts = MutableLiveData<Int>()
-    val inCart: MutableLiveData<Int>
-        get() = inCartProducts
+//    private val inCartProducts = MutableLiveData<Int>()
+//    val inCart: MutableLiveData<Int>
+//        get() = inCartProducts
+
+//    val docsPreferentialDeclarationFlow: SharedFlow<ViewState<ResponseBody>> =
+//        _docsPreferentialDeclarationFlow.shareWhileObserved(viewModelScope)
+
+    val inCartProducts: SharedFlow<Int> = _inCartProducts
+
+//    val product: SharedFlow<Product> = _product.shareWhileObserved(viewModelScope)
+    val product: SharedFlow<Product> = _product
+
+
+    fun init(productId: Int) {
+        viewModelScope.launch {
+            getProduct(productId)
+        }
+    }
+
+    fun fetchProduct(productId: Int) {
+        viewModelScope.launch {
+//            _product.emit(ViewState.loading())
+//            val viewState = when (val response = productRepository.getProduct(productId)) {
+//                is ResponseResult.Success -> {
+//                    ViewState.success(response.data)
+//                }
+//                is ResponseResult.Error -> {
+//                    ViewState.error(response.message)
+//                }
+//            }
+//            _product.emit(viewState)
+            getProduct(productId)
+        }
+    }
+
 
     override fun handleState(newState: ProductState) {
         when (val req = newState.request) {
@@ -41,12 +82,13 @@ class ProductViewModel @Inject constructor(
                 fetchedProducts.value = productList[0].products
             }
             is ProductState.Request.FetchProduct -> {
-                inCartProducts.value = userPreferences.getCartProducts().size ?: 0
+//                inCartProducts.value = userPreferences.getCartProducts().size ?: 0
                 viewModelScope.launch {
-                    getProduct(req.productId)
+//                    getProduct(req.productId)
                 }
             }
             is ProductState.Request.HandleATC -> {
+                Log.d("MANO", "add to cart vm")
                 val item = checkoutMapper.mapProductToCartItem(req.product)
                 val response = checkoutManager.addToCart(item)
                 if (response) {
@@ -64,8 +106,27 @@ class ProductViewModel @Inject constructor(
         val product = productRepository.getProduct(productId)
         val response = product.getOrNull()
         if (response != null) {
-            fetchedProduct.value = response
-            transition(ProductState.Event.ReceivedProduct(response))
+            delay(500)
+            _product.emit(response)
+        }
+    }
+
+    fun aTC(product :Product) {
+        viewModelScope.launch {
+            Log.d("MANO", "atc1 ${product.title}")
+            addProductToCart(product)
+        }
+    }
+
+    suspend fun addProductToCart(product: Product) {
+        Log.d("MANO", "atc2")
+        val item = checkoutMapper.mapProductToCartItem(product)
+        val response = checkoutManager.addToCart(item)
+        Log.d("MANO", "atc2 $response")
+        if (response) {
+            _inCartProducts.emit(2)
+        } else {
+            transition(ProductState.Event.ErrorAddingToCart)
         }
     }
 }

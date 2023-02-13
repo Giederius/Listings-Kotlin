@@ -25,7 +25,6 @@ data class HomeState(val request: Request? = null, val command: Command? = null)
     override fun reduce(event: Event): HomeState {
         return when (event) {
             Event.ViewCreated -> {
-                Log.d("MANO", "This is From VC")
                 copy()
             }
             Event.TappedSearch -> copy(command = Command.OpenSearch)

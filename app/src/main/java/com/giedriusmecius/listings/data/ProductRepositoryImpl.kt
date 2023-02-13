@@ -4,6 +4,8 @@ import com.giedriusmecius.listings.data.remote.api.ProductApi
 import com.giedriusmecius.listings.data.remote.model.category.Category
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.data.remote.repository.ProductRepository
+import com.giedriusmecius.listings.utils.ResponseResult
+import okhttp3.ResponseBody
 
 class ProductRepositoryImpl(
     private val api: ProductApi
@@ -36,7 +38,6 @@ class ProductRepositoryImpl(
     override suspend fun getProduct(id: Int): Result<Product> {
         return try {
             val product = api.getProduct(id)
-
             Result.success(product)
         } catch (e: Exception) {
             Result.failure(e)
