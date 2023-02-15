@@ -1,9 +1,14 @@
 package com.giedriusmecius.listings.data.checkoutManager
 
+import android.util.Log
+
 class CheckoutManager {
     var orderId: Int? = null
     var cartItems: MutableList<CartItem> = mutableListOf()
-    var cartSize = cartItems.size
+
+    init {
+        Log.d("MANOCHECKINIT", "FUCKING STTART")
+    }
 
     fun resetCart() {
         orderId = null
@@ -11,12 +16,19 @@ class CheckoutManager {
     }
 
     fun addToCart(item: CartItem): Boolean {
-        return if (!lookForDuplicates(item)) {
+//        return if (!lookForDuplicates(item)) {
+        try {
             cartItems.add(item)
-            true
-        } else {
-            false
+            Log.d("MANOCHECKOUTMNG2", "${getCartSize()} $cartItems")
+            return true
+        } catch (e: Exception) {
+            Log.d("MANOCHECKOUTMNG2", "${e.message}")
+            return false
         }
+
+//        } else {
+//            true
+//        }
     }
 
     fun removeFromCart(item: CartItem) {
@@ -31,6 +43,7 @@ class CheckoutManager {
 
     fun lookForDuplicates(item: CartItem): Boolean {
         val wasFound = cartItems.find { it == item }
+        Log.d("MANOCHECKOUTMNG", "${wasFound?.productTitle}")
         if (wasFound != null) {
             cartItems.find { it == wasFound }?.let { foundItem ->
                 foundItem.copy(quantity = foundItem.quantity.plus(item.quantity))
@@ -42,5 +55,9 @@ class CheckoutManager {
             }
         }
         return false
+    }
+
+    fun getCartSize(): Int {
+        return cartItems.size
     }
 }

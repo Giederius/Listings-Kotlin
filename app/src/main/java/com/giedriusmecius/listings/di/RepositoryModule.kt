@@ -3,6 +3,7 @@ package com.giedriusmecius.listings.di
 import android.content.Context
 import com.giedriusmecius.listings.R
 import com.giedriusmecius.listings.data.ProductRepositoryImpl
+import com.giedriusmecius.listings.data.checkoutManager.CheckoutManager
 import com.giedriusmecius.listings.data.checkoutManager.CheckoutMapper
 import com.giedriusmecius.listings.data.remote.api.ProductApi
 import com.giedriusmecius.listings.data.remote.repository.ProductRepository
@@ -35,5 +36,9 @@ class RepositoryModule {
     @Provides
     @Singleton
     fun provideCheckoutMapper() = CheckoutMapper()
+
+    @Provides
+    @Singleton
+    fun provideCheckoutManager() = CheckoutManager()
 
 }

@@ -2,8 +2,6 @@ package com.giedriusmecius.listings.data.remote.repository
 
 import com.giedriusmecius.listings.data.remote.model.category.Category
 import com.giedriusmecius.listings.data.remote.model.product.Product
-import com.giedriusmecius.listings.utils.ResponseResult
-import okhttp3.ResponseBody
 import javax.inject.Singleton
 
 @Singleton

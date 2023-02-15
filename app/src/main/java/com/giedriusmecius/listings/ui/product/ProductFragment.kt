@@ -5,15 +5,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.with
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,6 +40,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,7 +50,6 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -76,6 +76,7 @@ import com.giedriusmecius.listings.ui.views.ListingsButtonComposable
 import com.giedriusmecius.listings.ui.views.ListingsOutlinedButton
 import com.giedriusmecius.listings.utils.extensions.toCurrency
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBinding::inflate) {
@@ -124,7 +125,6 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
     @Composable
     fun MainContainer() {
 //        vm.fetchProduct(args.productID)
-
 //        val product by vm.product.collectAsStateWithLifecycle(ViewState.loading())
         val product by vm.product.collectAsStateWithLifecycle(
             Product(
@@ -137,6 +137,7 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
                 ""
             )
         )
+        mProduct = product
 //        val product1 by vm.product.collectAsState(ViewState.initial())
         val inCartItems by vm.inCartProducts.collectAsStateWithLifecycle(0)
         Log.d("MANO", "in Cart Items $inCartItems")
@@ -165,9 +166,13 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
 
     @OptIn(ExperimentalAnimationApi::class)
     @Composable
-    fun ProductFragmentScreen(product: Product, inCartItems: Int, modifier: Modifier, onATC: () -> Unit) {
-        val isCartActive by remember { mutableStateOf(inCartItems >= 1) }
-        Log.d("MANO", "is cart ACTIVE $isCartActive")
+    fun ProductFragmentScreen(
+        product: Product,
+        inCartItems: Int,
+        modifier: Modifier,
+        onATC: () -> Unit
+    ) {
+        Log.d("MANO", "is cart ACTIVE $inCartItems")
         ConstraintLayout(modifier = modifier.fillMaxSize()) {
             val (topbar, bottomBar, atcIndicator, productDetails) = createRefs()
 
@@ -195,7 +200,7 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
                         end.linkTo(parent.end)
                         width = Dimension.fillToConstraints
                         height = Dimension.wrapContent
-                    }, isCartActive
+                    }, inCartItems >= 1
             ) {
                 onATC()
             }
@@ -285,8 +290,6 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
                 }
             }
         }
-//        }
-
     }
 
     @Composable
@@ -338,50 +341,48 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
     @OptIn(ExperimentalAnimationApi::class)
     @Composable
     fun ProductBottomBar(modifier: Modifier, isCartActive: Boolean, onATC: () -> Unit) {
-        Log.d("MANO2", "$isCartActive")
-        AnimatedContent(
-            targetState = isCartActive,
-            modifier = modifier.padding(horizontal = 24.dp)
+        val coroutineScope = rememberCoroutineScope()
+        Row(
+            modifier = modifier.fillMaxWidth().padding(horizontal = 24.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
-            when (isCartActive) {
-                true -> {
-                    Row(
-                        modifier = modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
-                    ) {
-                        ListingsOutlinedButton(
-                            modifier = Modifier.height(48.dp).padding(end = 3.5.dp).weight(1F),
-                            null,
-                            text = "Remove",
-                            color = null,
-                            true,
-                        ) {
-
-                        }
-                        ListingsButtonComposable(
-                            modifier = Modifier.height(48.dp).padding(start = 3.5.dp).weight(1F),
-                            null,
-                            letter = "Add to cart",
-                            null,
-                            true,
-                        ) {
-
-                        }
-                    }
-                }
-                false -> {
-                    ListingsButtonComposable(
-                        modifier.fillMaxWidth(),
-                        null,
-                        "Add to card",
-                        null,
-                        true
-                    ) {
-                        onATC()
-                    }
+            var transitionState by remember { mutableStateOf(ATCState.noATC) }
+            val transition = updateTransition(targetState = transitionState, label = "")
+//            val atcWidth by transition.animateFloat(
+//                transitionSpec = { tween(500) },
+//                label = "",
+//                targetValueByState = { state ->
+//                    if (state == ATCState.ATC) 2f else 1f
+//                })
+            Log.d("MANOSTATE","$transitionState")
+            val atcWidth by transition.animateDp(
+                transitionSpec = { tween(1000) },
+                label = "",
+                targetValueByState = { state ->
+                    Log.d("MANOSTATE1","$state")
+                    if (state == ATCState.ATC) 100.dp else 48.dp
+                })
+            ListingsOutlinedButton(
+                modifier = Modifier.height(48.dp).padding(end = 3.5.dp).weight(1F),
+                null,
+                text = "Remove",
+                color = null,
+                true,
+            ) {
+                coroutineScope.launch {
+                    vm.removeProductFromCart(mProduct)
+                    transitionState = ATCState.noATC
                 }
             }
-
+            ListingsButtonComposable(
+                modifier = Modifier.height(atcWidth).padding(start = 3.5.dp).weight(1F),
+                null,
+                letter = "Add to cart",
+                null,
+                true,
+            ) {
+                transitionState = ATCState.ATC
+            }
         }
     }
 
@@ -468,41 +469,45 @@ class ProductFragment : BaseFragment<FragmentProductBinding>(FragmentProductBind
         }
     }
 
-    @OptIn(ExperimentalAnimationApi::class)
-    private fun expandFading(time: Int) =
-        fadeIn(animationSpec = tween(time * 3)) with
-                fadeOut(animationSpec = tween(time))
-
-    @OptIn(ExperimentalAnimationApi::class)
-    private fun expandSizing(time: Int) =
-        SizeTransform { initialSize, targetSize ->
-            keyframes {
-                // Expand to target width first
-                IntSize(targetSize.width, initialSize.height) at time
-                // Then expand to target height
-                durationMillis = time * 3
-            }
-        }
-
-    @OptIn(ExperimentalAnimationApi::class)
-    private fun shrinkFading(time: Int) =
-        fadeIn(animationSpec = tween(time, time * 2)) with
-                fadeOut(animationSpec = tween(time * 3))
-
-    @OptIn(ExperimentalAnimationApi::class)
-    private fun shrinkSizing(time: Int) =
-        SizeTransform { initialSize, targetSize ->
-            keyframes {
-                // Shrink to target height first
-                IntSize(initialSize.width, targetSize.height) at time
-                // Then shrink to target width
-                durationMillis = time * 3
-            }
-        }
+//    @OptIn(ExperimentalAnimationApi::class)
+//    private fun expandFading(time: Int) =
+//        fadeIn(animationSpec = tween(time * 3)) with
+//                fadeOut(animationSpec = tween(time))
+//
+//    @OptIn(ExperimentalAnimationApi::class)
+//    private fun expandSizing(time: Int) =
+//        SizeTransform { initialSize, targetSize ->
+//            keyframes {
+//                // Expand to target width first
+//                IntSize(targetSize.width, initialSize.height) at time
+//                // Then expand to target height
+//                durationMillis = time * 3
+//            }
+//        }
+//
+//    @OptIn(ExperimentalAnimationApi::class)
+//    private fun shrinkFading(time: Int) =
+//        fadeIn(animationSpec = tween(time, time * 2)) with
+//                fadeOut(animationSpec = tween(time * 3))
+//
+//    @OptIn(ExperimentalAnimationApi::class)
+//    private fun shrinkSizing(time: Int) =
+//        SizeTransform { initialSize, targetSize ->
+//            keyframes {
+//                // Shrink to target height first
+//                IntSize(initialSize.width, targetSize.height) at time
+//                // Then shrink to target width
+//                durationMillis = time * 3
+//            }
+//        }
 
     @Preview
     @Composable
     fun MainContainerPreview() {
         MainContainer()
+    }
+
+    enum class ATCState {
+        ATC, noATC
     }
 }

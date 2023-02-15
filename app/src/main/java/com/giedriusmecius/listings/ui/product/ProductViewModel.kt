@@ -7,8 +7,6 @@ import com.giedriusmecius.listings.data.checkoutManager.CheckoutManager
 import com.giedriusmecius.listings.data.checkoutManager.CheckoutMapper
 import com.giedriusmecius.listings.data.remote.model.product.Product
 import com.giedriusmecius.listings.data.remote.repository.ProductRepository
-import com.giedriusmecius.listings.ui.base.ViewState
-import com.giedriusmecius.listings.utils.ResponseResult
 import com.giedriusmecius.listings.utils.UserPreferences
 import com.giedriusmecius.listings.utils.extensions.shareWhileObserved
 import com.giedriusmecius.listings.utils.state.BaseViewModel
@@ -56,6 +54,10 @@ class ProductViewModel @Inject constructor(
         viewModelScope.launch {
             getProduct(productId)
         }
+    }
+
+    fun reset() {
+        checkoutManager.resetCart()
     }
 
     fun fetchProduct(productId: Int) {
@@ -113,18 +115,23 @@ class ProductViewModel @Inject constructor(
 
     fun aTC(product :Product) {
         viewModelScope.launch {
-            Log.d("MANO", "atc1 ${product.title}")
             addProductToCart(product)
         }
     }
 
+    suspend fun removeProductFromCart(product: Product) {
+        val item = checkoutMapper.mapProductToCartItem(product)
+        checkoutManager.removeFromCart(item)
+        _inCartProducts.emit(checkoutManager.getCartSize())
+    }
+
     suspend fun addProductToCart(product: Product) {
-        Log.d("MANO", "atc2")
         val item = checkoutMapper.mapProductToCartItem(product)
         val response = checkoutManager.addToCart(item)
         Log.d("MANO", "atc2 $response")
         if (response) {
-            _inCartProducts.emit(2)
+            Log.d("MANO", "atc2 cart size ${checkoutManager.getCartSize()}")
+            _inCartProducts.emit(checkoutManager.getCartSize())
         } else {
             transition(ProductState.Event.ErrorAddingToCart)
         }
